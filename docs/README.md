@@ -49,15 +49,15 @@ In addition to the webpack entry file, there will be three scripts involved in t
 
 ### Implementation Timeline
 
-**Day 1**: Setup all necessary Node modules, including getting webpack up and running and `Easel.js` installed.  Create `webpack.config.js` as well as `package.json`.  Write a basic entry file and the bare bones of all 3 scripts outlined above.  Learn the basics of `Easel.js`.  Goals for the day:
+**Day 1**: Setup all necessary Node modules, including getting webpack up and running.  Create `webpack.config.js` as well as `package.json`.  Write a basic entry file and the bare bones of all 3 scripts outlined above. Goals for the day:
 
-- Get a green bundle with `webpack`
-- Learn enough `Easel.js` to render an empty grid on the `Canvas` element
+- Successfully bundle with `webpack`
+- Learn enough about `HTML5 Canvas` to render an empty grid on the page
 
-**Day 2**: Dedicate this day to learning the `Easel.js` API.  First, build out the `Cell` object to connect to the `Board` object.  Then, use `board.js` to create and render at least the square grid, ideally all 3 grid types.  Build in the ability to toggle the live/dead states on click for each cell.  Goals for the day:
+**Day 2**: First, build out the `Cell` object to connect to the `Board` object.  Then, use `board.js` to create and render at least the grid.  Build in the ability to toggle the live/dead states on click for each cell.  Goals for the day:
 
 - Complete the `cell.js` module (constructor, update functions)
-- Render a square grid to the `Canvas` using `Easel.js`
+- Render a square grid to the `Canvas`
 - Make each cell in the grid clickable, toggling the state of the square on click
 
 **Day 3**: Create the automata logic backend.  Build out modular functions for handling their neighbor checks and ruleset. Incorporate the automata logic into the `Board.js` rendering and finish basic UI.  Goals for the day:
