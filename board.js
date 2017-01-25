@@ -11,7 +11,7 @@ class Board {
   }
 
   toggleCell (e) {
-    let clickedCell = this.cells.find((cell) => {
+    const clickedCell = this.cells.find((cell) => {
       if (e.offsetX >= cell.state.xmin && e.offsetX <= cell.state.xmax) {
         if (e.offsetY >= cell.state.ymin && e.offsetY <= cell.state.ymax) {
           return cell;
@@ -19,8 +19,7 @@ class Board {
       }
     });
 
-    clickedCell.state.alive = clickedCell.state.alive ? false : true;
-    clickedCell.render();
+    clickedCell.changeState();
   }
 
   populateGrid () {
