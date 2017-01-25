@@ -10,6 +10,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "webpack"
   },
+  "babel": {
+    "presets": ["es2015"]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chrabyrd/game_of_death.git"
@@ -22,7 +25,11 @@
   },
   "homepage": "https://github.com/chrabyrd/game_of_death#readme",
   "dependencies": {
-    "createjs-easeljs": "^0.8.2",
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
+    "css-loader": "^0.26.1",
+    "style-loader": "^0.13.1",
     "webpack": "^1.14.0"
   }
 }

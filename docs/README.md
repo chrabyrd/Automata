@@ -54,7 +54,7 @@ In addition to the webpack entry file, there will be three scripts involved in t
 - Successfully bundle with `webpack`
 - Learn enough about `HTML5 Canvas` to render an empty grid on the page
 
-**Day 2**: First, build out the `Cell` object to connect to the `Board` object.  Then, use `board.js` to create and render at least the grid.  Build in the ability to toggle the live/dead states on click for each cell.  Goals for the day:
+**Day 2**: First, build out the `Cell` object to connect to the `Board` object.  Build in the ability to toggle the live/dead states on click for each cell.  Goals for the day:
 
 - Complete the `cell.js` module (constructor, update functions)
 - Render a square grid to the `Canvas`
