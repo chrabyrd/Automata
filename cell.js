@@ -25,30 +25,30 @@ class Cell {
   }
 
   getNeighbors () {
-    const top = this.id - 12;
-    const topRight = this.id - 11;
+    const top = this.id - 11;
+    const topRight = this.id - 10;
     const right = this.id + 1;
-    const bottomRight = this.id + 13;
-    const bottom = this.id + 12;
-    const bottomLeft = this.id + 11;
+    const bottomRight = this.id + 12;
+    const bottom = this.id + 11;
+    const bottomLeft = this.id + 10;
     const left = this.id - 1;
-    const topLeft = this.id - 13;
+    const topLeft = this.id - 12;
 
-    if (this.id % 12 === 0) {
+    if (this.id % 11 === 0) {
       // Left side
       if (this.id === 0) {
         this.state.neighbors.push(right, bottomRight, bottom);
-      } else if (this.id === 132) {
+      } else if (this.id === 110) {
         this.state.neighbors.push(top, topRight, right);
       } else {
         this.state.neighbors.push(top, topRight, right, bottomRight, bottom);
       }
 
-    } else if ((this.id - 1) % 12 === 10) {
+    } else if (this.id % 11 === 10) {
       // Right side
-      if (this.id === 11) {
+      if (this.id === 10) {
         this.state.neighbors.push(left, bottomLeft, bottom);
-      } else if (this.id === 143) {
+      } else if (this.id === 120) {
         this.state.neighbors.push(top, topLeft, left);
       } else {
         this.state.neighbors.push(top, topLeft, left, bottomLeft, bottom);
@@ -60,7 +60,7 @@ class Cell {
         bottomLeft, left, topLeft);
 
       this.state.neighbors = this.state.neighbors.filter(cellId => {
-        return cellId >= 0 && cellId <= 143;
+        return cellId >= 0 && cellId <= 120;
       });
     }
   }

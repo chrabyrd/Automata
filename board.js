@@ -25,10 +25,10 @@ class Board {
     let y = 0;
     let id = 0;
 
-    for (let i=0; i < 12; i++) {
+    for (let i=0; i < 11; i++) {
       let x = 0;
 
-      for (let j=0; j < 12; j++) {
+      for (let j=0; j < 11; j++) {
         this.cells.push(new Cell(this.ctx, id, x, y));
         x += 50;
         id++;

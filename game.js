@@ -5,9 +5,11 @@ class Game {
   constructor (ctx) {
     const board = new Board(ctx);
     const automata = new Automata(board);
+    this.ctx = ctx;
     this.board = board;
     this.automata = automata;
-    this.play;
+    this.playButtonPushed = false;
+    this.startGame;
     this.gameTimer;
 
     this.levelOne();
@@ -19,15 +21,31 @@ class Game {
       this.automata.neighborLogic();
     };
 
-    this.play = setInterval(singleMove, 20);
+    this.playButtonPushed = true;
+    this.startGame = setInterval(singleMove, 20);
   }
 
   handlePauseEvent () {
-    clearInterval(this.play);
+    clearInterval(this.startGame);
+  }
+
+  handleResetEvent () {
+    this.resetCells();
+    this.ctx.clearRect(0, 0, 600, 600);
+    this.ctx.stroke();
+    this.levelOne();
+    clearTimeout(this.gameTimer);
   }
 
   handleClickEvent (e) {
-    this.board.toggleCell(e);
+    e.preventDefault();
+    this.playButtonPushed ? this.board.toggleCell(e) : null;
+  }
+
+  resetCells () {
+    for (let i = 0; i < this.board.cells.length; i++) {
+      this.board.cells[i].state.alive = false;
+    }
   }
 
   winCondition () {
@@ -42,12 +60,14 @@ class Game {
     if (this.winCondition()) {
       this.handlePauseEvent();
       clearTimeout(this.gameTimer);
+      this.playButtonPushed = false;
       alert("Win");
     }
   }
 
   endGame () {
     this.handlePauseEvent();
+    this.playButtonPushed = false;
     alert("Loss");
   }
 
@@ -57,7 +77,7 @@ class Game {
   }
 
   levelOne () {
-    const startingCells = [53, 64, 76, 89, 78, 66];
+    const startingCells = [38, 48, 50, 59, 61, 71];
 
     for (let i = 0; i < startingCells.length; i++) {
       this.board.cells[startingCells[i]].changeState();

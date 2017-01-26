@@ -5,10 +5,62 @@
     <title>Conway's Game of DEATH!</title>
   </head>
     <body>
-      <canvas id="canvas" width="600" height="600" style="border:1px solid #000000;">
-      </canvas>
-      <button id="playButton">Play</button>
-      <button id="pauseButton">Pause</button>
+      <div id="page">
+
+        <div id="header">
+          <h1>Conway's Game of <strike>Life</strike> DEATH!</h1>
+          <div id="header-buttons-container">
+            <button class="header-buttons">Github</button>
+            <button class="header-buttons">LinkedIn</button>
+          </div>
+        </div>
+
+        <div id="body">
+          <div id="rules">
+
+            <div id="objective">
+              <h2>Main Objective</h2>
+              <h3>Remove all colored tiles from play</h3>
+            </div>
+
+            <div class="board-rules">
+              <h4>Rule #1</h4>
+              <h5>Any live cell with fewer than two live neighbours dies,
+                as if caused by underpopulation.</h5>
+            </div>
+
+            <div class="board-rules">
+              <h4>Rule #2</h4>
+              <h5>Any live cell with two or three live neighbours lives
+                on to the next generation.</h5>
+            </div>
+
+            <div class="board-rules">
+              <h4>Rule #3</h4>
+              <h5>Any live cell with more than three live neighbours
+                dies, as if by overpopulation.</h5>
+            </div>
+
+            <div class="board-rules">
+              <h4>Rule #4</h4>
+              <h5>Any dead cell with exactly three live neighbours
+                becomes a live cell, as if by reproduction.</h5>
+            </div>
+          </div>
+
+          <div id="canvasContainer">
+            <canvas id="canvas" width="550" height="550" style="border:1px solid #000000;">
+            </canvas>
+          </div>
+
+          <div id="buttons">
+            <button id="playButton">Play</button>
+            <button id="pauseButton">Pause</button>
+            <button id="resetButton">Reset</button>
+          </div>
+        </div>
+
+      </div>
       <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
     </body>
 </html>

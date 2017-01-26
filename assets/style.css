@@ -1,0 +1,106 @@
+body {
+  background-color: ghostwhite;
+}
+
+#page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px;
+  padding: 5px;
+}
+
+#header {
+  background-color: pink;
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  margin: 5px;
+  padding: 5px;
+}
+
+#header > h1 {
+  background-color: cornflowerblue;
+  margin: 5px;
+  padding: 5px;
+}
+
+#header-buttons-container {
+  background-color: magenta;
+  margin: 5px;
+  padding: 5px;
+}
+
+.header-buttons {
+  background-color: peru;
+  margin: 5px;
+  padding: 5px;
+}
+
+#body {
+  background-color: purple;
+  display: flex;
+  margin: 5px;
+  padding: 5px;
+}
+
+#rules {
+  background-color: red;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  padding: 5px;
+}
+
+#objective {
+  background-color: gold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px;
+  padding: 5px;
+}
+
+#objective > h2, h3 {
+  background-color: lightgreen;
+  margin: 5px;
+  padding: 5px;
+}
+
+.board-rules {
+  background-color: turquoise;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  padding: 5px;
+}
+
+.board-rules > h4 {
+  background-color: tan;
+  display: flex;
+  margin: 5px;
+  padding: 5px;
+}
+
+.board-rules > h5 {
+  display: flex;
+  background-color: lime;
+  margin: 5px;
+  padding: 5px;
+}
+
+#canvasContainer {
+  display: flex;
+  background-color: yellow;
+  margin: 5px;
+  padding: 5px;
+}
+
+#buttons {
+  background-color: green;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  margin: 5px;
+  padding: 5px;
+}
