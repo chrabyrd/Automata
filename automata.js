@@ -1,21 +1,6 @@
 class Automata {
   constructor (board) {
     this.board = board;
-    this.play;
-  }
-
-  onPlay () {
-    this.play = setInterval(() => this.neighborLogic(), 100);
-  }
-
-  onPause () {
-    clearInterval(this.play);
-  }
-
-  redrawBoard () {
-    // disappears static elements
-    this.board.ctx.clearRect(0, 0, 600, 600);
-    this.board.ctx.stroke();
   }
 
   neighborLogic () {

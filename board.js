@@ -18,7 +18,6 @@ class Board {
         }
       }
     });
-
     clickedCell.changeState();
   }
 

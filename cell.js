@@ -65,9 +65,18 @@ class Cell {
     }
   }
 
+  getRandomColor() {
+    let length = 6;
+    const chars = '0123456789ABCDEF';
+    let hex = '#';
+    while(length--) hex += chars[(Math.random() * 16) | 0];
+    return hex;
+  }
+
   render () {
     if (this.state.alive) {
-      this.ctx.fillStyle = "green";
+      this.ctx.clearRect(this.x, this.y, 50, 50);
+      this.ctx.fillStyle = this.getRandomColor();
       this.ctx.fillRect(this.x, this.y, 50, 50);
     } else {
       this.ctx.clearRect(this.x, this.y, 50, 50);
