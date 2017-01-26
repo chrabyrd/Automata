@@ -4,6 +4,7 @@ class Board {
 
   constructor (ctx) {
     const cells = [];
+    const cellSwitches = {};
     this.ctx = ctx;
     this.cells = cells;
 
@@ -19,6 +20,12 @@ class Board {
       }
     });
     clickedCell.changeState();
+  }
+
+  populateCellSwitches () {
+    // for (let i=0; i < this.cells.length; i++) {
+    //   this.cellSwitches[this.cells[i].id] = this
+    // }
   }
 
   populateGrid () {

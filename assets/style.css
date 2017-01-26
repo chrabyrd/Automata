@@ -1,5 +1,11 @@
-body {
-  background-color: ghostwhite;
+
+button {
+  margin: 5px;
+  padding: 5px;
+}
+
+button:hover {
+  cursor: pointer;
 }
 
 #page {
@@ -27,12 +33,6 @@ body {
 
 #header-buttons-container {
   background-color: magenta;
-  margin: 5px;
-  padding: 5px;
-}
-
-.header-buttons {
-  background-color: peru;
   margin: 5px;
   padding: 5px;
 }
