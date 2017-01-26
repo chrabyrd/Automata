@@ -1,5 +1,8 @@
 
 button {
+  background: darkgrey;
+  outline: none;
+  border: none;
   margin: 5px;
   padding: 5px;
 }
@@ -17,43 +20,52 @@ button:hover {
 }
 
 #header {
-  background-color: pink;
+  background: rgba(211, 211, 211, 0.9);
+  font-size: 22px;
+  letter-spacing: 2px;
+  font-family: cursive;
   display: flex;
   width: 100%;
-  justify-content: space-around;
+  justify-content: space-between;
   margin: 5px;
   padding: 5px;
 }
 
 #header > h1 {
-  background-color: cornflowerblue;
   margin: 5px;
   padding: 5px;
 }
 
 #header-buttons-container {
-  background-color: magenta;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 5px;
   padding: 5px;
 }
 
+#header-buttons-container > button {
+  background: none;
+}
+
 #body {
-  background-color: purple;
+  background: rgba(211, 211, 211, 0.9);
   display: flex;
   margin: 5px;
   padding: 5px;
 }
 
 #rules {
-  background-color: red;
+  background-color: darkgrey;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   margin: 5px;
   padding: 5px;
 }
 
 #objective {
-  background-color: gold;
+  background-color: grey;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -62,42 +74,35 @@ button:hover {
 }
 
 #objective > h2, h3 {
-  background-color: lightgreen;
+  color: ghostwhite;
   margin: 5px;
   padding: 5px;
 }
 
 .board-rules {
-  background-color: turquoise;
+  background-color: grey;
   display: flex;
   flex-direction: column;
   margin: 5px;
   padding: 5px;
 }
 
-.board-rules > h4 {
-  background-color: tan;
+.board-rules > h4, h5{
+  color: ghostwhite;
   display: flex;
-  margin: 5px;
-  padding: 5px;
-}
-
-.board-rules > h5 {
-  display: flex;
-  background-color: lime;
   margin: 5px;
   padding: 5px;
 }
 
 #canvasContainer {
   display: flex;
-  background-color: yellow;
+  background: rgba(0, 0, 0, 1);
   margin: 5px;
   padding: 5px;
 }
 
 #buttons {
-  background-color: green;
+  background-color: darkgrey;
   display: flex;
   justify-content: space-around;
   flex-direction: column;
