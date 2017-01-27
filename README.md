@@ -1,6 +1,6 @@
 ## Conway's Game of ~~Life~~ DEATH!
 
-[Website][website]
+[Live][website]
 
 [website]: https://chrabyrd.github.io/game_of_death
 
