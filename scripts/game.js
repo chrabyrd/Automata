@@ -47,10 +47,9 @@ class Game {
   }
 
   handlePlayEvent () {
-
     if (this.playButtonPushed) return;
+    delete this.board;
     this.playButtonPushed = false;
-
     this.board = new Board(this.ctx);
     this.automata = new Automata(this.board);
 
@@ -64,7 +63,7 @@ class Game {
     this.timer();
     this.board.populateGrid();
     this.levelOne();
-    this.startGame = setInterval(singleMove, 30);
+    this.startGame = setInterval(singleMove, 50);
   }
 
   handlePauseEvent () {
@@ -72,7 +71,6 @@ class Game {
   }
 
   handleResetEvent () {
-    if (!this.playButtonPushed) return;
     this.playButtonPushed = false;
     this.timerctx.clearRect(0, 0, 50, 50);
     this.playButtonPushed = false;
@@ -157,6 +155,7 @@ class Game {
 
   gameWon () {
     if (this.winCondition()) {
+      this.playButtonPushed = false;
       this.handlePauseEvent();
       clearInterval(this.playTimer);
       clearTimeout(this.gameTimer);
@@ -168,6 +167,7 @@ class Game {
   }
 
   endGame () {
+    this.playButtonPushed = false;
     this.handlePauseEvent();
     this.timerctx.clearRect(0, 0, 50, 50);
     this.ctx.clearRect(0, 0, 550, 550);

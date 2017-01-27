@@ -5,6 +5,7 @@ body {
 
 button {
   background: darkgrey;
+  text-shadow: 2px 2px ghostwhite;
   outline: none;
   border: none;
   margin: 5px;
