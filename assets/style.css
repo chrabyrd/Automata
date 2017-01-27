@@ -1,3 +1,7 @@
+body {
+  font-family: Roboto;
+  letter-spacing: 1px;
+}
 
 button {
   background: darkgrey;
@@ -7,8 +11,9 @@ button {
   padding: 5px;
 }
 
-button:hover {
+button > i:hover {
   cursor: pointer;
+  text-shadow: 5px 5px 5px ghostwhite;
 }
 
 #page {
@@ -24,8 +29,9 @@ button:hover {
   font-size: 22px;
   letter-spacing: 2px;
   font-family: cursive;
+  align-items: center;
+  text-shadow: 2px 2px ghostwhite;
   display: flex;
-  width: 100%;
   justify-content: space-between;
   margin: 5px;
   padding: 5px;
@@ -36,16 +42,23 @@ button:hover {
   padding: 5px;
 }
 
-#header-buttons-container {
+#header-buttons {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;;
   align-items: center;
   margin: 5px;
   padding: 5px;
 }
 
-#header-buttons-container > button {
+#header-buttons > a {
   background: none;
+  color: black;
+  margin: 5px;
+  padding: 5px;
+}
+
+#header-buttons > a:hover {
+  text-shadow: 5px 5px 5px ghostwhite;
 }
 
 #body {
@@ -55,43 +68,8 @@ button:hover {
   padding: 5px;
 }
 
-#rules {
-  background-color: darkgrey;
+#game-display {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  margin: 5px;
-  padding: 5px;
-}
-
-#objective {
-  background-color: grey;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 5px;
-  padding: 5px;
-}
-
-#objective > h2, h3 {
-  color: ghostwhite;
-  margin: 5px;
-  padding: 5px;
-}
-
-.board-rules {
-  background-color: grey;
-  display: flex;
-  flex-direction: column;
-  margin: 5px;
-  padding: 5px;
-}
-
-.board-rules > h4, h5{
-  color: ghostwhite;
-  display: flex;
-  margin: 5px;
-  padding: 5px;
 }
 
 #canvasContainer {
@@ -101,11 +79,21 @@ button:hover {
   padding: 5px;
 }
 
-#buttons {
+#buttons-container {
   background-color: darkgrey;
   display: flex;
-  justify-content: space-around;
   flex-direction: column;
+  justify-content: space-around;
   margin: 5px;
   padding: 5px;
+}
+
+#timer-container {
+  background-color: darkgrey;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px black dotted;
+
 }

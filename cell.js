@@ -1,17 +1,14 @@
 class Cell {
   constructor (ctx, id, x, y) {
-    this.state = {
-      id: id,
-      xmin: x + 1,
-      xmax: x + 50,
-      ymin: y + 1,
-      ymax: y + 50,
-      alive: false,
-      neighbors: []
-    };
+    this.id = id;
+    this.xmin = x + 1;
+    this.xmax = x + 50;
+    this.ymin = y + 1;
+    this.ymax = y + 50;
+    this.alive = false;
+    this.neighbors = [];
 
     this.ctx = ctx;
-    this.id = id;
     this.x = x;
     this.y = y;
 
@@ -20,7 +17,7 @@ class Cell {
   }
 
   changeState () {
-    this.state.alive = this.state.alive ? false : true;
+    this.alive = this.alive ? false : true;
     this.render();
   }
 
@@ -37,29 +34,29 @@ class Cell {
     if (this.id % 11 === 0) {
       // Left side
       if (this.id === 0) {
-        this.state.neighbors.push(right, bottomRight, bottom);
+        this.neighbors.push(right, bottomRight, bottom);
       } else if (this.id === 110) {
-        this.state.neighbors.push(top, topRight, right);
+        this.neighbors.push(top, topRight, right);
       } else {
-        this.state.neighbors.push(top, topRight, right, bottomRight, bottom);
+        this.neighbors.push(top, topRight, right, bottomRight, bottom);
       }
 
     } else if (this.id % 11 === 10) {
       // Right side
       if (this.id === 10) {
-        this.state.neighbors.push(left, bottomLeft, bottom);
+        this.neighbors.push(left, bottomLeft, bottom);
       } else if (this.id === 120) {
-        this.state.neighbors.push(top, topLeft, left);
+        this.neighbors.push(top, topLeft, left);
       } else {
-        this.state.neighbors.push(top, topLeft, left, bottomLeft, bottom);
+        this.neighbors.push(top, topLeft, left, bottomLeft, bottom);
       }
 
     } else {
       // Center
-      this.state.neighbors.push(top, topRight, right, bottomRight, bottom,
+      this.neighbors.push(top, topRight, right, bottomRight, bottom,
         bottomLeft, left, topLeft);
 
-      this.state.neighbors = this.state.neighbors.filter(cellId => {
+      this.neighbors = this.neighbors.filter(cellId => {
         return cellId >= 0 && cellId <= 120;
       });
     }
@@ -74,7 +71,7 @@ class Cell {
   }
 
   render () {
-    if (this.state.alive) {
+    if (this.alive) {
       this.ctx.clearRect(this.x, this.y, 50, 50);
       this.ctx.fillStyle = this.getRandomColor();
       this.ctx.fillRect(this.x, this.y, 50, 50);

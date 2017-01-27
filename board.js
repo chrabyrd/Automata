@@ -4,28 +4,21 @@ class Board {
 
   constructor (ctx) {
     const cells = [];
-    const cellSwitches = {};
     this.ctx = ctx;
     this.cells = cells;
 
-    this.populateGrid();
   }
 
   toggleCell (e) {
     const clickedCell = this.cells.find((cell) => {
-      if (e.offsetX >= cell.state.xmin && e.offsetX <= cell.state.xmax) {
-        if (e.offsetY >= cell.state.ymin && e.offsetY <= cell.state.ymax) {
+      if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
+        if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
           return cell;
         }
       }
     });
-    clickedCell.changeState();
-  }
 
-  populateCellSwitches () {
-    // for (let i=0; i < this.cells.length; i++) {
-    //   this.cellSwitches[this.cells[i].id] = this
-    // }
+    if (!clickedCell.alive) clickedCell.changeState();
   }
 
   populateGrid () {

@@ -18,11 +18,11 @@ With this gamified version of Conway's Game of Life, players will be able to:
 
 - [ ] Start, pause, and reset each level on the game board
 - [ ] Select squares to be alive at any point during play
-- [ ] See their score, which is based on the amount of time and clicks taken to complete each level
+- [ ] See the amount of time left to complete the level
 
 In addition, this project will include:
 
-- [ ] An About modal describing the background and rules of the game
+- [ ] An About modal describing the rules of the game
 - [ ] A production Readme
 
 ### Wireframes
@@ -35,17 +35,19 @@ This app will consist of a single screen with game board, game controls, nav lin
 
 This project will be implemented with the following technologies:
 
-- Vanilla JavaScript and `jquery` for overall structure and game logic,
-- `Easel.js` with `HTML5 Canvas` for DOM manipulation and rendering,
+- Vanilla `JavaScript` for overall structure and game logic,
+- `HTML5 Canvas` for DOM manipulation and rendering,
 - Webpack to bundle and serve up the various scripts.
 
-In addition to the webpack entry file, there will be three scripts involved in this project:
+In addition to the webpack entry file, there will be four scripts involved in this project:
 
 `board.js`: this script will handle the logic for creating and updating the necessary `Easel.js` elements and rendering them to the DOM.
 
 `automata.js`: this script will handle the logic behind the scenes.  An Automata object will hold a 2D array of `Cell`s.  It will be responsible for doing neighbor checks for each `Cell` upon iteration and updating the `Cell` array appropriately.
 
 `cell.js`: this lightweight script will house the constructor and update functions for the `Cell` objects.  Each `Cell` will contain an `aliveState` (`true` or `false`).
+
+`game.js`: this script will hold the `board` and `automata` classes, as well as the logic to turn Conway's Game of Life into a single player game.
 
 ### Implementation Timeline
 
@@ -64,20 +66,18 @@ In addition to the webpack entry file, there will be three scripts involved in t
 
 - Export an `Automata` object with correct type and handling logic
 - Have a functional grid on the `Canvas` frontend that correctly handles iterations from one generation of the game to the next
-- Have basic UI start/pause/reset functionality
+- Have basic UI start/reset functionality
 
-**Day 4**: Create the first level, and the ability for the player to see his or her score. Style the frontend, making it polished and professional.  Goals for the day:
+**Day 4**: Create the first level, and style the frontend, making it polished and professional.  Goals for the day:
 
-- Create several levels of increasing difficulty
+- Create a starting level
 - Have a styled `Canvas`, nice looking controls and title
-- Add ability to keep track of score
 
 
 ### Bonus features
 
 I would like to continue to develop this app into a full-fledged game. Some anticipated updates are:
 
-- [ ] Progress to more difficult levels, which can contain complex patterns
 - [ ] Adding unique cell colors, or the ability for cells to change color
 - [ ] Add more levels of increasing difficulty, as well as patterns of increasing complexity
 - [ ] Experiment with different rulesets for potential different modes of gameplay
