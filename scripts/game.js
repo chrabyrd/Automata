@@ -87,7 +87,7 @@ class Game {
 
   handleClickEvent (e) {
     e.preventDefault();
-    this.playButtonPushed ? this.board.toggleCell(e) : null;
+    if (this.playButtonPushed) this.board.toggleCell(e);
   }
 
   handleRulesEvent () {
