@@ -2,9 +2,6 @@ class Automata {
   constructor (board) {
     this.board = board;
     this.cellsClone = JSON.parse(JSON.stringify(this.board.cells));
-    // console.log(this.board.cells);
-    // console.log(JSON.stringify(this.board.cells));
-    // console.log(this.cellsClone);
   }
 
   neighborLogic () {
