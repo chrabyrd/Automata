@@ -1,5 +1,3 @@
-require('font-awesome/css/font-awesome.css');
-
 import Game from "./scripts/game";
 
 document.addEventListener("DOMContentLoaded", () => {
