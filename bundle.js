@@ -178,11 +178,6 @@
 	      this.startGame = setInterval(singleMove, 50);
 	    }
 	  }, {
-	    key: "handlePauseEvent",
-	    value: function handlePauseEvent() {
-	      clearInterval(this.startGame);
-	    }
-	  }, {
 	    key: "handleResetEvent",
 	    value: function handleResetEvent() {
 	      this.playButtonPushed = false;
@@ -206,6 +201,8 @@
 	    key: "handleRulesEvent",
 	    value: function handleRulesEvent() {
 	      var _this3 = this;
+
+	      this.handleResetEvent();
 
 	      setTimeout(function () {
 	        _this3.ctx.fillStyle = "darkgrey";
@@ -276,7 +273,7 @@
 	    value: function gameWon() {
 	      if (this.winCondition()) {
 	        this.playButtonPushed = false;
-	        this.handlePauseEvent();
+	        clearInterval(this.startGame);
 	        clearInterval(this.playTimer);
 	        clearTimeout(this.gameTimer);
 	        this.timerctx.clearRect(0, 0, 50, 50);
@@ -289,7 +286,7 @@
 	    key: "endGame",
 	    value: function endGame() {
 	      this.playButtonPushed = false;
-	      this.handlePauseEvent();
+	      clearInterval(this.startGame);
 	      this.timerctx.clearRect(0, 0, 50, 50);
 	      this.ctx.clearRect(0, 0, 550, 550);
 	      this.ctx.fillStyle = "darkgrey";

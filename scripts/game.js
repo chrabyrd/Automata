@@ -66,10 +66,6 @@ class Game {
     this.startGame = setInterval(singleMove, 50);
   }
 
-  handlePauseEvent () {
-    clearInterval(this.startGame);
-  }
-
   handleResetEvent () {
     this.playButtonPushed = false;
     this.timerctx.clearRect(0, 0, 50, 50);
@@ -89,6 +85,8 @@ class Game {
   }
 
   handleRulesEvent () {
+
+    this.handleResetEvent();
 
     setTimeout(() => {
       this.ctx.fillStyle = "darkgrey";
@@ -156,7 +154,7 @@ class Game {
   gameWon () {
     if (this.winCondition()) {
       this.playButtonPushed = false;
-      this.handlePauseEvent();
+      clearInterval(this.startGame);
       clearInterval(this.playTimer);
       clearTimeout(this.gameTimer);
       this.timerctx.clearRect(0, 0, 50, 50);
@@ -168,7 +166,7 @@ class Game {
 
   endGame () {
     this.playButtonPushed = false;
-    this.handlePauseEvent();
+    clearInterval(this.startGame);
     this.timerctx.clearRect(0, 0, 50, 50);
     this.ctx.clearRect(0, 0, 550, 550);
     this.ctx.fillStyle = "darkgrey";
