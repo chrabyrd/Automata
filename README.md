@@ -1,4 +1,4 @@
-## Conway's Game of ~~Life~~ DEATH!
+# Conway's Game of ~~Life~~ DEATH!
 
 [Live][website]
 
