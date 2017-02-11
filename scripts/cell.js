@@ -79,9 +79,7 @@ class Cell {
       this.ctx.clearRect(this.x, this.y, 50, 50);
       this.ctx.rect(this.x, this.y, 50, 50);
     }
-    this.ctx.stroke();
   }
-
 }
 
 export default Cell;

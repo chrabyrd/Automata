@@ -2,15 +2,13 @@ import Board from "./board";
 import Automata from "./automata";
 
 class Game {
-  constructor (ctx, timerctx) {
+  constructor (ctx) {
     this.ctx = ctx;
-    this.timerctx = timerctx;
-    this.playButtonPushed = false;
+    this.rulesEvent = false;
+    this.playEvent = false;
     this.board;
     this.automata;
     this.startGame;
-    this.playTimer;
-    this.gameTimer;
 
     this.opener();
   }
@@ -33,23 +31,19 @@ class Game {
     this.ctx.fillText(openingStatementSix, 140, 490);
   }
 
-  timer () {
-    let timeLeft = 10;
-    this.timerctx.font = "20px Arial ghostwhite";
-    this.timerctx.textAlign= "center";
-
-    this.playTimer = setInterval(() => {
-      this.timerctx.clearRect(0, 0, 50, 50);
-      this.timerctx.fillText(timeLeft, 25, 20);
-      timeLeft--;
-      if (timeLeft <= 0) { clearInterval(this.playTimer); }
-    }, 900);
+  handleClickEvent (e) {
+    e.preventDefault();
+    if (this.rulesEvent) {
+      // this.handleRulesEvent();
+    } else if (this.playEvent) {
+      this.board.toggleCell(e);
+    } else {
+      this.handlePlayEvent();
+    }
   }
 
   handlePlayEvent () {
-    if (this.playButtonPushed) return;
-    delete this.board;
-    this.playButtonPushed = false;
+    this.playEvent = true;
     this.board = new Board(this.ctx);
     this.automata = new Automata(this.board);
 
@@ -58,81 +52,20 @@ class Game {
       this.automata.neighborLogic();
     };
 
-    this.playButtonPushed = true;
-    this.gameTimer = setTimeout(this.endGame.bind(this), 10000);
-    this.timer();
-    this.board.populateGrid();
     this.levelOne();
-    this.startGame = setInterval(singleMove, 50);
+    this.startGame = setInterval(singleMove, 300);
   }
 
   handleResetEvent () {
-    this.playButtonPushed = false;
-    this.timerctx.clearRect(0, 0, 50, 50);
-    this.playButtonPushed = false;
-    clearInterval(this.startGame);
-    clearInterval(this.playTimer);
-    clearTimeout(this.gameTimer);
+    this.playEvent = false;
     this.resetCells();
     this.ctx.clearRect(0, 0, 550, 550);
     this.ctx.stroke();
     this.opener();
   }
 
-  handleClickEvent (e) {
-    e.preventDefault();
-    if (this.playButtonPushed) this.board.toggleCell(e);
-  }
-
   handleRulesEvent () {
 
-    this.handleResetEvent();
-
-    setTimeout(() => {
-      this.ctx.fillStyle = "darkgrey";
-      this.ctx.font = "50px Arial ghostwhite";
-      this.ctx.clearRect(0, 0, 550, 550);
-      this.ctx.fillText("Rule One:", 50, 140);
-      this.ctx.fillText("Any live cell with", 50, 260);
-      this.ctx.fillText("fewer than two", 50, 320);
-      this.ctx.fillText("live neighbours dies.", 50, 380);
-    }, 1);
-
-    setTimeout(() => {
-      this.ctx.fillStyle = "darkgrey";
-      this.ctx.font = "50px Arial ghostwhite";
-      this.ctx.clearRect(0, 0, 550, 550);
-      this.ctx.fillText("Rule Two:", 50, 140);
-      this.ctx.fillText("Any live cell with", 50, 260);
-      this.ctx.fillText("two or three live", 50, 320);
-      this.ctx.fillText("live neighbours lives.", 50, 380);
-    }, 2500);
-
-    setTimeout(() => {
-      this.ctx.fillStyle = "darkgrey";
-      this.ctx.font = "50px Arial ghostwhite";
-      this.ctx.clearRect(0, 0, 550, 550);
-      this.ctx.fillText("Rule Three:", 50, 140);
-      this.ctx.fillText("Any live cell with", 50, 260);
-      this.ctx.fillText("more than three", 50, 320);
-      this.ctx.fillText("live neighbours dies.", 50, 380);
-    }, 5000);
-
-    setTimeout(() => {
-      this.ctx.fillStyle = "darkgrey";
-      this.ctx.font = "50px Arial ghostwhite";
-      this.ctx.clearRect(0, 0, 550, 550);
-      this.ctx.fillText("Rule Four:", 50, 140);
-      this.ctx.fillText("Any dead cell with", 50, 260);
-      this.ctx.fillText("exactly three live", 50, 320);
-      this.ctx.fillText("neighbours comes to", 50, 380);
-      this.ctx.fillText("life.", 50, 440);
-    }, 7500);
-
-    setTimeout(() => {
-      this.ctx.clearRect(0, 0, 550, 550);
-      this.opener();
-    }, 10000);
   }
 
   resetCells () {
@@ -153,11 +86,7 @@ class Game {
 
   gameWon () {
     if (this.winCondition()) {
-      this.playButtonPushed = false;
-      clearInterval(this.startGame);
-      clearInterval(this.playTimer);
-      clearTimeout(this.gameTimer);
-      this.timerctx.clearRect(0, 0, 50, 50);
+      this.playEvent = false;
       this.ctx.fillStyle = "darkgrey";
       this.ctx.font = "50px Arial ghostwhite";
       this.ctx.fillText("You Win!", 190, 260);
@@ -165,9 +94,7 @@ class Game {
   }
 
   endGame () {
-    this.playButtonPushed = false;
-    clearInterval(this.startGame);
-    this.timerctx.clearRect(0, 0, 50, 50);
+    this.playEvent = false;
     this.ctx.clearRect(0, 0, 550, 550);
     this.ctx.fillStyle = "darkgrey";
     this.ctx.font = "50px Arial ghostwhite";
@@ -175,7 +102,8 @@ class Game {
   }
 
   levelOne () {
-    const startingCells = [38, 48, 50, 59, 61, 71];
+    // const startingCells = [38, 48, 50, 59, 61, 71];
+    const startingCells = [38, 48, 50, 60];
 
     for (let i = 0; i < startingCells.length; i++) {
       this.board.cells[startingCells[i]].changeState();

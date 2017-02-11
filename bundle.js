@@ -55,26 +55,27 @@
 	document.addEventListener("DOMContentLoaded", function () {
 	  var canvas = document.getElementById("canvas");
 	  var ctx = canvas.getContext("2d");
-	  var timer = document.getElementById("timer");
-	  var timerctx = timer.getContext("2d");
-	  var playButton = document.getElementById("playButton");
 	  var resetButton = document.getElementById("resetButton");
 	  var rulesButton = document.getElementById("rulesButton");
+	  var rulesModal = document.getElementById("rulesModal");
 
-	  var game = new _game2.default(ctx, timerctx);
+	  var game = new _game2.default(ctx);
 
 	  canvas.addEventListener('click', function (e) {
 	    return game.handleClickEvent(e);
-	  }, false);
-	  playButton.addEventListener('click', function () {
-	    return game.handlePlayEvent();
 	  }, false);
 	  resetButton.addEventListener('click', function () {
 	    return game.handleResetEvent();
 	  }, false);
 	  rulesButton.addEventListener('click', function () {
-	    return game.handleRulesEvent();
-	  }, false);
+	    rulesModal.style.display = "block";
+	  });
+
+	  window.onclick = function (event) {
+	    if (event.target === rulesModal) {
+	      rulesModal.style.display = "none";
+	    }
+	  };
 	});
 
 /***/ },
@@ -102,17 +103,15 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Game = function () {
-	  function Game(ctx, timerctx) {
+	  function Game(ctx) {
 	    _classCallCheck(this, Game);
 
 	    this.ctx = ctx;
-	    this.timerctx = timerctx;
-	    this.playButtonPushed = false;
+	    this.rulesEvent = false;
+	    this.playEvent = false;
 	    this.board;
 	    this.automata;
 	    this.startGame;
-	    this.playTimer;
-	    this.gameTimer;
 
 	    this.opener();
 	  }
@@ -137,119 +136,46 @@
 	      this.ctx.fillText(openingStatementSix, 140, 490);
 	    }
 	  }, {
-	    key: "timer",
-	    value: function timer() {
-	      var _this = this;
-
-	      var timeLeft = 10;
-	      this.timerctx.font = "20px Arial ghostwhite";
-	      this.timerctx.textAlign = "center";
-
-	      this.playTimer = setInterval(function () {
-	        _this.timerctx.clearRect(0, 0, 50, 50);
-	        _this.timerctx.fillText(timeLeft, 25, 20);
-	        timeLeft--;
-	        if (timeLeft <= 0) {
-	          clearInterval(_this.playTimer);
-	        }
-	      }, 900);
+	    key: "handleClickEvent",
+	    value: function handleClickEvent(e) {
+	      e.preventDefault();
+	      if (this.rulesEvent) {
+	        // this.handleRulesEvent();
+	      } else if (this.playEvent) {
+	        this.board.toggleCell(e);
+	      } else {
+	        this.handlePlayEvent();
+	      }
 	    }
 	  }, {
 	    key: "handlePlayEvent",
 	    value: function handlePlayEvent() {
-	      var _this2 = this;
+	      var _this = this;
 
-	      if (this.playButtonPushed) return;
-	      delete this.board;
-	      this.playButtonPushed = false;
+	      this.playEvent = true;
 	      this.board = new _board2.default(this.ctx);
 	      this.automata = new _automata2.default(this.board);
 
 	      var singleMove = function singleMove() {
-	        _this2.gameWon();
-	        _this2.automata.neighborLogic();
+	        _this.gameWon();
+	        _this.automata.neighborLogic();
 	      };
 
-	      this.playButtonPushed = true;
-	      this.gameTimer = setTimeout(this.endGame.bind(this), 10000);
-	      this.timer();
-	      this.board.populateGrid();
 	      this.levelOne();
-	      this.startGame = setInterval(singleMove, 50);
+	      this.startGame = setInterval(singleMove, 300);
 	    }
 	  }, {
 	    key: "handleResetEvent",
 	    value: function handleResetEvent() {
-	      this.playButtonPushed = false;
-	      this.timerctx.clearRect(0, 0, 50, 50);
-	      this.playButtonPushed = false;
-	      clearInterval(this.startGame);
-	      clearInterval(this.playTimer);
-	      clearTimeout(this.gameTimer);
+	      this.playEvent = false;
 	      this.resetCells();
 	      this.ctx.clearRect(0, 0, 550, 550);
 	      this.ctx.stroke();
 	      this.opener();
 	    }
 	  }, {
-	    key: "handleClickEvent",
-	    value: function handleClickEvent(e) {
-	      e.preventDefault();
-	      if (this.playButtonPushed) this.board.toggleCell(e);
-	    }
-	  }, {
 	    key: "handleRulesEvent",
-	    value: function handleRulesEvent() {
-	      var _this3 = this;
-
-	      this.handleResetEvent();
-
-	      setTimeout(function () {
-	        _this3.ctx.fillStyle = "darkgrey";
-	        _this3.ctx.font = "50px Arial ghostwhite";
-	        _this3.ctx.clearRect(0, 0, 550, 550);
-	        _this3.ctx.fillText("Rule One:", 50, 140);
-	        _this3.ctx.fillText("Any live cell with", 50, 260);
-	        _this3.ctx.fillText("fewer than two", 50, 320);
-	        _this3.ctx.fillText("live neighbours dies.", 50, 380);
-	      }, 1);
-
-	      setTimeout(function () {
-	        _this3.ctx.fillStyle = "darkgrey";
-	        _this3.ctx.font = "50px Arial ghostwhite";
-	        _this3.ctx.clearRect(0, 0, 550, 550);
-	        _this3.ctx.fillText("Rule Two:", 50, 140);
-	        _this3.ctx.fillText("Any live cell with", 50, 260);
-	        _this3.ctx.fillText("two or three live", 50, 320);
-	        _this3.ctx.fillText("live neighbours lives.", 50, 380);
-	      }, 2500);
-
-	      setTimeout(function () {
-	        _this3.ctx.fillStyle = "darkgrey";
-	        _this3.ctx.font = "50px Arial ghostwhite";
-	        _this3.ctx.clearRect(0, 0, 550, 550);
-	        _this3.ctx.fillText("Rule Three:", 50, 140);
-	        _this3.ctx.fillText("Any live cell with", 50, 260);
-	        _this3.ctx.fillText("more than three", 50, 320);
-	        _this3.ctx.fillText("live neighbours dies.", 50, 380);
-	      }, 5000);
-
-	      setTimeout(function () {
-	        _this3.ctx.fillStyle = "darkgrey";
-	        _this3.ctx.font = "50px Arial ghostwhite";
-	        _this3.ctx.clearRect(0, 0, 550, 550);
-	        _this3.ctx.fillText("Rule Four:", 50, 140);
-	        _this3.ctx.fillText("Any dead cell with", 50, 260);
-	        _this3.ctx.fillText("exactly three live", 50, 320);
-	        _this3.ctx.fillText("neighbours comes to", 50, 380);
-	        _this3.ctx.fillText("life.", 50, 440);
-	      }, 7500);
-
-	      setTimeout(function () {
-	        _this3.ctx.clearRect(0, 0, 550, 550);
-	        _this3.opener();
-	      }, 10000);
-	    }
+	    value: function handleRulesEvent() {}
 	  }, {
 	    key: "resetCells",
 	    value: function resetCells() {
@@ -272,11 +198,7 @@
 	    key: "gameWon",
 	    value: function gameWon() {
 	      if (this.winCondition()) {
-	        this.playButtonPushed = false;
-	        clearInterval(this.startGame);
-	        clearInterval(this.playTimer);
-	        clearTimeout(this.gameTimer);
-	        this.timerctx.clearRect(0, 0, 50, 50);
+	        this.playEvent = false;
 	        this.ctx.fillStyle = "darkgrey";
 	        this.ctx.font = "50px Arial ghostwhite";
 	        this.ctx.fillText("You Win!", 190, 260);
@@ -285,9 +207,7 @@
 	  }, {
 	    key: "endGame",
 	    value: function endGame() {
-	      this.playButtonPushed = false;
-	      clearInterval(this.startGame);
-	      this.timerctx.clearRect(0, 0, 50, 50);
+	      this.playEvent = false;
 	      this.ctx.clearRect(0, 0, 550, 550);
 	      this.ctx.fillStyle = "darkgrey";
 	      this.ctx.font = "50px Arial ghostwhite";
@@ -296,7 +216,8 @@
 	  }, {
 	    key: "levelOne",
 	    value: function levelOne() {
-	      var startingCells = [38, 48, 50, 59, 61, 71];
+	      // const startingCells = [38, 48, 50, 59, 61, 71];
+	      var startingCells = [38, 48, 50, 60];
 
 	      for (var i = 0; i < startingCells.length; i++) {
 	        this.board.cells[startingCells[i]].changeState();
@@ -336,6 +257,8 @@
 	    var cells = [];
 	    this.ctx = ctx;
 	    this.cells = cells;
+
+	    this.populateGrid();
 	  }
 
 	  _createClass(Board, [{
@@ -344,6 +267,7 @@
 	      var clickedCell = this.cells.find(function (cell) {
 	        if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
 	          if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
+	            console.log(cell.id);
 	            return cell;
 	          }
 	        }
@@ -475,7 +399,6 @@
 	        this.ctx.clearRect(this.x, this.y, 50, 50);
 	        this.ctx.rect(this.x, this.y, 50, 50);
 	      }
-	      this.ctx.stroke();
 	    }
 	  }]);
 
@@ -503,13 +426,14 @@
 	    _classCallCheck(this, Automata);
 
 	    this.board = board;
-	    this.cellsClone = JSON.parse(JSON.stringify(this.board.cells));
 	  }
 
 	  _createClass(Automata, [{
 	    key: "neighborLogic",
 	    value: function neighborLogic() {
 	      var _this = this;
+
+	      var changingCells = [];
 
 	      for (var i = 0; i < this.board.cells.length; i++) {
 	        var currentCell = this.board.cells[i];
@@ -521,17 +445,21 @@
 	        if (currentCell.alive) {
 
 	          if (aliveNeighbors.length < 2) {
-	            currentCell.changeState();
+	            changingCells.push(i);
 	          } else if (aliveNeighbors.length > 3) {
-	            currentCell.changeState();
+	            changingCells.push(i);
 	          }
 	        } else {
 
 	          if (aliveNeighbors.length === 3) {
-	            currentCell.changeState();
+	            changingCells.push(i);
 	          }
 	        }
 	      }
+
+	      changingCells.forEach(function (id) {
+	        _this.board.cells[id].changeState();
+	      });
 	    }
 	  }]);
 

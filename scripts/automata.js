@@ -1,10 +1,11 @@
 class Automata {
   constructor (board) {
     this.board = board;
-    this.cellsClone = JSON.parse(JSON.stringify(this.board.cells));
   }
 
   neighborLogic () {
+    const changingCells = [];
+
     for (let i=0; i < this.board.cells.length; i++) {
       const currentCell = this.board.cells[i];
       const cellNeighbors = this.board.cells[i].neighbors;
@@ -15,19 +16,23 @@ class Automata {
       if (currentCell.alive) {
 
         if (aliveNeighbors.length < 2) {
-          currentCell.changeState();
+          changingCells.push(i);
         } else if (aliveNeighbors.length > 3) {
-          currentCell.changeState();
+          changingCells.push(i);
         }
 
       } else {
 
         if (aliveNeighbors.length === 3) {
-          currentCell.changeState();
+          changingCells.push(i);
         }
 
       }
     }
+
+    changingCells.forEach(id => {
+      this.board.cells[id].changeState();
+    });
   }
 }
 
