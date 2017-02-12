@@ -58,6 +58,7 @@
 	  var resetButton = document.getElementById("resetButton");
 	  var rulesButton = document.getElementById("rulesButton");
 	  var rulesModal = document.getElementById("rulesModal");
+	  var openerModal = document.getElementById("openerModal");
 
 	  var game = new _game2.default(ctx);
 
@@ -67,13 +68,14 @@
 	  resetButton.addEventListener('click', function () {
 	    return game.handleResetEvent();
 	  }, false);
+	  // Rules Modal
 	  rulesButton.addEventListener('click', function () {
 	    rulesModal.style.display = "block";
 	  });
-
 	  window.onclick = function (event) {
-	    if (event.target === rulesModal) {
+	    if (event.target === rulesModal || event.target === openerModal) {
 	      rulesModal.style.display = "none";
+	      openerModal.style.display = "none";
 	    }
 	  };
 	});
@@ -107,41 +109,17 @@
 	    _classCallCheck(this, Game);
 
 	    this.ctx = ctx;
-	    this.rulesEvent = false;
 	    this.playEvent = false;
 	    this.board;
 	    this.automata;
 	    this.startGame;
-
-	    this.opener();
 	  }
 
 	  _createClass(Game, [{
-	    key: "opener",
-	    value: function opener() {
-	      var openingStatement = "Once you click play,";
-	      var openingStatementTwo = "you'll have 10 seconds";
-	      var openingStatementThree = "to clear the board.";
-	      var openingStatementFour = "Click black squares";
-	      var openingStatementFive = "to bring them to life.";
-	      var openingStatementSix = "Good Luck!";
-
-	      this.ctx.fillStyle = "darkgrey";
-	      this.ctx.font = "50px Arial ghostwhite";
-	      this.ctx.fillText(openingStatement, 50, 80);
-	      this.ctx.fillText(openingStatementTwo, 40, 140);
-	      this.ctx.fillText(openingStatementThree, 80, 200);
-	      this.ctx.fillText(openingStatementFour, 80, 320);
-	      this.ctx.fillText(openingStatementFive, 80, 380);
-	      this.ctx.fillText(openingStatementSix, 140, 490);
-	    }
-	  }, {
 	    key: "handleClickEvent",
 	    value: function handleClickEvent(e) {
 	      e.preventDefault();
-	      if (this.rulesEvent) {
-	        // this.handleRulesEvent();
-	      } else if (this.playEvent) {
+	      if (this.playEvent) {
 	        this.board.toggleCell(e);
 	      } else {
 	        this.handlePlayEvent();
@@ -158,11 +136,11 @@
 
 	      var singleMove = function singleMove() {
 	        _this.gameWon();
-	        _this.automata.neighborLogic();
+	        _this.automata.cellLogic();
 	      };
 
 	      this.levelOne();
-	      this.startGame = setInterval(singleMove, 300);
+	      this.startGame = setInterval(singleMove, 350);
 	    }
 	  }, {
 	    key: "handleResetEvent",
@@ -170,48 +148,28 @@
 	      this.playEvent = false;
 	      this.resetCells();
 	      this.ctx.clearRect(0, 0, 550, 550);
-	      this.ctx.stroke();
-	      this.opener();
 	    }
-	  }, {
-	    key: "handleRulesEvent",
-	    value: function handleRulesEvent() {}
 	  }, {
 	    key: "resetCells",
 	    value: function resetCells() {
+	      clearInterval(this.startGame);
 	      for (var i = 0; i < this.board.cells.length; i++) {
 	        this.board.cells[i].alive = false;
 	      }
 	    }
 	  }, {
-	    key: "winCondition",
-	    value: function winCondition() {
-	      var gameWon = true;
-
-	      for (var i = 0; i < this.board.cells.length; i++) {
-	        if (this.board.cells[i].alive) gameWon = false;
-	      }
-
-	      return gameWon;
-	    }
-	  }, {
 	    key: "gameWon",
 	    value: function gameWon() {
-	      if (this.winCondition()) {
+	      if (this.board.cells.every(function (cell) {
+	        return !cell.alive;
+	      })) {
+	        clearInterval(this.startGame);
 	        this.playEvent = false;
+	        this.ctx.clearRect(0, 0, 550, 550);
 	        this.ctx.fillStyle = "darkgrey";
 	        this.ctx.font = "50px Arial ghostwhite";
 	        this.ctx.fillText("You Win!", 190, 260);
 	      }
-	    }
-	  }, {
-	    key: "endGame",
-	    value: function endGame() {
-	      this.playEvent = false;
-	      this.ctx.clearRect(0, 0, 550, 550);
-	      this.ctx.fillStyle = "darkgrey";
-	      this.ctx.font = "50px Arial ghostwhite";
-	      this.ctx.fillText("You Lose!", 180, 270);
 	    }
 	  }, {
 	    key: "levelOne",
@@ -267,7 +225,6 @@
 	      var clickedCell = this.cells.find(function (cell) {
 	        if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
 	          if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
-	            console.log(cell.id);
 	            return cell;
 	          }
 	        }
@@ -429,8 +386,8 @@
 	  }
 
 	  _createClass(Automata, [{
-	    key: "neighborLogic",
-	    value: function neighborLogic() {
+	    key: "cellLogic",
+	    value: function cellLogic() {
 	      var _this = this;
 
 	      var changingCells = [];

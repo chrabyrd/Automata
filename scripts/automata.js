@@ -3,7 +3,7 @@ class Automata {
     this.board = board;
   }
 
-  neighborLogic () {
+  cellLogic () {
     const changingCells = [];
 
     for (let i=0; i < this.board.cells.length; i++) {
