@@ -2,11 +2,15 @@ import Board from "./board";
 import Automata from "./automata";
 
 class Game {
-  constructor (ctx) {
-    this.ctx = ctx;
+  constructor (mainCtx, clickCtx) {
+    this.mainCtx = mainCtx;
+    this.clickCtx = clickCtx;
     this.playEvent = false;
-    this.board;
-    this.automata;
+    this.pauseEvent = false;
+    this.gameWon = false;
+    this.clickCount = 0;
+    this.board = new Board(this.mainCtx);
+    this.automata = new Automata(this.board);
     this.startGame;
   }
 
@@ -14,52 +18,90 @@ class Game {
     e.preventDefault();
     if (this.playEvent) {
       this.board.toggleCell(e);
+      this.clickCount--;
+      this.clickCounter();
     } else {
       this.handlePlayEvent();
     }
   }
 
   handlePlayEvent () {
+    this.handleResetEvent();
     this.playEvent = true;
-    this.board = new Board(this.ctx);
-    this.automata = new Automata(this.board);
-
-    const singleMove = () => {
-      this.gameWon();
-      this.automata.cellLogic();
-    };
-
     this.levelOne();
-    this.startGame = setInterval(singleMove, 350);
+    this.clickCounter();
+
+    this.startGame = setInterval(() => {
+      this.automata.cellLogic();
+      this.winCondition();
+    }, 350);
   }
 
-  handleResetEvent () {
-    this.playEvent = false;
-    this.resetCells();
-    this.ctx.clearRect(0, 0, 550, 550);
-  }
+  handlePauseEvent () {
+    if (this.pauseEvent) {
+      this.pauseEvent = false;
 
-  resetCells () {
-    clearInterval(this.startGame);
-    for (let i = 0; i < this.board.cells.length; i++) {
-      this.board.cells[i].alive = false;
+      this.startGame = setInterval(() => {
+        this.automata.cellLogic();
+        this.winCondition();
+      }, 350);
+
+    } else {
+      this.pauseEvent = true;
+      clearInterval(this.startGame);
     }
   }
 
-  gameWon () {
-    if (this.board.cells.every(cell => !cell.alive)) {
+  handleResetEvent () {
+    this.gameWon = false;
+    this.playEvent = false;
+    clearInterval(this.startGame);
+    this.board = new Board(this.mainCtx);
+    this.automata = new Automata(this.board);
+    this.clickCtx.clearRect(0, 0, 550, 550);
+  }
+
+  clickCounter () {
+    this.clickCtx.fillStyle = "black";
+    this.clickCtx.font = "18px sans-serif";
+    this.clickCtx.clearRect(0, 0, 550, 550);
+    this.clickCtx.fillText(`Clicks left: ${this.clickCount}`, 440, 20);
+  }
+
+  winCondition () {
+    if (this.clickCount === -1) {
       clearInterval(this.startGame);
       this.playEvent = false;
-      this.ctx.clearRect(0, 0, 550, 550);
-      this.ctx.fillStyle = "darkgrey";
-      this.ctx.font = "50px Arial ghostwhite";
-      this.ctx.fillText("You Win!", 190, 260);
+      this.mainCtx.clearRect(0, 0, 550, 550);
+      this.mainCtx.fillStyle = "black";
+      this.mainCtx.font = "50px sans-serif";
+      this.mainCtx.fillText("You Lose!", 190, 260);
+      this.clickCtx.clearRect(0, 0, 550, 550);
+    } else if (this.board.cells.every(cell => !cell.alive)) {
+      clearInterval(this.startGame);
+      this.playEvent = false;
+      this.mainCtx.clearRect(0, 0, 550, 550);
+      this.mainCtx.fillStyle = "black";
+      this.mainCtx.font = "50px sans-serif";
+      this.mainCtx.fillText("You Win!", 190, 260);
+      this.clickCtx.clearRect(0, 0, 550, 550);
     }
   }
 
   levelOne () {
-    // const startingCells = [38, 48, 50, 59, 61, 71];
-    const startingCells = [38, 48, 50, 60];
+    const startingCells = [71, 49, 59, 61];
+
+    this.clickCount = 3;
+
+    for (let i = 0; i < startingCells.length; i++) {
+      this.board.cells[startingCells[i]].changeState();
+    }
+  }
+
+  levelTwo () {
+    const startingCells = [38, 48, 50, 59, 61, 71];
+
+    this.clickCount = 3;
 
     for (let i = 0; i < startingCells.length; i++) {
       this.board.cells[startingCells[i]].changeState();

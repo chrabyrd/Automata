@@ -53,21 +53,34 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	document.addEventListener("DOMContentLoaded", function () {
-	  var canvas = document.getElementById("canvas");
-	  var ctx = canvas.getContext("2d");
+	  var mainCanvas = document.getElementById("mainCanvas");
+	  var mainCtx = mainCanvas.getContext("2d");
+
+	  var clickCanvas = document.getElementById("clickCanvas");
+	  var clickCtx = clickCanvas.getContext("2d");
+
 	  var resetButton = document.getElementById("resetButton");
 	  var rulesButton = document.getElementById("rulesButton");
 	  var rulesModal = document.getElementById("rulesModal");
 	  var openerModal = document.getElementById("openerModal");
 
-	  var game = new _game2.default(ctx);
+	  var game = new _game2.default(mainCtx, clickCtx);
 
-	  canvas.addEventListener('click', function (e) {
+	  mainCanvas.addEventListener('click', function (e) {
 	    return game.handleClickEvent(e);
 	  }, false);
 	  resetButton.addEventListener('click', function () {
 	    return game.handleResetEvent();
 	  }, false);
+
+	  // Pause Button
+	  document.body.addEventListener('keydown', function (e) {
+	    if (e.keyCode === 32) {
+	      e.preventDefault();
+	      game.handlePauseEvent();
+	    }
+	  });
+
 	  // Rules Modal
 	  rulesButton.addEventListener('click', function () {
 	    rulesModal.style.display = "block";
@@ -105,13 +118,17 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Game = function () {
-	  function Game(ctx) {
+	  function Game(mainCtx, clickCtx) {
 	    _classCallCheck(this, Game);
 
-	    this.ctx = ctx;
+	    this.mainCtx = mainCtx;
+	    this.clickCtx = clickCtx;
 	    this.playEvent = false;
-	    this.board;
-	    this.automata;
+	    this.pauseEvent = false;
+	    this.gameWon = false;
+	    this.clickCount = 0;
+	    this.board = new _board2.default(this.mainCtx);
+	    this.automata = new _automata2.default(this.board);
 	    this.startGame;
 	  }
 
@@ -121,6 +138,8 @@
 	      e.preventDefault();
 	      if (this.playEvent) {
 	        this.board.toggleCell(e);
+	        this.clickCount--;
+	        this.clickCounter();
 	      } else {
 	        this.handlePlayEvent();
 	      }
@@ -130,52 +149,91 @@
 	    value: function handlePlayEvent() {
 	      var _this = this;
 
+	      this.handleResetEvent();
 	      this.playEvent = true;
-	      this.board = new _board2.default(this.ctx);
-	      this.automata = new _automata2.default(this.board);
-
-	      var singleMove = function singleMove() {
-	        _this.gameWon();
-	        _this.automata.cellLogic();
-	      };
-
 	      this.levelOne();
-	      this.startGame = setInterval(singleMove, 350);
+	      this.clickCounter();
+
+	      this.startGame = setInterval(function () {
+	        _this.automata.cellLogic();
+	        _this.winCondition();
+	      }, 350);
+	    }
+	  }, {
+	    key: "handlePauseEvent",
+	    value: function handlePauseEvent() {
+	      var _this2 = this;
+
+	      if (this.pauseEvent) {
+	        this.pauseEvent = false;
+
+	        this.startGame = setInterval(function () {
+	          _this2.automata.cellLogic();
+	          _this2.winCondition();
+	        }, 350);
+	      } else {
+	        this.pauseEvent = true;
+	        clearInterval(this.startGame);
+	      }
 	    }
 	  }, {
 	    key: "handleResetEvent",
 	    value: function handleResetEvent() {
+	      this.gameWon = false;
 	      this.playEvent = false;
-	      this.resetCells();
-	      this.ctx.clearRect(0, 0, 550, 550);
-	    }
-	  }, {
-	    key: "resetCells",
-	    value: function resetCells() {
 	      clearInterval(this.startGame);
-	      for (var i = 0; i < this.board.cells.length; i++) {
-	        this.board.cells[i].alive = false;
-	      }
+	      this.board = new _board2.default(this.mainCtx);
+	      this.automata = new _automata2.default(this.board);
+	      this.clickCtx.clearRect(0, 0, 550, 550);
 	    }
 	  }, {
-	    key: "gameWon",
-	    value: function gameWon() {
-	      if (this.board.cells.every(function (cell) {
+	    key: "clickCounter",
+	    value: function clickCounter() {
+	      this.clickCtx.fillStyle = "black";
+	      this.clickCtx.font = "18px sans-serif";
+	      this.clickCtx.clearRect(0, 0, 550, 550);
+	      this.clickCtx.fillText("Clicks left: " + this.clickCount, 440, 20);
+	    }
+	  }, {
+	    key: "winCondition",
+	    value: function winCondition() {
+	      if (this.clickCount === -1) {
+	        clearInterval(this.startGame);
+	        this.playEvent = false;
+	        this.mainCtx.clearRect(0, 0, 550, 550);
+	        this.mainCtx.fillStyle = "black";
+	        this.mainCtx.font = "50px sans-serif";
+	        this.mainCtx.fillText("You Lose!", 190, 260);
+	        this.clickCtx.clearRect(0, 0, 550, 550);
+	      } else if (this.board.cells.every(function (cell) {
 	        return !cell.alive;
 	      })) {
 	        clearInterval(this.startGame);
 	        this.playEvent = false;
-	        this.ctx.clearRect(0, 0, 550, 550);
-	        this.ctx.fillStyle = "darkgrey";
-	        this.ctx.font = "50px Arial ghostwhite";
-	        this.ctx.fillText("You Win!", 190, 260);
+	        this.mainCtx.clearRect(0, 0, 550, 550);
+	        this.mainCtx.fillStyle = "black";
+	        this.mainCtx.font = "50px sans-serif";
+	        this.mainCtx.fillText("You Win!", 190, 260);
+	        this.clickCtx.clearRect(0, 0, 550, 550);
 	      }
 	    }
 	  }, {
 	    key: "levelOne",
 	    value: function levelOne() {
-	      // const startingCells = [38, 48, 50, 59, 61, 71];
-	      var startingCells = [38, 48, 50, 60];
+	      var startingCells = [71, 49, 59, 61];
+
+	      this.clickCount = 3;
+
+	      for (var i = 0; i < startingCells.length; i++) {
+	        this.board.cells[startingCells[i]].changeState();
+	      }
+	    }
+	  }, {
+	    key: "levelTwo",
+	    value: function levelTwo() {
+	      var startingCells = [38, 48, 50, 59, 61, 71];
+
+	      this.clickCount = 3;
 
 	      for (var i = 0; i < startingCells.length; i++) {
 	        this.board.cells[startingCells[i]].changeState();
@@ -354,7 +412,6 @@
 	        this.ctx.fillRect(this.x, this.y, 50, 50);
 	      } else {
 	        this.ctx.clearRect(this.x, this.y, 50, 50);
-	        this.ctx.rect(this.x, this.y, 50, 50);
 	      }
 	    }
 	  }]);
@@ -414,9 +471,9 @@
 	        }
 	      }
 
-	      changingCells.forEach(function (id) {
-	        _this.board.cells[id].changeState();
-	      });
+	      for (var _i = 0; _i < changingCells.length; _i++) {
+	        this.board.cells[changingCells[_i]].changeState();
+	      }
 	    }
 	  }]);
 

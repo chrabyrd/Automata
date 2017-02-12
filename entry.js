@@ -1,17 +1,30 @@
 import Game from "./scripts/game";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
+  const mainCanvas = document.getElementById("mainCanvas");
+  const mainCtx = mainCanvas.getContext("2d");
+
+  const clickCanvas = document.getElementById("clickCanvas");
+  const clickCtx = clickCanvas.getContext("2d");
+
   const resetButton = document.getElementById("resetButton");
   const rulesButton = document.getElementById("rulesButton");
   const rulesModal = document.getElementById("rulesModal");
   const openerModal = document.getElementById("openerModal");
 
-  const game = new Game(ctx);
+  const game = new Game(mainCtx, clickCtx);
 
-  canvas.addEventListener('click', (e) => game.handleClickEvent(e), false);
+  mainCanvas.addEventListener('click', (e) => game.handleClickEvent(e), false);
   resetButton.addEventListener('click', () => game.handleResetEvent(), false);
+
+  // Pause Button
+  document.body.addEventListener('keydown', e =>{
+    if(e.keyCode === 32){
+      e.preventDefault();
+      game.handlePauseEvent();
+    }
+  });
+
   // Rules Modal
   rulesButton.addEventListener('click', function() {
     rulesModal.style.display = "block";

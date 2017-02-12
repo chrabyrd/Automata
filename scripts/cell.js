@@ -77,7 +77,6 @@ class Cell {
       this.ctx.fillRect(this.x, this.y, 50, 50);
     } else {
       this.ctx.clearRect(this.x, this.y, 50, 50);
-      this.ctx.rect(this.x, this.y, 50, 50);
     }
   }
 }

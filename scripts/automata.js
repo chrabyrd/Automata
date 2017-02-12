@@ -6,7 +6,7 @@ class Automata {
   cellLogic () {
     const changingCells = [];
 
-    for (let i=0; i < this.board.cells.length; i++) {
+    for (let i = 0; i < this.board.cells.length; i++) {
       const currentCell = this.board.cells[i];
       const cellNeighbors = this.board.cells[i].neighbors;
       const aliveNeighbors = cellNeighbors.filter(cellId => {
@@ -30,9 +30,9 @@ class Automata {
       }
     }
 
-    changingCells.forEach(id => {
-      this.board.cells[id].changeState();
-    });
+    for (let i = 0; i < changingCells.length; i++) {
+      this.board.cells[changingCells[i]].changeState();
+    }
   }
 }
 
