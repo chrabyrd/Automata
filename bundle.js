@@ -59,7 +59,6 @@
 	  var clickCanvas = document.getElementById("clickCanvas");
 	  var clickCtx = clickCanvas.getContext("2d");
 
-	  var resetButton = document.getElementById("resetButton");
 	  var rulesButton = document.getElementById("rulesButton");
 	  var rulesModal = document.getElementById("rulesModal");
 	  var openerModal = document.getElementById("openerModal");
@@ -68,9 +67,6 @@
 
 	  mainCanvas.addEventListener('click', function (e) {
 	    return game.handleClickEvent(e);
-	  }, false);
-	  resetButton.addEventListener('click', function () {
-	    return game.handleResetEvent();
 	  }, false);
 
 	  // Pause Button
@@ -164,14 +160,14 @@
 	    value: function handlePauseEvent() {
 	      var _this2 = this;
 
-	      if (this.pauseEvent) {
+	      if (this.pauseEvent && this.playEvent) {
 	        this.pauseEvent = false;
 
 	        this.startGame = setInterval(function () {
 	          _this2.automata.cellLogic();
 	          _this2.winCondition();
 	        }, 350);
-	      } else {
+	      } else if (this.playEvent) {
 	        this.pauseEvent = true;
 	        clearInterval(this.startGame);
 	      }
@@ -190,19 +186,19 @@
 	    key: "clickCounter",
 	    value: function clickCounter() {
 	      this.clickCtx.fillStyle = "black";
-	      this.clickCtx.font = "18px sans-serif";
+	      this.clickCtx.font = "12pt sans-serif";
 	      this.clickCtx.clearRect(0, 0, 550, 550);
-	      this.clickCtx.fillText("Clicks left: " + this.clickCount, 440, 20);
+	      this.clickCtx.fillText("Clicks left: " + this.clickCount, 440, 15);
 	    }
 	  }, {
 	    key: "winCondition",
 	    value: function winCondition() {
-	      if (this.clickCount === -1) {
+	      if (this.clickCount <= -1) {
 	        clearInterval(this.startGame);
 	        this.playEvent = false;
 	        this.mainCtx.clearRect(0, 0, 550, 550);
 	        this.mainCtx.fillStyle = "black";
-	        this.mainCtx.font = "50px sans-serif";
+	        this.mainCtx.font = "50pt sans-serif";
 	        this.mainCtx.fillText("You Lose!", 190, 260);
 	        this.clickCtx.clearRect(0, 0, 550, 550);
 	      } else if (this.board.cells.every(function (cell) {
@@ -212,7 +208,7 @@
 	        this.playEvent = false;
 	        this.mainCtx.clearRect(0, 0, 550, 550);
 	        this.mainCtx.fillStyle = "black";
-	        this.mainCtx.font = "50px sans-serif";
+	        this.mainCtx.font = "50pt sans-serif";
 	        this.mainCtx.fillText("You Win!", 190, 260);
 	        this.clickCtx.clearRect(0, 0, 550, 550);
 	      }

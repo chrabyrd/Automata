@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const clickCanvas = document.getElementById("clickCanvas");
   const clickCtx = clickCanvas.getContext("2d");
 
-  const resetButton = document.getElementById("resetButton");
   const rulesButton = document.getElementById("rulesButton");
   const rulesModal = document.getElementById("rulesModal");
   const openerModal = document.getElementById("openerModal");
@@ -15,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const game = new Game(mainCtx, clickCtx);
 
   mainCanvas.addEventListener('click', (e) => game.handleClickEvent(e), false);
-  resetButton.addEventListener('click', () => game.handleResetEvent(), false);
 
   // Pause Button
   document.body.addEventListener('keydown', e =>{

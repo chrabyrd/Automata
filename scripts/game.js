@@ -38,7 +38,7 @@ class Game {
   }
 
   handlePauseEvent () {
-    if (this.pauseEvent) {
+    if (this.pauseEvent && this.playEvent) {
       this.pauseEvent = false;
 
       this.startGame = setInterval(() => {
@@ -46,7 +46,7 @@ class Game {
         this.winCondition();
       }, 350);
 
-    } else {
+    } else if (this.playEvent) {
       this.pauseEvent = true;
       clearInterval(this.startGame);
     }
@@ -63,18 +63,18 @@ class Game {
 
   clickCounter () {
     this.clickCtx.fillStyle = "black";
-    this.clickCtx.font = "18px sans-serif";
+    this.clickCtx.font = "12pt sans-serif";
     this.clickCtx.clearRect(0, 0, 550, 550);
-    this.clickCtx.fillText(`Clicks left: ${this.clickCount}`, 440, 20);
+    this.clickCtx.fillText(`Clicks left: ${this.clickCount}`, 440, 15);
   }
 
   winCondition () {
-    if (this.clickCount === -1) {
+    if (this.clickCount <= -1) {
       clearInterval(this.startGame);
       this.playEvent = false;
       this.mainCtx.clearRect(0, 0, 550, 550);
       this.mainCtx.fillStyle = "black";
-      this.mainCtx.font = "50px sans-serif";
+      this.mainCtx.font = "50pt sans-serif";
       this.mainCtx.fillText("You Lose!", 190, 260);
       this.clickCtx.clearRect(0, 0, 550, 550);
     } else if (this.board.cells.every(cell => !cell.alive)) {
@@ -82,7 +82,7 @@ class Game {
       this.playEvent = false;
       this.mainCtx.clearRect(0, 0, 550, 550);
       this.mainCtx.fillStyle = "black";
-      this.mainCtx.font = "50px sans-serif";
+      this.mainCtx.font = "50pt sans-serif";
       this.mainCtx.fillText("You Win!", 190, 260);
       this.clickCtx.clearRect(0, 0, 550, 550);
     }
