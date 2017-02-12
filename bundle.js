@@ -109,6 +109,8 @@
 
 	var _automata2 = _interopRequireDefault(_automata);
 
+	var _levels = __webpack_require__(5);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -125,7 +127,11 @@
 	    this.clickCount = 0;
 	    this.board = new _board2.default(this.mainCtx);
 	    this.automata = new _automata2.default(this.board);
+	    this.levels = _levels.levels;
+	    this.currentLevel = 0;
 	    this.startGame;
+
+	    this.handlePlayEvent();
 	  }
 
 	  _createClass(Game, [{
@@ -147,8 +153,15 @@
 
 	      this.handleResetEvent();
 	      this.playEvent = true;
-	      this.levelOne();
+
+	      var currentLevel = this.levels[this.currentLevel];
+	      var startingCells = currentLevel.startingCells;
+	      this.clickCount = currentLevel.clickCount;
 	      this.clickCounter();
+
+	      for (var i = 0; i < startingCells.length; i++) {
+	        this.board.cells[startingCells[i]].changeState();
+	      }
 
 	      this.startGame = setInterval(function () {
 	        _this.automata.cellLogic();
@@ -206,33 +219,12 @@
 	      })) {
 	        clearInterval(this.startGame);
 	        this.playEvent = false;
+	        this.currentLevel >= 2 ? alert('Stay tuned for more levels!') : this.currentLevel++;
 	        this.mainCtx.clearRect(0, 0, 550, 550);
 	        this.mainCtx.fillStyle = "black";
 	        this.mainCtx.font = "50pt sans-serif";
 	        this.mainCtx.fillText("You Win!", 190, 260);
 	        this.clickCtx.clearRect(0, 0, 550, 550);
-	      }
-	    }
-	  }, {
-	    key: "levelOne",
-	    value: function levelOne() {
-	      var startingCells = [71, 49, 59, 61];
-
-	      this.clickCount = 3;
-
-	      for (var i = 0; i < startingCells.length; i++) {
-	        this.board.cells[startingCells[i]].changeState();
-	      }
-	    }
-	  }, {
-	    key: "levelTwo",
-	    value: function levelTwo() {
-	      var startingCells = [38, 48, 50, 59, 61, 71];
-
-	      this.clickCount = 3;
-
-	      for (var i = 0; i < startingCells.length; i++) {
-	        this.board.cells[startingCells[i]].changeState();
 	      }
 	    }
 	  }]);
@@ -477,6 +469,21 @@
 	}();
 
 	exports.default = Automata;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var levels = exports.levels = {
+	  0: { startingCells: [71, 49, 59, 61], clickCount: 2 },
+	  1: { startingCells: [38, 48, 50, 59, 61, 71], clickCount: 3 },
+	  2: { startingCells: [47, 48, 36, 37, 39, 40, 50, 51, 72, 73, 83, 84, 70, 69, 80, 81], clickCount: 1 }
+	};
 
 /***/ }
 /******/ ]);

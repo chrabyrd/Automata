@@ -1,5 +1,6 @@
 import Board from "./board";
 import Automata from "./automata";
+import { levels } from "./levels";
 
 class Game {
   constructor (mainCtx, clickCtx) {
@@ -11,7 +12,11 @@ class Game {
     this.clickCount = 0;
     this.board = new Board(this.mainCtx);
     this.automata = new Automata(this.board);
+    this.levels = levels;
+    this.currentLevel = 0;
     this.startGame;
+
+    this.handlePlayEvent();
   }
 
   handleClickEvent (e) {
@@ -28,8 +33,15 @@ class Game {
   handlePlayEvent () {
     this.handleResetEvent();
     this.playEvent = true;
-    this.levelOne();
+    
+    const currentLevel = this.levels[this.currentLevel];
+    const startingCells = currentLevel.startingCells;
+    this.clickCount = currentLevel.clickCount;
     this.clickCounter();
+
+    for (let i = 0; i < startingCells.length; i++) {
+      this.board.cells[startingCells[i]].changeState();
+    }
 
     this.startGame = setInterval(() => {
       this.automata.cellLogic();
@@ -80,31 +92,12 @@ class Game {
     } else if (this.board.cells.every(cell => !cell.alive)) {
       clearInterval(this.startGame);
       this.playEvent = false;
+      this.currentLevel >= 2 ? alert('Stay tuned for more levels!') : this.currentLevel++;
       this.mainCtx.clearRect(0, 0, 550, 550);
       this.mainCtx.fillStyle = "black";
       this.mainCtx.font = "50pt sans-serif";
       this.mainCtx.fillText("You Win!", 190, 260);
       this.clickCtx.clearRect(0, 0, 550, 550);
-    }
-  }
-
-  levelOne () {
-    const startingCells = [71, 49, 59, 61];
-
-    this.clickCount = 3;
-
-    for (let i = 0; i < startingCells.length; i++) {
-      this.board.cells[startingCells[i]].changeState();
-    }
-  }
-
-  levelTwo () {
-    const startingCells = [38, 48, 50, 59, 61, 71];
-
-    this.clickCount = 3;
-
-    for (let i = 0; i < startingCells.length; i++) {
-      this.board.cells[startingCells[i]].changeState();
     }
   }
 }
