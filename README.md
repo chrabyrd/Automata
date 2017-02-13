@@ -68,7 +68,7 @@ The `automata` is the engine driving the game. It has a single function `cellLog
 
 ```
 
-## Game
+### Game
 
 [Game.js][game]
 
