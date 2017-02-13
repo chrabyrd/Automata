@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Rules Modal
   rulesButton.addEventListener('click', function() {
-    rulesModal.style.display = "block";
+    rulesModal.style.display = "flex";
   });
   window.onclick = function(event) {
     if (event.target === rulesModal || event.target === openerModal) {

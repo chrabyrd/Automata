@@ -16,7 +16,7 @@ class Game {
     this.currentLevel = 0;
     this.startGame;
 
-    this.handlePlayEvent();
+    this.levelMessage();
   }
 
   handleClickEvent (e) {
@@ -33,7 +33,6 @@ class Game {
   handlePlayEvent () {
     this.handleResetEvent();
     this.playEvent = true;
-    
     const currentLevel = this.levels[this.currentLevel];
     const startingCells = currentLevel.startingCells;
     this.clickCount = currentLevel.clickCount;
@@ -46,7 +45,7 @@ class Game {
     this.startGame = setInterval(() => {
       this.automata.cellLogic();
       this.winCondition();
-    }, 350);
+    }, 250);
   }
 
   handlePauseEvent () {
@@ -56,7 +55,7 @@ class Game {
       this.startGame = setInterval(() => {
         this.automata.cellLogic();
         this.winCondition();
-      }, 350);
+      }, 250);
 
     } else if (this.playEvent) {
       this.pauseEvent = true;
@@ -73,6 +72,34 @@ class Game {
     this.clickCtx.clearRect(0, 0, 550, 550);
   }
 
+  levelMessage () {
+    this.mainCtx.clearRect(0, 0, 550, 550);
+    this.mainCtx.fillStyle = "black";
+    this.mainCtx.font = "50pt sans-serif";
+    this.mainCtx.fillText(`Level ${this.currentLevel + 1}`, 170, 290);
+    this.clickCtx.clearRect(0, 0, 550, 550);
+  }
+
+  winMessage () {
+    this.mainCtx.clearRect(0, 0, 550, 550);
+    this.mainCtx.fillStyle = "black";
+    this.mainCtx.font = "50pt sans-serif";
+    this.mainCtx.fillText("You Win!", 140, 290);
+    this.mainCtx.font = "30pt sans-serif";
+    this.mainCtx.fillText("(only 3 levels so far)", 100, 360);
+    this.clickCtx.clearRect(0, 0, 550, 550);
+  }
+
+  loseMessage () {
+    this.mainCtx.clearRect(0, 0, 550, 550);
+    this.mainCtx.fillStyle = "black";
+    this.mainCtx.font = "50pt sans-serif";
+    this.mainCtx.fillText("Fail!", 210, 290);
+    this.mainCtx.font = "30pt sans-serif";
+    this.mainCtx.fillText("(click to play again)", 100, 360);
+    this.clickCtx.clearRect(0, 0, 550, 550);
+  }
+
   clickCounter () {
     this.clickCtx.fillStyle = "black";
     this.clickCtx.font = "12pt sans-serif";
@@ -84,20 +111,20 @@ class Game {
     if (this.clickCount <= -1) {
       clearInterval(this.startGame);
       this.playEvent = false;
-      this.mainCtx.clearRect(0, 0, 550, 550);
-      this.mainCtx.fillStyle = "black";
-      this.mainCtx.font = "50pt sans-serif";
-      this.mainCtx.fillText("You Lose!", 190, 260);
-      this.clickCtx.clearRect(0, 0, 550, 550);
+      this.loseMessage();
     } else if (this.board.cells.every(cell => !cell.alive)) {
       clearInterval(this.startGame);
       this.playEvent = false;
-      this.currentLevel >= 2 ? alert('Stay tuned for more levels!') : this.currentLevel++;
-      this.mainCtx.clearRect(0, 0, 550, 550);
-      this.mainCtx.fillStyle = "black";
-      this.mainCtx.font = "50pt sans-serif";
-      this.mainCtx.fillText("You Win!", 190, 260);
-      this.clickCtx.clearRect(0, 0, 550, 550);
+
+      if (this.currentLevel >=2 ) {
+        this.currentLevel = 0;
+        this.winMessage();
+      } else {
+        this.currentLevel++;
+        this.levelMessage();
+        this.clickCtx.clearRect(0, 0, 550, 550);
+      }
+
     }
   }
 }
