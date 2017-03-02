@@ -121,7 +121,7 @@
 
 	    this.mainCtx = mainCtx;
 	    this.clickCtx = clickCtx;
-	    this.playEvent = false;
+	    this.playEvent = true;
 	    this.pauseEvent = false;
 	    this.gameWon = false;
 	    this.clickCount = 0;
@@ -151,19 +151,19 @@
 
 	      this.handleResetEvent();
 	      this.playEvent = true;
-	      // const currentLevel = this.levels[this.currentLevel];
-	      // const startingCells = currentLevel.startingCells;
-	      // this.clickCount = currentLevel.clickCount;
-	      // this.clickCounter();
+	      var currentLevel = this.levels[this.currentLevel];
+	      var startingCells = currentLevel.startingCells;
+	      this.clickCount = currentLevel.clickCount;
+	      this.clickCounter();
 
-	      // for (let i = 0; i < startingCells.length; i++) {
-	      //   this.board.cells[startingCells[i]].changeState();
-	      // }
+	      for (var i = 0; i < startingCells.length; i++) {
+	        this.board.cells[startingCells[i]].changeState();
+	      }
 
 	      this.startGame = setInterval(function () {
 	        _this.automata.cellLogic();
 	        // this.winCondition();
-	      }, 50);
+	      }, 20);
 	    }
 	  }, {
 	    key: "handlePauseEvent",
@@ -176,7 +176,7 @@
 	        this.startGame = setInterval(function () {
 	          _this2.automata.cellLogic();
 	          // this.winCondition();
-	        }, 50);
+	        }, 20);
 	      } else if (this.playEvent) {
 	        this.pauseEvent = true;
 	        clearInterval(this.startGame);
@@ -379,9 +379,9 @@
 	      var top = this.id - 80;
 	      var topRight = this.id - 79;
 	      var right = this.id + 1;
-	      var bottomRight = this.id + 79;
+	      var bottomRight = this.id + 81;
 	      var bottom = this.id + 80;
-	      var bottomLeft = this.id + 78;
+	      var bottomLeft = this.id + 79;
 	      var left = this.id - 1;
 	      var topLeft = this.id - 81;
 
@@ -434,6 +434,8 @@
 	        this.ctx.fillStyle = this.getRandomColor();
 	        this.ctx.fillRect(this.x, this.y, 10, 10);
 	      }
+
+	      // this.ctx.strokeRect(this.x, this.y, 10, 10);
 	    }
 	  }]);
 
@@ -472,7 +474,7 @@
 
 	      for (var i = 0; i < this.board.cells.length; i++) {
 	        var currentCell = this.board.cells[i];
-	        var cellNeighbors = this.board.cells[i].neighbors;
+	        var cellNeighbors = currentCell.neighbors;
 	        var aliveNeighbors = cellNeighbors.filter(function (cellId) {
 	          return _this.board.cells[cellId - 1].alive;
 	        });

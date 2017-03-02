@@ -25,9 +25,9 @@ class Cell {
     const top = this.id - 80;
     const topRight = this.id - 79;
     const right = this.id + 1;
-    const bottomRight = this.id + 79;
+    const bottomRight = this.id + 81;
     const bottom = this.id + 80;
-    const bottomLeft = this.id + 78;
+    const bottomLeft = this.id + 79;
     const left = this.id - 1;
     const topLeft = this.id - 81;
 
@@ -72,6 +72,8 @@ class Cell {
       this.ctx.fillStyle = this.getRandomColor();
       this.ctx.fillRect(this.x, this.y, 10, 10);
     }
+
+    // this.ctx.strokeRect(this.x, this.y, 10, 10);
   }
 }
 

@@ -8,7 +8,7 @@ class Automata {
 
     for (let i = 0; i < this.board.cells.length; i++) {
       const currentCell = this.board.cells[i];
-      const cellNeighbors = this.board.cells[i].neighbors;
+      const cellNeighbors = currentCell.neighbors;
       const aliveNeighbors = cellNeighbors.filter(cellId => {
         return this.board.cells[cellId - 1].alive;
       });
@@ -26,7 +26,6 @@ class Automata {
         if (aliveNeighbors.length === 3) {
           changingCells.push(i);
         }
-
       }
     }
 
