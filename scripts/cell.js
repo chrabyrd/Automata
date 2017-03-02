@@ -16,8 +16,12 @@ class Cell {
     this.render();
   }
 
-  changeState () {
-    this.alive = this.alive ? false : true;
+  changeState (color = false) {
+    if (this.alive) {
+      this.alive = false;
+    } else {
+      this.alive = color;
+    }
     this.render();
   }
 
@@ -30,24 +34,23 @@ class Cell {
     const bottomLeft = this.id + 79;
     const left = this.id - 1;
     const topLeft = this.id - 81;
+    let neighborArray;
 
     if (this.id % 80 === 1) {
       // Left side
-      [top, topRight, right, bottomRight, bottom].forEach(num => {
-        if (num > 0 && num < 4800) {this.neighbors.push(num);}
-      });
+      neighborArray = [top, topRight, right, bottomRight, bottom];
     } else if (this.id % 80 === 0) {
       // Right side
-      [top, bottom, bottomLeft + 1, left, topLeft].forEach(num => {
-        if (num > 0 && num <= 4800) {this.neighbors.push(num);}
-      });
+      neighborArray = [top, bottom, bottomLeft + 1, left, topLeft];
     } else {
       // Center
-      [top, topRight, right, bottomRight, bottom,
-        bottomLeft, left, topLeft].forEach(num => {
-          if (num > 0 && num <= 4800) {this.neighbors.push(num);}
-        });
+      neighborArray = [top, topRight, right, bottomRight, bottom,
+        bottomLeft, left, topLeft];
     }
+
+    neighborArray.forEach(num => {
+      if (num > 0 && num <= 4800) {this.neighbors.push(num);}
+    });
 
     // Edge case
     if (this.id === 4722) {
@@ -57,19 +60,22 @@ class Cell {
     }
   }
 
-  getRandomColor() {
-    let length = 6;
-    const chars = '0123456789ABCDEF';
-    let hex = '#';
-    while(length--) hex += chars[(Math.random() * 16) | 0];
-    return hex;
-  }
+  // getRandomColor() {
+  //   let length = 6;
+  //   const chars = '0123456789ABCDEF';
+  //   let hex = '#';
+  //   while(length--) hex += chars[(Math.random() * 16) | 0];
+  //   return hex;
+  // }
 
   render () {
     this.ctx.clearRect(this.x, this.y, 10, 10);
 
-    if (this.alive) {
-      this.ctx.fillStyle = this.getRandomColor();
+    if (this.alive === 'green') {
+      this.ctx.fillStyle = 'green';
+      this.ctx.fillRect(this.x, this.y, 10, 10);
+    } else if (this.alive === 'blue') {
+      this.ctx.fillStyle = 'blue';
       this.ctx.fillRect(this.x, this.y, 10, 10);
     }
 

@@ -6,7 +6,7 @@ class Game {
   constructor (mainCtx, clickCtx) {
     this.mainCtx = mainCtx;
     this.clickCtx = clickCtx;
-    this.playEvent = true;
+    this.playEvent = false;
     this.pauseEvent = false;
     this.gameWon = false;
     this.clickCount = 0;
@@ -16,12 +16,15 @@ class Game {
     this.currentLevel = 0;
     this.startGame;
 
+    this.color = 'blue';
+
   }
 
   handleClickEvent (e) {
     e.preventDefault();
     if (this.playEvent) {
-      this.board.toggleCell(e);
+      this.color === 'blue' ? this.color = 'green' : this.color = 'blue';
+      this.board.toggleCell(e, this.color);
       this.clickCount--;
       this.clickCounter();
     } else {
@@ -32,19 +35,19 @@ class Game {
   handlePlayEvent () {
     this.handleResetEvent();
     this.playEvent = true;
-    const currentLevel = this.levels[this.currentLevel];
-    const startingCells = currentLevel.startingCells;
-    this.clickCount = currentLevel.clickCount;
-    this.clickCounter();
-
-    for (let i = 0; i < startingCells.length; i++) {
-      this.board.cells[startingCells[i]].changeState();
-    }
+    // const currentLevel = this.levels[this.currentLevel];
+    // const startingCells = currentLevel.startingCells;
+    // this.clickCount = currentLevel.clickCount;
+    // this.clickCounter();
+    //
+    // for (let i = 0; i < startingCells.length; i++) {
+    //   this.board.cells[startingCells[i]].changeState();
+    // }
 
     this.startGame = setInterval(() => {
       this.automata.cellLogic();
       // this.winCondition();
-    }, 20);
+    }, 100);
   }
 
   handlePauseEvent () {
@@ -54,7 +57,7 @@ class Game {
       this.startGame = setInterval(() => {
         this.automata.cellLogic();
         // this.winCondition();
-      }, 20);
+      }, 100);
 
     } else if (this.playEvent) {
       this.pauseEvent = true;

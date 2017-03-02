@@ -121,7 +121,7 @@
 
 	    this.mainCtx = mainCtx;
 	    this.clickCtx = clickCtx;
-	    this.playEvent = true;
+	    this.playEvent = false;
 	    this.pauseEvent = false;
 	    this.gameWon = false;
 	    this.clickCount = 0;
@@ -130,6 +130,8 @@
 	    this.levels = _levels.levels;
 	    this.currentLevel = 0;
 	    this.startGame;
+
+	    this.color = 'blue';
 	  }
 
 	  _createClass(Game, [{
@@ -137,7 +139,8 @@
 	    value: function handleClickEvent(e) {
 	      e.preventDefault();
 	      if (this.playEvent) {
-	        this.board.toggleCell(e);
+	        this.color === 'blue' ? this.color = 'green' : this.color = 'blue';
+	        this.board.toggleCell(e, this.color);
 	        this.clickCount--;
 	        this.clickCounter();
 	      } else {
@@ -151,19 +154,19 @@
 
 	      this.handleResetEvent();
 	      this.playEvent = true;
-	      var currentLevel = this.levels[this.currentLevel];
-	      var startingCells = currentLevel.startingCells;
-	      this.clickCount = currentLevel.clickCount;
-	      this.clickCounter();
-
-	      for (var i = 0; i < startingCells.length; i++) {
-	        this.board.cells[startingCells[i]].changeState();
-	      }
+	      // const currentLevel = this.levels[this.currentLevel];
+	      // const startingCells = currentLevel.startingCells;
+	      // this.clickCount = currentLevel.clickCount;
+	      // this.clickCounter();
+	      //
+	      // for (let i = 0; i < startingCells.length; i++) {
+	      //   this.board.cells[startingCells[i]].changeState();
+	      // }
 
 	      this.startGame = setInterval(function () {
 	        _this.automata.cellLogic();
 	        // this.winCondition();
-	      }, 20);
+	      }, 100);
 	    }
 	  }, {
 	    key: "handlePauseEvent",
@@ -176,7 +179,7 @@
 	        this.startGame = setInterval(function () {
 	          _this2.automata.cellLogic();
 	          // this.winCondition();
-	        }, 20);
+	        }, 100);
 	      } else if (this.playEvent) {
 	        this.pauseEvent = true;
 	        clearInterval(this.startGame);
@@ -294,17 +297,17 @@
 
 	  _createClass(Board, [{
 	    key: "toggleCell",
-	    value: function toggleCell(e) {
+	    value: function toggleCell(e, color) {
 	      var clickedCell = this.cells.find(function (cell) {
 	        if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
 	          if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
-	            console.log(cell.id, cell.neighbors);
+	            console.log(cell.id);
 	            return cell;
 	          }
 	        }
 	      });
 
-	      if (!clickedCell.alive) clickedCell.changeState();
+	      clickedCell.changeState(color);
 	    }
 	  }, {
 	    key: "populateGrid",
@@ -368,7 +371,13 @@
 	  _createClass(Cell, [{
 	    key: 'changeState',
 	    value: function changeState() {
-	      this.alive = this.alive ? false : true;
+	      var color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	      if (this.alive) {
+	        this.alive = false;
+	      } else {
+	        this.alive = color;
+	      }
 	      this.render();
 	    }
 	  }, {
@@ -384,29 +393,24 @@
 	      var bottomLeft = this.id + 79;
 	      var left = this.id - 1;
 	      var topLeft = this.id - 81;
+	      var neighborArray = void 0;
 
 	      if (this.id % 80 === 1) {
 	        // Left side
-	        [top, topRight, right, bottomRight, bottom].forEach(function (num) {
-	          if (num > 0 && num < 4800) {
-	            _this.neighbors.push(num);
-	          }
-	        });
+	        neighborArray = [top, topRight, right, bottomRight, bottom];
 	      } else if (this.id % 80 === 0) {
 	        // Right side
-	        [top, bottom, bottomLeft + 1, left, topLeft].forEach(function (num) {
-	          if (num > 0 && num <= 4800) {
-	            _this.neighbors.push(num);
-	          }
-	        });
+	        neighborArray = [top, bottom, bottomLeft + 1, left, topLeft];
 	      } else {
 	        // Center
-	        [top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft].forEach(function (num) {
-	          if (num > 0 && num <= 4800) {
-	            _this.neighbors.push(num);
-	          }
-	        });
+	        neighborArray = [top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft];
 	      }
+
+	      neighborArray.forEach(function (num) {
+	        if (num > 0 && num <= 4800) {
+	          _this.neighbors.push(num);
+	        }
+	      });
 
 	      // Edge case
 	      if (this.id === 4722) {
@@ -415,23 +419,25 @@
 	        });
 	      }
 	    }
-	  }, {
-	    key: 'getRandomColor',
-	    value: function getRandomColor() {
-	      var length = 6;
-	      var chars = '0123456789ABCDEF';
-	      var hex = '#';
-	      while (length--) {
-	        hex += chars[Math.random() * 16 | 0];
-	      }return hex;
-	    }
+
+	    // getRandomColor() {
+	    //   let length = 6;
+	    //   const chars = '0123456789ABCDEF';
+	    //   let hex = '#';
+	    //   while(length--) hex += chars[(Math.random() * 16) | 0];
+	    //   return hex;
+	    // }
+
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      this.ctx.clearRect(this.x, this.y, 10, 10);
 
-	      if (this.alive) {
-	        this.ctx.fillStyle = this.getRandomColor();
+	      if (this.alive === 'green') {
+	        this.ctx.fillStyle = 'green';
+	        this.ctx.fillRect(this.x, this.y, 10, 10);
+	      } else if (this.alive === 'blue') {
+	        this.ctx.fillStyle = 'blue';
 	        this.ctx.fillRect(this.x, this.y, 10, 10);
 	      }
 
@@ -466,36 +472,67 @@
 	  }
 
 	  _createClass(Automata, [{
+	    key: "randomNeighbor",
+	    value: function randomNeighbor(array) {
+	      return array[Math.floor(Math.random() * array.length)];
+	    }
+	  }, {
 	    key: "cellLogic",
 	    value: function cellLogic() {
 	      var _this = this;
 
 	      var changingCells = [];
 
-	      for (var i = 0; i < this.board.cells.length; i++) {
-	        var currentCell = this.board.cells[i];
+	      var _loop = function _loop(i) {
+	        var currentCell = _this.board.cells[i];
 	        var cellNeighbors = currentCell.neighbors;
 	        var aliveNeighbors = cellNeighbors.filter(function (cellId) {
 	          return _this.board.cells[cellId - 1].alive;
 	        });
 
-	        if (currentCell.alive) {
+	        var blue = 0;
+	        var green = 0;
 
-	          if (aliveNeighbors.length < 2) {
-	            changingCells.push(i);
-	          } else if (aliveNeighbors.length > 3) {
-	            changingCells.push(i);
+	        aliveNeighbors.forEach(function (num) {
+	          if (_this.board.cells[num - 1].alive === 'blue') {
+	            blue++;
+	          } else {
+	            green++;
 	          }
-	        } else {
+	        });
 
-	          if (aliveNeighbors.length === 3) {
-	            changingCells.push(i);
+	        var color = blue > green ? ["blue", [blue, green]] : ["green", [green, blue]];
+
+	        if (currentCell.alive) {
+	          if (blue === 0 && green === 0) {
+	            // Solitary cell
+	            var randomNeighbor = cellNeighbors[Math.floor(Math.random() * cellNeighbors.length)];
+	            color = [currentCell.alive, [0, 0]];
+	            changingCells.push([randomNeighbor - 1, color[0]]);
+	            changingCells.push([i]);
+	          } else if (aliveNeighbors.length === 1) {
+	            // Meeting a partner
+	            var _randomNeighbor = cellNeighbors[Math.floor(Math.random() * cellNeighbors.length)];
+
+	            if (color[0] === currentCell.alive) {
+	              console.log(_randomNeighbor);
+
+	              _randomNeighbor = cellNeighbors[Math.floor(Math.random() * cellNeighbors.length)];
+
+	              console.log(_randomNeighbor);
+	            } else {
+	              changingCells.push([i]);
+	            }
 	          }
 	        }
+	      };
+
+	      for (var i = 0; i < this.board.cells.length; i++) {
+	        _loop(i);
 	      }
 
-	      for (var _i = 0; _i < changingCells.length; _i++) {
-	        this.board.cells[changingCells[_i]].changeState();
+	      for (var i = 0; i < changingCells.length; i++) {
+	        this.board.cells[changingCells[i][0]].changeState(changingCells[i][1]);
 	      }
 	    }
 	  }]);
