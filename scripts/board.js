@@ -14,6 +14,7 @@ class Board {
     const clickedCell = this.cells.find((cell) => {
       if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
         if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
+          console.log(cell.id, cell.neighbors);
           return cell;
         }
       }
@@ -24,17 +25,18 @@ class Board {
 
   populateGrid () {
     let y = 0;
-    let id = 0;
+    let id = 1;
 
-    for (let i=0; i < 11; i++) {
+    for (let i=0; i < 60; i++) {
       let x = 0;
 
-      for (let j=0; j < 11; j++) {
+      for (let j=0; j < 80; j++) {
         this.cells.push(new Cell(this.ctx, id, x, y));
-        x += 50;
+        x += 10;
         id++;
       }
-      y += 50;
+
+      y += 10;
     }
   }
 }

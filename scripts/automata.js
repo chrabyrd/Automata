@@ -10,7 +10,7 @@ class Automata {
       const currentCell = this.board.cells[i];
       const cellNeighbors = this.board.cells[i].neighbors;
       const aliveNeighbors = cellNeighbors.filter(cellId => {
-        return this.board.cells[cellId].alive;
+        return this.board.cells[cellId - 1].alive;
       });
 
       if (currentCell.alive) {

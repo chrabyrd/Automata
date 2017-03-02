@@ -130,8 +130,6 @@
 	    this.levels = _levels.levels;
 	    this.currentLevel = 0;
 	    this.startGame;
-
-	    this.levelMessage();
 	  }
 
 	  _createClass(Game, [{
@@ -153,19 +151,19 @@
 
 	      this.handleResetEvent();
 	      this.playEvent = true;
-	      var currentLevel = this.levels[this.currentLevel];
-	      var startingCells = currentLevel.startingCells;
-	      this.clickCount = currentLevel.clickCount;
-	      this.clickCounter();
+	      // const currentLevel = this.levels[this.currentLevel];
+	      // const startingCells = currentLevel.startingCells;
+	      // this.clickCount = currentLevel.clickCount;
+	      // this.clickCounter();
 
-	      for (var i = 0; i < startingCells.length; i++) {
-	        this.board.cells[startingCells[i]].changeState();
-	      }
+	      // for (let i = 0; i < startingCells.length; i++) {
+	      //   this.board.cells[startingCells[i]].changeState();
+	      // }
 
 	      this.startGame = setInterval(function () {
 	        _this.automata.cellLogic();
-	        _this.winCondition();
-	      }, 250);
+	        // this.winCondition();
+	      }, 50);
 	    }
 	  }, {
 	    key: "handlePauseEvent",
@@ -177,8 +175,8 @@
 
 	        this.startGame = setInterval(function () {
 	          _this2.automata.cellLogic();
-	          _this2.winCondition();
-	        }, 250);
+	          // this.winCondition();
+	        }, 50);
 	      } else if (this.playEvent) {
 	        this.pauseEvent = true;
 	        clearInterval(this.startGame);
@@ -300,6 +298,7 @@
 	      var clickedCell = this.cells.find(function (cell) {
 	        if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
 	          if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
+	            console.log(cell.id, cell.neighbors);
 	            return cell;
 	          }
 	        }
@@ -311,17 +310,18 @@
 	    key: "populateGrid",
 	    value: function populateGrid() {
 	      var y = 0;
-	      var id = 0;
+	      var id = 1;
 
-	      for (var i = 0; i < 11; i++) {
+	      for (var i = 0; i < 60; i++) {
 	        var x = 0;
 
-	        for (var j = 0; j < 11; j++) {
+	        for (var j = 0; j < 80; j++) {
 	          this.cells.push(new _cell2.default(this.ctx, id, x, y));
-	          x += 50;
+	          x += 10;
 	          id++;
 	        }
-	        y += 50;
+
+	        y += 10;
 	      }
 	    }
 	  }]);
@@ -351,9 +351,9 @@
 
 	    this.id = id;
 	    this.xmin = x + 1;
-	    this.xmax = x + 50;
+	    this.xmax = x + 10;
 	    this.ymin = y + 1;
-	    this.ymax = y + 50;
+	    this.ymax = y + 10;
 	    this.alive = false;
 	    this.neighbors = [];
 
@@ -374,39 +374,44 @@
 	  }, {
 	    key: 'getNeighbors',
 	    value: function getNeighbors() {
-	      var top = this.id - 11;
-	      var topRight = this.id - 10;
-	      var right = this.id + 1;
-	      var bottomRight = this.id + 12;
-	      var bottom = this.id + 11;
-	      var bottomLeft = this.id + 10;
-	      var left = this.id - 1;
-	      var topLeft = this.id - 12;
+	      var _this = this;
 
-	      if (this.id % 11 === 0) {
+	      var top = this.id - 80;
+	      var topRight = this.id - 79;
+	      var right = this.id + 1;
+	      var bottomRight = this.id + 79;
+	      var bottom = this.id + 80;
+	      var bottomLeft = this.id + 78;
+	      var left = this.id - 1;
+	      var topLeft = this.id - 81;
+
+	      if (this.id % 80 === 1) {
 	        // Left side
-	        if (this.id === 0) {
-	          this.neighbors.push(right, bottomRight, bottom);
-	        } else if (this.id === 110) {
-	          this.neighbors.push(top, topRight, right);
-	        } else {
-	          this.neighbors.push(top, topRight, right, bottomRight, bottom);
-	        }
-	      } else if (this.id % 11 === 10) {
+	        [top, topRight, right, bottomRight, bottom].forEach(function (num) {
+	          if (num > 0 && num < 4800) {
+	            _this.neighbors.push(num);
+	          }
+	        });
+	      } else if (this.id % 80 === 0) {
 	        // Right side
-	        if (this.id === 10) {
-	          this.neighbors.push(left, bottomLeft, bottom);
-	        } else if (this.id === 120) {
-	          this.neighbors.push(top, topLeft, left);
-	        } else {
-	          this.neighbors.push(top, topLeft, left, bottomLeft, bottom);
-	        }
+	        [top, bottom, bottomLeft + 1, left, topLeft].forEach(function (num) {
+	          if (num > 0 && num <= 4800) {
+	            _this.neighbors.push(num);
+	          }
+	        });
 	      } else {
 	        // Center
-	        this.neighbors.push(top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);
+	        [top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft].forEach(function (num) {
+	          if (num > 0 && num <= 4800) {
+	            _this.neighbors.push(num);
+	          }
+	        });
+	      }
 
-	        this.neighbors = this.neighbors.filter(function (cellId) {
-	          return cellId >= 0 && cellId <= 120;
+	      // Edge case
+	      if (this.id === 4722) {
+	        this.neighbors = this.neighbors.filter(function (num) {
+	          return num < 4800;
 	        });
 	      }
 	    }
@@ -423,12 +428,11 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      this.ctx.clearRect(this.x, this.y, 10, 10);
+
 	      if (this.alive) {
-	        this.ctx.clearRect(this.x, this.y, 50, 50);
 	        this.ctx.fillStyle = this.getRandomColor();
-	        this.ctx.fillRect(this.x, this.y, 50, 50);
-	      } else {
-	        this.ctx.clearRect(this.x, this.y, 50, 50);
+	        this.ctx.fillRect(this.x, this.y, 10, 10);
 	      }
 	    }
 	  }]);
@@ -470,7 +474,7 @@
 	        var currentCell = this.board.cells[i];
 	        var cellNeighbors = this.board.cells[i].neighbors;
 	        var aliveNeighbors = cellNeighbors.filter(function (cellId) {
-	          return _this.board.cells[cellId].alive;
+	          return _this.board.cells[cellId - 1].alive;
 	        });
 
 	        if (currentCell.alive) {

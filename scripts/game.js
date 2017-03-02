@@ -16,7 +16,6 @@ class Game {
     this.currentLevel = 0;
     this.startGame;
 
-    this.levelMessage();
   }
 
   handleClickEvent (e) {
@@ -33,19 +32,19 @@ class Game {
   handlePlayEvent () {
     this.handleResetEvent();
     this.playEvent = true;
-    const currentLevel = this.levels[this.currentLevel];
-    const startingCells = currentLevel.startingCells;
-    this.clickCount = currentLevel.clickCount;
-    this.clickCounter();
+    // const currentLevel = this.levels[this.currentLevel];
+    // const startingCells = currentLevel.startingCells;
+    // this.clickCount = currentLevel.clickCount;
+    // this.clickCounter();
 
-    for (let i = 0; i < startingCells.length; i++) {
-      this.board.cells[startingCells[i]].changeState();
-    }
+    // for (let i = 0; i < startingCells.length; i++) {
+    //   this.board.cells[startingCells[i]].changeState();
+    // }
 
     this.startGame = setInterval(() => {
       this.automata.cellLogic();
-      this.winCondition();
-    }, 250);
+      // this.winCondition();
+    }, 50);
   }
 
   handlePauseEvent () {
@@ -54,8 +53,8 @@ class Game {
 
       this.startGame = setInterval(() => {
         this.automata.cellLogic();
-        this.winCondition();
-      }, 250);
+        // this.winCondition();
+      }, 50);
 
     } else if (this.playEvent) {
       this.pauseEvent = true;
