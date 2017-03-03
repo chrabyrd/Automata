@@ -525,28 +525,18 @@
 	        if (cells[i].type) {
 
 	          if (cells[i].type === 'cabbage') {
-	            // Chance to grow into unoccupied square
-	            // if (type !== 'rabbit') {
-
+	            // Grow
 	            var validNeighbors = cellNeighbors.filter(function (cell) {
-	              return changingCells[cell - 1] === undefined && !cells[cell - 1].type || cells[cell - 1].type === 'cabbage';
+	              return changingCells[cell - 1] === undefined && !cells[cell - 1].type;
 	            });
-	            // console.log(validNeighbors);
 
-	            // changingCells.push([this.random(validNeighbors), 'cabbage']);
-	            // }
-	            // Eaten by rabbit
-	            // if (type === 'rabbit') changingCells.push([i]);
-	            // if (typeHash['rabbit']) {
-	            // changingCells[i] = 'false';
-	            // }
 	            if (validNeighbors.length > 0) {
 	              changingCells[_this.random(validNeighbors)] = 'cabbage';
 	            }
 	          } else if (cells[i].type === 'rabbit') {
-
+	            // Wander
 	            var _validNeighbors = cellNeighbors.filter(function (cell) {
-	              return changingCells[cell - 1] === undefined && !cells[cell - 1].type || cells[cell - 1].type === 'cabbage';
+	              return changingCells[cell - 1] === undefined && (!cells[cell - 1].type || cells[cell - 1].type === 'cabbage');
 	            });
 
 	            if (_validNeighbors.length > 0) {
