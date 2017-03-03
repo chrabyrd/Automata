@@ -56,7 +56,7 @@ class Game {
     this.startGame = setInterval(() => {
       this.automata.cellLogic();
       // this.winCondition();
-    }, 10);
+    }, 100);
   }
 
   handlePauseEvent (e) {
@@ -67,7 +67,7 @@ class Game {
       this.startGame = setInterval(() => {
         this.automata.cellLogic();
         // this.winCondition();
-      }, 10);
+      }, 100);
 
     } else if (this.playEvent) {
       this.pauseEvent = true;
