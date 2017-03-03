@@ -10,17 +10,16 @@ class Board {
     this.populateGrid();
   }
 
-  toggleCell (e, color) {
+  toggleCell (e, type) {
     const clickedCell = this.cells.find((cell) => {
       if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
         if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
-          console.log(cell.id);
           return cell;
         }
       }
     });
 
-    clickedCell.changeState(color);
+    clickedCell.changeState(type);
   }
 
   populateGrid () {

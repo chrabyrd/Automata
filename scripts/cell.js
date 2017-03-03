@@ -5,7 +5,7 @@ class Cell {
     this.xmax = x + 10;
     this.ymin = y + 1;
     this.ymax = y + 10;
-    this.alive = false;
+    this.type = false;
     this.neighbors = [];
 
     this.ctx = ctx;
@@ -16,12 +16,8 @@ class Cell {
     this.render();
   }
 
-  changeState (color = false) {
-    if (this.alive) {
-      this.alive = false;
-    } else {
-      this.alive = color;
-    }
+  changeState (type = false) {
+    this.type = type;
     this.render();
   }
 
@@ -71,11 +67,14 @@ class Cell {
   render () {
     this.ctx.clearRect(this.x, this.y, 10, 10);
 
-    if (this.alive === 'green') {
+    if (this.type === 'cabbage') {
       this.ctx.fillStyle = 'green';
       this.ctx.fillRect(this.x, this.y, 10, 10);
-    } else if (this.alive === 'blue') {
+    } else if (this.type === 'rabbit') {
       this.ctx.fillStyle = 'blue';
+      this.ctx.fillRect(this.x, this.y, 10, 10);
+    } else if (this.type === 'fox') {
+      this.ctx.fillStyle = 'purple';
       this.ctx.fillRect(this.x, this.y, 10, 10);
     }
 

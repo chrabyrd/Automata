@@ -16,19 +16,28 @@ class Game {
     this.currentLevel = 0;
     this.startGame;
 
-    this.color = 'blue';
+    this.type = 'cabbage';
 
   }
 
   handleClickEvent (e) {
     e.preventDefault();
     if (this.playEvent) {
-      this.color === 'blue' ? this.color = 'green' : this.color = 'blue';
-      this.board.toggleCell(e, this.color);
+      this.board.toggleCell(e, this.type);
       this.clickCount--;
       this.clickCounter();
     } else {
       this.handlePlayEvent();
+    }
+  }
+
+  toggleColor (e) {
+    if (e.keyCode === 49) {
+      this.type = 'cabbage';
+    } else if (e.keyCode === 50) {
+      this.type = 'rabbit';
+    } else if (e.keyCode === 51) {
+      this.type = 'fox';
     }
   }
 
@@ -47,17 +56,18 @@ class Game {
     this.startGame = setInterval(() => {
       this.automata.cellLogic();
       // this.winCondition();
-    }, 100);
+    }, 10);
   }
 
-  handlePauseEvent () {
+  handlePauseEvent (e) {
+    e.preventDefault();
     if (this.pauseEvent && this.playEvent) {
       this.pauseEvent = false;
 
       this.startGame = setInterval(() => {
         this.automata.cellLogic();
         // this.winCondition();
-      }, 100);
+      }, 10);
 
     } else if (this.playEvent) {
       this.pauseEvent = true;

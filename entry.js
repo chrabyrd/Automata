@@ -15,11 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   mainCanvas.addEventListener('click', (e) => game.handleClickEvent(e), false);
 
-  // Pause Button
+  // Pause Button && color shift
   document.body.addEventListener('keydown', e =>{
     if(e.keyCode === 32){
-      e.preventDefault();
-      game.handlePauseEvent();
+      game.handlePauseEvent(e);
+    } else {
+      game.toggleColor(e);
     }
   });
 

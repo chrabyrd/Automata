@@ -69,11 +69,12 @@
 	    return game.handleClickEvent(e);
 	  }, false);
 
-	  // Pause Button
+	  // Pause Button && color shift
 	  document.body.addEventListener('keydown', function (e) {
 	    if (e.keyCode === 32) {
-	      e.preventDefault();
-	      game.handlePauseEvent();
+	      game.handlePauseEvent(e);
+	    } else {
+	      game.toggleColor(e);
 	    }
 	  });
 
@@ -131,7 +132,7 @@
 	    this.currentLevel = 0;
 	    this.startGame;
 
-	    this.color = 'blue';
+	    this.type = 'cabbage';
 	  }
 
 	  _createClass(Game, [{
@@ -139,12 +140,22 @@
 	    value: function handleClickEvent(e) {
 	      e.preventDefault();
 	      if (this.playEvent) {
-	        this.color === 'blue' ? this.color = 'green' : this.color = 'blue';
-	        this.board.toggleCell(e, this.color);
+	        this.board.toggleCell(e, this.type);
 	        this.clickCount--;
 	        this.clickCounter();
 	      } else {
 	        this.handlePlayEvent();
+	      }
+	    }
+	  }, {
+	    key: "toggleColor",
+	    value: function toggleColor(e) {
+	      if (e.keyCode === 49) {
+	        this.type = 'cabbage';
+	      } else if (e.keyCode === 50) {
+	        this.type = 'rabbit';
+	      } else if (e.keyCode === 51) {
+	        this.type = 'fox';
 	      }
 	    }
 	  }, {
@@ -166,20 +177,21 @@
 	      this.startGame = setInterval(function () {
 	        _this.automata.cellLogic();
 	        // this.winCondition();
-	      }, 100);
+	      }, 10);
 	    }
 	  }, {
 	    key: "handlePauseEvent",
-	    value: function handlePauseEvent() {
+	    value: function handlePauseEvent(e) {
 	      var _this2 = this;
 
+	      e.preventDefault();
 	      if (this.pauseEvent && this.playEvent) {
 	        this.pauseEvent = false;
 
 	        this.startGame = setInterval(function () {
 	          _this2.automata.cellLogic();
 	          // this.winCondition();
-	        }, 100);
+	        }, 10);
 	      } else if (this.playEvent) {
 	        this.pauseEvent = true;
 	        clearInterval(this.startGame);
@@ -297,17 +309,16 @@
 
 	  _createClass(Board, [{
 	    key: "toggleCell",
-	    value: function toggleCell(e, color) {
+	    value: function toggleCell(e, type) {
 	      var clickedCell = this.cells.find(function (cell) {
 	        if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
 	          if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
-	            console.log(cell.id);
 	            return cell;
 	          }
 	        }
 	      });
 
-	      clickedCell.changeState(color);
+	      clickedCell.changeState(type);
 	    }
 	  }, {
 	    key: "populateGrid",
@@ -357,7 +368,7 @@
 	    this.xmax = x + 10;
 	    this.ymin = y + 1;
 	    this.ymax = y + 10;
-	    this.alive = false;
+	    this.type = false;
 	    this.neighbors = [];
 
 	    this.ctx = ctx;
@@ -371,13 +382,9 @@
 	  _createClass(Cell, [{
 	    key: 'changeState',
 	    value: function changeState() {
-	      var color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-	      if (this.alive) {
-	        this.alive = false;
-	      } else {
-	        this.alive = color;
-	      }
+	      this.type = type;
 	      this.render();
 	    }
 	  }, {
@@ -433,11 +440,14 @@
 	    value: function render() {
 	      this.ctx.clearRect(this.x, this.y, 10, 10);
 
-	      if (this.alive === 'green') {
+	      if (this.type === 'cabbage') {
 	        this.ctx.fillStyle = 'green';
 	        this.ctx.fillRect(this.x, this.y, 10, 10);
-	      } else if (this.alive === 'blue') {
+	      } else if (this.type === 'rabbit') {
 	        this.ctx.fillStyle = 'blue';
+	        this.ctx.fillRect(this.x, this.y, 10, 10);
+	      } else if (this.type === 'fox') {
+	        this.ctx.fillStyle = 'purple';
 	        this.ctx.fillRect(this.x, this.y, 10, 10);
 	      }
 
@@ -462,6 +472,8 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Automata = function () {
@@ -472,68 +484,149 @@
 	  }
 
 	  _createClass(Automata, [{
-	    key: "randomNeighbor",
-	    value: function randomNeighbor(array) {
-	      return array[Math.floor(Math.random() * array.length)];
+	    key: "random",
+	    value: function random(array) {
+	      return array[Math.floor(Math.random() * array.length)] - 1;
 	    }
 	  }, {
 	    key: "cellLogic",
 	    value: function cellLogic() {
 	      var _this = this;
 
-	      var changingCells = [];
+	      var changingCells = {};
+	      var cells = this.board.cells;
 
 	      var _loop = function _loop(i) {
-	        var currentCell = _this.board.cells[i];
-	        var cellNeighbors = currentCell.neighbors;
-	        var aliveNeighbors = cellNeighbors.filter(function (cellId) {
-	          return _this.board.cells[cellId - 1].alive;
-	        });
+	        var cellNeighbors = cells[i].neighbors;
+	        var typeHash = { "cabbage": 0, "rabbit": 0, "fox": 0 };
+	        var type = void 0;
 
-	        var blue = 0;
-	        var green = 0;
-
-	        aliveNeighbors.forEach(function (num) {
-	          if (_this.board.cells[num - 1].alive === 'blue') {
-	            blue++;
-	          } else {
-	            green++;
+	        cellNeighbors.forEach(function (num) {
+	          if (cells[num - 1].type === 'rabbit') {
+	            typeHash["rabbit"]++;
+	          } else if (cells[num - 1].type === 'cabbage') {
+	            typeHash["cabbage"]++;
+	          } else if (cells[num - 1].type === 'fox') {
+	            typeHash["fox"]++;
 	          }
 	        });
 
-	        var color = blue > green ? ["blue", [blue, green]] : ["green", [green, blue]];
+	        // sets `type` to most common neighbor
+	        var largestValue = Math.max.apply(Math, _toConsumableArray(Object.values(typeHash)));
 
-	        if (currentCell.alive) {
-	          if (blue === 0 && green === 0) {
-	            // Solitary cell
-	            var randomNeighbor = cellNeighbors[Math.floor(Math.random() * cellNeighbors.length)];
-	            color = [currentCell.alive, [0, 0]];
-	            changingCells.push([randomNeighbor - 1, color[0]]);
-	            changingCells.push([i]);
-	          } else if (aliveNeighbors.length === 1) {
-	            // Meeting a partner
-	            var _randomNeighbor = cellNeighbors[Math.floor(Math.random() * cellNeighbors.length)];
+	        Object.keys(typeHash).forEach(function (key) {
+	          if (typeHash["" + key] === largestValue) type = key;
+	        });
 
-	            if (color[0] === currentCell.alive) {
-	              console.log(_randomNeighbor);
+	        var neighborCount = Object.values(typeHash).reduce(function (sum, num) {
+	          return sum + num;
+	        });
 
-	              _randomNeighbor = cellNeighbors[Math.floor(Math.random() * cellNeighbors.length)];
+	        if (cells[i].type) {
 
-	              console.log(_randomNeighbor);
-	            } else {
-	              changingCells.push([i]);
+	          if (cells[i].type === 'cabbage') {
+	            // Chance to grow into unoccupied square
+	            // if (type !== 'rabbit') {
+
+	            var validNeighbors = cellNeighbors.filter(function (cell) {
+	              return changingCells[cell - 1] === undefined && !cells[cell - 1].type || cells[cell - 1].type === 'cabbage';
+	            });
+	            // console.log(validNeighbors);
+
+	            // changingCells.push([this.random(validNeighbors), 'cabbage']);
+	            // }
+	            // Eaten by rabbit
+	            // if (type === 'rabbit') changingCells.push([i]);
+	            // if (typeHash['rabbit']) {
+	            // changingCells[i] = 'false';
+	            // }
+	            if (validNeighbors.length > 0) {
+	              changingCells[_this.random(validNeighbors)] = 'cabbage';
 	            }
+	          } else if (cells[i].type === 'rabbit') {
+
+	            var _validNeighbors = cellNeighbors.filter(function (cell) {
+	              return changingCells[cell - 1] === undefined && !cells[cell - 1].type || cells[cell - 1].type === 'cabbage';
+	            });
+
+	            if (_validNeighbors.length > 0) {
+	              changingCells[_this.random(_validNeighbors)] = 'rabbit';
+	              changingCells[i] = false;
+	            }
+	          } else if (cells[i].type === 'fox') {}
+
+	          // if (neighborCount === 0) {
+	          //
+	          //   if (cells[i].type === 'rabbit' || cells[i].type === 'fox') {
+	          //     changingCells.push([this.random(cellNeighbors), cells[i].type]);
+	          //     changingCells.push([i]);
+	          //   } else if (cells[i].type === 'cabbage') {
+	          //     if (Math.floor(Math.random() * 32) === 31) {
+	          //       changingCells.push([this.random(cellNeighbors), cells[i].type]);
+	          //     }
+	          //   }
+	          //
+	          // } else if (neighborCount === 1) {
+	          //
+	          //   if (cells[i].type === 'cabbage') {
+	          //     if (type === 'cabbage') {
+	          //       if (Math.floor(Math.random() * 8) === 7) {
+	          //         changingCells.push([this.random(cellNeighbors), cells[i].type]);
+	          //       }
+	          //     } else if (type === 'rabbit') {
+	          //       changingCells.push([i]);
+	          //     }
+	          //   } else if (cells[i].type === 'rabbit') {
+	          //     if (type === 'fox') {
+	          //       changingCells.push([i]);
+	          //     } else if (type === 'rabbit') {
+	          //       if (Math.floor(Math.random() * 8) === 7) {
+	          //         changingCells.push([this.random(cellNeighbors), type]);
+	          //       }
+	          //     }
+	          //     changingCells.push([this.random(cellNeighbors), cells[i].type]);
+	          //     changingCells.push([i]);
+	          //   } else if (cells[i].type === 'fox') {
+	          //     changingCells.push([this.random(cellNeighbors), cells[i].type]);
+	          //     changingCells.push([i]);
+	          //   }
+	          //
+	          // } else {
+	          //
+	          // if (cells[i].type === 'cabbage') {
+	          // } else if (cells[i].type === 'rabbit') {
+	          // } else if (cells[i].type === 'fox') {
+	          // }
+	          //
+	          // }
+	          // else if (typeHash["false"] === 7) {
+	          //   // Meeting a partner
+	          //   if (type === cells[i].type) {
+	          //     changingCells.push([this.random(cellNeighbors), type]);
+	          //     changingCells.push([i]);
+	          //   }
+	          //   changingCells.push([i]);
+	          // } else {
+	          //   if (type[1][1] !== 0) {
+	          //     changingCells.push([i, type[0]]);
+	          //   }
+	          // }
+	        } else {
+	            // if (neighborCount === 2 && type === 'rabbit') {
+	            //   if (Math.floor(Math.random() * 8) === 7) {
+	            //     changingCells.push([i, type]);
+	            //   }
+	            // }
 	          }
-	        }
 	      };
 
 	      for (var i = 0; i < this.board.cells.length; i++) {
 	        _loop(i);
 	      }
 
-	      for (var i = 0; i < changingCells.length; i++) {
-	        this.board.cells[changingCells[i][0]].changeState(changingCells[i][1]);
-	      }
+	      Object.keys(changingCells).forEach(function (key) {
+	        cells[key].changeState(changingCells[key]);
+	      });
 	    }
 	  }]);
 
