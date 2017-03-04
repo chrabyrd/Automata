@@ -161,8 +161,6 @@
 	  }, {
 	    key: "handlePlayEvent",
 	    value: function handlePlayEvent() {
-	      var _this = this;
-
 	      this.handleResetEvent();
 	      this.playEvent = true;
 	      // const currentLevel = this.levels[this.currentLevel];
@@ -174,28 +172,27 @@
 	      //   this.board.cells[startingCells[i]].changeState();
 	      // }
 
-	      this.startGame = setInterval(function () {
-	        _this.automata.cellLogic();
-	        // this.winCondition();
-	      }, 100);
+	      // this.startGame = setInterval(() => {
+	      this.automata.cellLogic();
+	      // this.winCondition();
+	      // }, 100);
 	    }
 	  }, {
 	    key: "handlePauseEvent",
 	    value: function handlePauseEvent(e) {
-	      var _this2 = this;
-
 	      e.preventDefault();
-	      if (this.pauseEvent && this.playEvent) {
-	        this.pauseEvent = false;
-
-	        this.startGame = setInterval(function () {
-	          _this2.automata.cellLogic();
-	          // this.winCondition();
-	        }, 100);
-	      } else if (this.playEvent) {
-	        this.pauseEvent = true;
-	        clearInterval(this.startGame);
-	      }
+	      // if (this.pauseEvent && this.playEvent) {
+	      //   this.pauseEvent = false;
+	      //
+	      //   this.startGame = setInterval(() => {
+	      this.automata.cellLogic();
+	      // this.winCondition();
+	      //   }, 100);
+	      //
+	      // } else if (this.playEvent) {
+	      //   this.pauseEvent = true;
+	      //   clearInterval(this.startGame);
+	      // }
 	    }
 	  }, {
 	    key: "handleResetEvent",
@@ -503,6 +500,7 @@
 	      var _this = this;
 
 	      var changingCells = {};
+	      var changeRecord = {};
 	      var cells = this.board.cells;
 	      var shuffledCells = this.shuffle(this.board.cells.map(function (cell) {
 	        return cell.id - 1;
@@ -522,64 +520,82 @@
 	          }
 	        });
 
-	        if (!cells[id].type) {
-	          return;
-	        }
+	        if (!cells[id].type) return;
 
 	        if (cells[id].type === 'cabbage') {
 	          (function () {
 
-	            // const alone = Object.values(typeHash).reduce(function(sum, num) {
-	            //   return sum + num;
-	            // }) === 0;
 	            var validNeighbors = cellNeighbors.filter(function (cell) {
-	              return changingCells[cell - 1] === undefined && !cells[cell - 1].type;
+	              cell = cell - 1;
+	              return !changingCells[cell] && !cells[cell].type;
 	            });
 
 	            var grow = function grow() {
 	              if (validNeighbors.length > 0) {
-	                changingCells[_this.random(validNeighbors)] = 'cabbage';
+	                var nextCell = _this.random(validNeighbors);
+	                changeRecord[id] = nextCell;
+	                changingCells[nextCell] = 'cabbage';
 	              }
 	            };
 
-	            var die = function die() {
-	              changingCells[id] = false;
-	            };
-
-	            // Grow
-	            // if (typeHash['cabbage']) {
 	            grow();
-	            // }
 	          })();
 	        } else if (cells[id].type === 'rabbit') {
 	          (function () {
 
 	            var validNeighbors = cellNeighbors.filter(function (cell) {
-	              return changingCells[cell - 1] === undefined && cells[cell - 1].type !== 'rabbit';
+	              cell = cell - 1;
+	              return !changingCells[cell] && (cells[cell].type === 'cabbage' || !cells[cell].type);
 	            });
 
 	            var wander = function wander() {
-	              if (validNeighbors.length > 0) {
-	                changingCells[_this.random(validNeighbors)] = 'rabbit';
-	                changingCells[id] = false;
-	              }
+	              if (validNeighbors.length === 0) return;
+	              var nextCell = _this.random(validNeighbors);
+	              changeRecord[id] = nextCell;
+	              changingCells[nextCell] = 'rabbit';
+	              changingCells[id] = false;
 	            };
 
 	            var reproduce = function reproduce() {
-	              if (validNeighbors.length > 0) {
-	                changingCells[_this.random(validNeighbors)] = 'rabbit';
-	              }
+	              if (validNeighbors.length === 0) return;
+	              var nextCell = _this.random(validNeighbors);
+	              changeRecord[id] = nextCell;
+	              changingCells[nextCell] = 'rabbit';
 	            };
 
 	            var die = function die() {
 	              changingCells[id] = false;
 	            };
 
-	            if (!typeHash['cabbage'] && !typeHash['fox']) {
+	            // const hunt = () => {
+	            //
+	            //   const prey = cellNeighbors.filter(function(num) {
+	            //     return cells[num - 1].type === 'cabbage';
+	            //   });
+	            //
+	            //   if (prey.length > 0) {
+	            //     const preyCell = this.random(prey);
+	            //
+	            //     if (changeRecord[preyCell]) {
+	            //       changingCells[changeRecord[preyCell]] = 'rabbit';
+	            //       changeRecord[id] = changeRecord[preyCell];
+	            //     } else {
+	            //       changingCells[preyCell] = 'rabbit';
+	            //       changeRecord[id] = preyCell;
+	            //     }
+	            //
+	            //     changingCells[id] = false;
+	            //
+	            //   } else {
+	            //     wander();
+	            //   }
+	            // };
+
+	            if (!typeHash['cabbage']) {
 	              die();
 	            } else {
 	              wander();
-	              if (typeHash['rabbit'] && !typeHash['fox']) {
+	              if (!typeHash['fox'] && typeHash['rabbit']) {
 	                reproduce();
 	              }
 	            }
@@ -588,27 +604,55 @@
 	          (function () {
 
 	            var validNeighbors = cellNeighbors.filter(function (cell) {
-	              return changingCells[cell - 1] === undefined && cells[cell - 1].type !== 'fox';
+	              cell = cell - 1;
+	              return !changingCells[cell] && (cells[cell].type === 'cabbage' || !cells[cell].type);
 	            });
 
 	            var wander = function wander() {
-	              if (validNeighbors.length > 0) {
-	                changingCells[_this.random(validNeighbors)] = 'fox';
-	                changingCells[id] = false;
-	              }
+	              if (validNeighbors.length === 0) return;
+	              var nextCell = _this.random(validNeighbors);
+	              changeRecord[id] = nextCell;
+	              changingCells[nextCell] = 'fox';
+	              changingCells[id] = false;
 	            };
 
 	            var reproduce = function reproduce() {
-	              if (validNeighbors.length > 0) {
-	                changingCells[_this.random(validNeighbors)] = 'fox';
-	              }
+	              if (validNeighbors.length === 0) return;
+	              var nextCell = _this.random(validNeighbors);
+	              changeRecord[id] = nextCell;
+	              changingCells[nextCell] = 'fox';
 	            };
 
 	            var die = function die() {
 	              changingCells[id] = false;
 	            };
 
-	            if (!typeHash['cabbage'] && !typeHash['rabbit']) {
+	            // const hunt = () => {
+	            //
+	            //   const prey = cellNeighbors.filter(function(num) {
+	            //     return cells[num - 1].type === 'rabbit';
+	            //   });
+	            //
+	            //   if (prey.length > 0) {
+	            //     const preyCell = this.random(prey);
+	            //
+	            //     if (changeRecord[preyCell]) {
+	            //       changingCells[changeRecord[preyCell]] = 'fox';
+	            //       changeRecord[id] = changeRecord[preyCell];
+	            //     } else {
+	            //       changingCells[preyCell] = 'fox';
+	            //       changeRecord[id] = preyCell;
+	            //     }
+	            //
+	            //     changingCells[id] = false;
+	            //
+	            //   } else {
+	            //     wander();
+	            //   }
+	            // };
+
+
+	            if (!typeHash['cabbage']) {
 	              die();
 	            } else {
 	              wander();
