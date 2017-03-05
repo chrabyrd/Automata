@@ -19,108 +19,44 @@ class Automata {
 
   cellLogic () {
     const changingCells = {};
-    const changeRecord = {};
     const cells = this.board.cells;
-    const shuffledCells = this.shuffle(this.board.cells.map(cell => cell.id - 1));
+    const shuffledCells = this.shuffle(cells.map(cell => cell.id - 1));
 
     shuffledCells.forEach(id => {
+      const type = cells[id].type;
+      const typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0 };
       const cellNeighbors = cells[id].neighbors;
-      const typeHash = { "cabbage": 0, "rabbit": 0, "fox": 0 };
 
-      cellNeighbors.forEach(num => {
-        if (cells[num - 1].type === 'rabbit') {
-          typeHash["rabbit"]++;
-        } else if (cells[num - 1].type === 'cabbage'){
-          typeHash["cabbage"]++;
-        } else if (cells[num - 1].type === 'fox'){
-          typeHash["fox"]++;
-        }
+      const validNeighbors = cellNeighbors.filter(function(cell) {
+        cell = cell - 1;
+        return !changingCells[cell]
+        && (cells[cell].type !== type);
       });
 
-      if (!cells[id].type) return;
+      if (!type) return;
 
-      if (cells[id].type === 'cabbage') {
+      cellNeighbors.forEach(num => {typeHash[cells[num - 1].type]++;});
 
-        const validNeighbors = cellNeighbors.filter(function(cell) {
-          cell = cell - 1;
-          return !changingCells[cell] && !cells[cell].type;
-        });
+      const wander = () => {
+        if (validNeighbors.length === 0) return;
+        const nextCell = this.random(validNeighbors);
+        changingCells[nextCell] = type;
+        changingCells[id] = false;
+      };
 
-        const grow = () => {
-          if (validNeighbors.length > 0) {
-            const nextCell = this.random(validNeighbors);
-            changeRecord[id] = nextCell;
-            changingCells[nextCell] = 'cabbage';
-          }
-        };
+      const reproduce = () => {
+        if (validNeighbors.length === 0) return;
+        const nextCell = this.random(validNeighbors);
+        changingCells[nextCell] = type;
+      };
 
-        // if (!typeHash['rabbit'] && !typeHash['fox']){
-          grow();
+      const die = () => {
+        changingCells[id] = false;
+      };
 
-        // }
-
-      } else {
-
-        const validNeighbors = cellNeighbors.filter(function(cell) {
-          cell = cell - 1;
-          return !changingCells[cell]
-                  && (cells[cell].type === 'cabbage'
-                    || !cells[cell].type);
-        });
-
-        const wander = type => {
-          if (validNeighbors.length === 0) return;
-          const nextCell = this.random(validNeighbors);
-          changeRecord[id] = nextCell;
-          changingCells[nextCell] = type;
-          changingCells[id] = false;
-        };
-
-        const reproduce = type => {
-          if (validNeighbors.length === 0) return;
-          const nextCell = this.random(validNeighbors);
-          changeRecord[id] = nextCell;
-          changingCells[nextCell] = type;
-        };
-
-        const die = () => {
-          changingCells[id] = false;
-        };
-
-        if (!typeHash['cabbage']) {
-          die();
-        } else {
-          wander(cells[id].type);
-          if (typeHash[cells[id].type]) {
-            reproduce(cells[id].type);
-          }
-        }
-
-        // const hunt = () => {
-        //
-        //   const prey = cellNeighbors.filter(function(num) {
-        //     return cells[num - 1].type === 'rabbit';
-        //   });
-        //
-        //   if (prey.length > 0) {
-        //     const preyCell = this.random(prey);
-        //
-        //     if (changeRecord[preyCell]) {
-        //       changingCells[changeRecord[preyCell]] = 'fox';
-        //       changeRecord[id] = changeRecord[preyCell];
-        //     } else {
-        //       changingCells[preyCell] = 'fox';
-        //       changeRecord[id] = preyCell;
-        //     }
-        //
-        //     changingCells[id] = false;
-        //
-        //   } else {
-        //     wander();
-        //   }
-        // };
-
-
+      wander();
+      if (typeHash[type]) {
+        reproduce();
       }
     });
 

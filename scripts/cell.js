@@ -16,7 +16,7 @@ class Cell {
     this.render();
   }
 
-  changeState (type = false) {
+  changeState (type) {
     this.type = type;
     this.render();
   }
@@ -67,13 +67,13 @@ class Cell {
   render () {
     this.ctx.clearRect(this.x, this.y, 10, 10);
 
-    if (this.type === 'cabbage') {
-      this.ctx.fillStyle = 'green';
+    if (this.type === 'typeOne') {
+      this.ctx.fillStyle = 'red';
       this.ctx.fillRect(this.x, this.y, 10, 10);
-    } else if (this.type === 'rabbit') {
+    } else if (this.type === 'typeTwo') {
       this.ctx.fillStyle = 'blue';
       this.ctx.fillRect(this.x, this.y, 10, 10);
-    } else if (this.type === 'fox') {
+    } else if (this.type === 'typeThree') {
       this.ctx.fillStyle = 'purple';
       this.ctx.fillRect(this.x, this.y, 10, 10);
     }

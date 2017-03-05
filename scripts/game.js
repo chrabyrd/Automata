@@ -16,7 +16,7 @@ class Game {
     this.currentLevel = 0;
     this.startGame;
 
-    this.type = 'cabbage';
+    this.type = 'typeOne';
 
   }
 
@@ -33,11 +33,11 @@ class Game {
 
   toggleColor (e) {
     if (e.keyCode === 49) {
-      this.type = 'cabbage';
+      this.type = 'typeOne';
     } else if (e.keyCode === 50) {
-      this.type = 'rabbit';
+      this.type = 'typeTwo';
     } else if (e.keyCode === 51) {
-      this.type = 'fox';
+      this.type = 'typeThree';
     }
   }
 

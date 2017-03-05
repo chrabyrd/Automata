@@ -132,7 +132,7 @@
 	    this.currentLevel = 0;
 	    this.startGame;
 
-	    this.type = 'cabbage';
+	    this.type = 'typeOne';
 	  }
 
 	  _createClass(Game, [{
@@ -151,11 +151,11 @@
 	    key: "toggleColor",
 	    value: function toggleColor(e) {
 	      if (e.keyCode === 49) {
-	        this.type = 'cabbage';
+	        this.type = 'typeOne';
 	      } else if (e.keyCode === 50) {
-	        this.type = 'rabbit';
+	        this.type = 'typeTwo';
 	      } else if (e.keyCode === 51) {
-	        this.type = 'fox';
+	        this.type = 'typeThree';
 	      }
 	    }
 	  }, {
@@ -381,9 +381,7 @@
 
 	  _createClass(Cell, [{
 	    key: 'changeState',
-	    value: function changeState() {
-	      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
+	    value: function changeState(type) {
 	      this.type = type;
 	      this.render();
 	    }
@@ -440,13 +438,13 @@
 	    value: function render() {
 	      this.ctx.clearRect(this.x, this.y, 10, 10);
 
-	      if (this.type === 'cabbage') {
-	        this.ctx.fillStyle = 'green';
+	      if (this.type === 'typeOne') {
+	        this.ctx.fillStyle = 'red';
 	        this.ctx.fillRect(this.x, this.y, 10, 10);
-	      } else if (this.type === 'rabbit') {
+	      } else if (this.type === 'typeTwo') {
 	        this.ctx.fillStyle = 'blue';
 	        this.ctx.fillRect(this.x, this.y, 10, 10);
-	      } else if (this.type === 'fox') {
+	      } else if (this.type === 'typeThree') {
 	        this.ctx.fillStyle = 'purple';
 	        this.ctx.fillRect(this.x, this.y, 10, 10);
 	      }
@@ -503,110 +501,47 @@
 	      var _this = this;
 
 	      var changingCells = {};
-	      var changeRecord = {};
 	      var cells = this.board.cells;
-	      var shuffledCells = this.shuffle(this.board.cells.map(function (cell) {
+	      var shuffledCells = this.shuffle(cells.map(function (cell) {
 	        return cell.id - 1;
 	      }));
 
 	      shuffledCells.forEach(function (id) {
+	        var type = cells[id].type;
+	        var typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0 };
 	        var cellNeighbors = cells[id].neighbors;
-	        var typeHash = { "cabbage": 0, "rabbit": 0, "fox": 0 };
 
-	        cellNeighbors.forEach(function (num) {
-	          if (cells[num - 1].type === 'rabbit') {
-	            typeHash["rabbit"]++;
-	          } else if (cells[num - 1].type === 'cabbage') {
-	            typeHash["cabbage"]++;
-	          } else if (cells[num - 1].type === 'fox') {
-	            typeHash["fox"]++;
-	          }
+	        var validNeighbors = cellNeighbors.filter(function (cell) {
+	          cell = cell - 1;
+	          return !changingCells[cell] && cells[cell].type !== type;
 	        });
 
-	        if (!cells[id].type) return;
+	        if (!type) return;
 
-	        if (cells[id].type === 'cabbage') {
-	          (function () {
+	        cellNeighbors.forEach(function (num) {
+	          typeHash[cells[num - 1].type]++;
+	        });
 
-	            var validNeighbors = cellNeighbors.filter(function (cell) {
-	              cell = cell - 1;
-	              return !changingCells[cell] && !cells[cell].type;
-	            });
+	        var wander = function wander() {
+	          if (validNeighbors.length === 0) return;
+	          var nextCell = _this.random(validNeighbors);
+	          changingCells[nextCell] = type;
+	          changingCells[id] = false;
+	        };
 
-	            var grow = function grow() {
-	              if (validNeighbors.length > 0) {
-	                var nextCell = _this.random(validNeighbors);
-	                changeRecord[id] = nextCell;
-	                changingCells[nextCell] = 'cabbage';
-	              }
-	            };
+	        var reproduce = function reproduce() {
+	          if (validNeighbors.length === 0) return;
+	          var nextCell = _this.random(validNeighbors);
+	          changingCells[nextCell] = type;
+	        };
 
-	            // if (!typeHash['rabbit'] && !typeHash['fox']){
-	            grow();
+	        var die = function die() {
+	          changingCells[id] = false;
+	        };
 
-	            // }
-	          })();
-	        } else {
-	          (function () {
-
-	            var validNeighbors = cellNeighbors.filter(function (cell) {
-	              cell = cell - 1;
-	              return !changingCells[cell] && (cells[cell].type === 'cabbage' || !cells[cell].type);
-	            });
-
-	            var wander = function wander(type) {
-	              if (validNeighbors.length === 0) return;
-	              var nextCell = _this.random(validNeighbors);
-	              changeRecord[id] = nextCell;
-	              changingCells[nextCell] = type;
-	              changingCells[id] = false;
-	            };
-
-	            var reproduce = function reproduce(type) {
-	              if (validNeighbors.length === 0) return;
-	              var nextCell = _this.random(validNeighbors);
-	              changeRecord[id] = nextCell;
-	              changingCells[nextCell] = type;
-	            };
-
-	            var die = function die() {
-	              changingCells[id] = false;
-	            };
-
-	            if (!typeHash['cabbage']) {
-	              die();
-	            } else {
-	              wander(cells[id].type);
-	              if (typeHash[cells[id].type]) {
-	                reproduce(cells[id].type);
-	              }
-	            }
-
-	            // const hunt = () => {
-	            //
-	            //   const prey = cellNeighbors.filter(function(num) {
-	            //     return cells[num - 1].type === 'rabbit';
-	            //   });
-	            //
-	            //   if (prey.length > 0) {
-	            //     const preyCell = this.random(prey);
-	            //
-	            //     if (changeRecord[preyCell]) {
-	            //       changingCells[changeRecord[preyCell]] = 'fox';
-	            //       changeRecord[id] = changeRecord[preyCell];
-	            //     } else {
-	            //       changingCells[preyCell] = 'fox';
-	            //       changeRecord[id] = preyCell;
-	            //     }
-	            //
-	            //     changingCells[id] = false;
-	            //
-	            //   } else {
-	            //     wander();
-	            //   }
-	            // };
-
-	          })();
+	        wander();
+	        if (typeHash[type]) {
+	          reproduce();
 	        }
 	      });
 
