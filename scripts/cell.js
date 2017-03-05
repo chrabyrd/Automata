@@ -68,7 +68,7 @@ class Cell {
     this.ctx.clearRect(this.x, this.y, 10, 10);
 
     if (this.type === 'typeOne') {
-      this.ctx.fillStyle = 'red';
+      this.ctx.fillStyle = 'green';
       this.ctx.fillRect(this.x, this.y, 10, 10);
     } else if (this.type === 'typeTwo') {
       this.ctx.fillStyle = 'blue';

@@ -439,7 +439,7 @@
 	      this.ctx.clearRect(this.x, this.y, 10, 10);
 
 	      if (this.type === 'typeOne') {
-	        this.ctx.fillStyle = 'red';
+	        this.ctx.fillStyle = 'green';
 	        this.ctx.fillRect(this.x, this.y, 10, 10);
 	      } else if (this.type === 'typeTwo') {
 	        this.ctx.fillStyle = 'blue';
@@ -507,31 +507,23 @@
 	      }));
 
 	      shuffledCells.forEach(function (id) {
+	        if (!cells[id].type) return;
+
 	        var type = cells[id].type;
 	        var typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0 };
 	        var cellNeighbors = cells[id].neighbors;
-
-	        var validNeighbors = cellNeighbors.filter(function (cell) {
-	          cell = cell - 1;
-	          return !changingCells[cell] && cells[cell].type !== type;
-	        });
-
-	        if (!type) return;
-
 	        cellNeighbors.forEach(function (num) {
 	          typeHash[cells[num - 1].type]++;
 	        });
 
-	        var wander = function wander() {
-	          if (validNeighbors.length === 0) return;
-	          var nextCell = _this.random(validNeighbors);
+	        var wander = function wander(array) {
+	          var nextCell = _this.random(array);
 	          changingCells[nextCell] = type;
 	          changingCells[id] = false;
 	        };
 
-	        var reproduce = function reproduce() {
-	          if (validNeighbors.length === 0) return;
-	          var nextCell = _this.random(validNeighbors);
+	        var reproduce = function reproduce(array) {
+	          var nextCell = _this.random(array);
 	          changingCells[nextCell] = type;
 	        };
 
@@ -539,9 +531,53 @@
 	          changingCells[id] = false;
 	        };
 
-	        wander();
-	        if (typeHash[type]) {
-	          reproduce();
+	        if (type === 'typeOne') {
+	          // EXAMPLE: CABBAGE
+	          var validNeighbors = cellNeighbors.filter(function (cell) {
+	            cell = cell - 1;
+	            return !changingCells[cell] && !cells[cell].type;
+	          });
+
+	          if (validNeighbors.length === 0) return;
+
+	          // FRACTALS
+	          // if (!typeHash['typeTwo'] && !typeHash['typeThree']) {
+	          reproduce(validNeighbors);
+	          // }
+	        } else if (type === 'typeTwo') {
+	          // EXAMPLE: NON-PREDATOR SPECIES
+	          var _validNeighbors = cellNeighbors.filter(function (cell) {
+	            cell = cell - 1;
+	            return !changingCells[cell] && cells[cell].type !== type;
+	          });
+
+	          if (_validNeighbors.length === 0) return;
+
+	          if (!typeHash['typeOne']) {
+	            die();
+	          } else {
+	            wander(_validNeighbors);
+	            if (typeHash[type]) {
+	              reproduce(_validNeighbors);
+	            }
+	          }
+	        } else if (type === 'typeThree') {
+	          // EXAMPLE: NON-PREDATOR SPECIES
+	          var _validNeighbors2 = cellNeighbors.filter(function (cell) {
+	            cell = cell - 1;
+	            return !changingCells[cell] && cells[cell].type !== type;
+	          });
+
+	          if (_validNeighbors2.length === 0) return;
+
+	          if (!typeHash['typeOne']) {
+	            die();
+	          } else {
+	            wander(_validNeighbors2);
+	            if (typeHash[type]) {
+	              reproduce(_validNeighbors2);
+	            }
+	          }
 	        }
 	      });
 
