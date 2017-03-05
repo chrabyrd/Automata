@@ -161,6 +161,8 @@
 	  }, {
 	    key: "handlePlayEvent",
 	    value: function handlePlayEvent() {
+	      var _this = this;
+
 	      this.handleResetEvent();
 	      this.playEvent = true;
 	      // const currentLevel = this.levels[this.currentLevel];
@@ -172,27 +174,28 @@
 	      //   this.board.cells[startingCells[i]].changeState();
 	      // }
 
-	      // this.startGame = setInterval(() => {
-	      this.automata.cellLogic();
-	      // this.winCondition();
-	      // }, 100);
+	      this.startGame = setInterval(function () {
+	        _this.automata.cellLogic();
+	        // this.winCondition();
+	      }, 100);
 	    }
 	  }, {
 	    key: "handlePauseEvent",
 	    value: function handlePauseEvent(e) {
+	      var _this2 = this;
+
 	      e.preventDefault();
-	      // if (this.pauseEvent && this.playEvent) {
-	      //   this.pauseEvent = false;
-	      //
-	      //   this.startGame = setInterval(() => {
-	      this.automata.cellLogic();
-	      // this.winCondition();
-	      //   }, 100);
-	      //
-	      // } else if (this.playEvent) {
-	      //   this.pauseEvent = true;
-	      //   clearInterval(this.startGame);
-	      // }
+	      if (this.pauseEvent && this.playEvent) {
+	        this.pauseEvent = false;
+
+	        this.startGame = setInterval(function () {
+	          _this2.automata.cellLogic();
+	          // this.winCondition();
+	        }, 100);
+	      } else if (this.playEvent) {
+	        this.pauseEvent = true;
+	        clearInterval(this.startGame);
+	      }
 	    }
 	  }, {
 	    key: "handleResetEvent",
@@ -538,9 +541,12 @@
 	              }
 	            };
 
+	            // if (!typeHash['rabbit'] && !typeHash['fox']){
 	            grow();
+
+	            // }
 	          })();
-	        } else if (cells[id].type === 'rabbit') {
+	        } else {
 	          (function () {
 
 	            var validNeighbors = cellNeighbors.filter(function (cell) {
@@ -548,84 +554,33 @@
 	              return !changingCells[cell] && (cells[cell].type === 'cabbage' || !cells[cell].type);
 	            });
 
-	            var wander = function wander() {
+	            var wander = function wander(type) {
 	              if (validNeighbors.length === 0) return;
 	              var nextCell = _this.random(validNeighbors);
 	              changeRecord[id] = nextCell;
-	              changingCells[nextCell] = 'rabbit';
+	              changingCells[nextCell] = type;
 	              changingCells[id] = false;
 	            };
 
-	            var reproduce = function reproduce() {
+	            var reproduce = function reproduce(type) {
 	              if (validNeighbors.length === 0) return;
 	              var nextCell = _this.random(validNeighbors);
 	              changeRecord[id] = nextCell;
-	              changingCells[nextCell] = 'rabbit';
+	              changingCells[nextCell] = type;
 	            };
 
 	            var die = function die() {
 	              changingCells[id] = false;
 	            };
-
-	            // const hunt = () => {
-	            //
-	            //   const prey = cellNeighbors.filter(function(num) {
-	            //     return cells[num - 1].type === 'cabbage';
-	            //   });
-	            //
-	            //   if (prey.length > 0) {
-	            //     const preyCell = this.random(prey);
-	            //
-	            //     if (changeRecord[preyCell]) {
-	            //       changingCells[changeRecord[preyCell]] = 'rabbit';
-	            //       changeRecord[id] = changeRecord[preyCell];
-	            //     } else {
-	            //       changingCells[preyCell] = 'rabbit';
-	            //       changeRecord[id] = preyCell;
-	            //     }
-	            //
-	            //     changingCells[id] = false;
-	            //
-	            //   } else {
-	            //     wander();
-	            //   }
-	            // };
 
 	            if (!typeHash['cabbage']) {
 	              die();
 	            } else {
-	              wander();
-	              if (!typeHash['fox'] && typeHash['rabbit']) {
-	                reproduce();
+	              wander(cells[id].type);
+	              if (typeHash[cells[id].type]) {
+	                reproduce(cells[id].type);
 	              }
 	            }
-	          })();
-	        } else if (cells[id].type === 'fox') {
-	          (function () {
-
-	            var validNeighbors = cellNeighbors.filter(function (cell) {
-	              cell = cell - 1;
-	              return !changingCells[cell] && (cells[cell].type === 'cabbage' || !cells[cell].type);
-	            });
-
-	            var wander = function wander() {
-	              if (validNeighbors.length === 0) return;
-	              var nextCell = _this.random(validNeighbors);
-	              changeRecord[id] = nextCell;
-	              changingCells[nextCell] = 'fox';
-	              changingCells[id] = false;
-	            };
-
-	            var reproduce = function reproduce() {
-	              if (validNeighbors.length === 0) return;
-	              var nextCell = _this.random(validNeighbors);
-	              changeRecord[id] = nextCell;
-	              changingCells[nextCell] = 'fox';
-	            };
-
-	            var die = function die() {
-	              changingCells[id] = false;
-	            };
 
 	            // const hunt = () => {
 	            //
@@ -651,15 +606,6 @@
 	            //   }
 	            // };
 
-
-	            if (!typeHash['cabbage']) {
-	              die();
-	            } else {
-	              wander();
-	              if (typeHash['fox'] && !typeHash['rabbit']) {
-	                reproduce();
-	              }
-	            }
 	          })();
 	        }
 	      });

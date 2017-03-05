@@ -54,9 +54,12 @@ class Automata {
           }
         };
 
-        grow();
+        // if (!typeHash['rabbit'] && !typeHash['fox']){
+          grow();
 
-      } else if (cells[id].type === 'rabbit') {
+        // }
+
+      } else {
 
         const validNeighbors = cellNeighbors.filter(function(cell) {
           cell = cell - 1;
@@ -65,85 +68,33 @@ class Automata {
                     || !cells[cell].type);
         });
 
-        const wander = () => {
+        const wander = type => {
           if (validNeighbors.length === 0) return;
           const nextCell = this.random(validNeighbors);
           changeRecord[id] = nextCell;
-          changingCells[nextCell] = 'rabbit';
+          changingCells[nextCell] = type;
           changingCells[id] = false;
         };
 
-        const reproduce = () => {
+        const reproduce = type => {
           if (validNeighbors.length === 0) return;
           const nextCell = this.random(validNeighbors);
           changeRecord[id] = nextCell;
-          changingCells[nextCell] = 'rabbit';
+          changingCells[nextCell] = type;
         };
 
         const die = () => {
           changingCells[id] = false;
         };
-
-        // const hunt = () => {
-        //
-        //   const prey = cellNeighbors.filter(function(num) {
-        //     return cells[num - 1].type === 'cabbage';
-        //   });
-        //
-        //   if (prey.length > 0) {
-        //     const preyCell = this.random(prey);
-        //
-        //     if (changeRecord[preyCell]) {
-        //       changingCells[changeRecord[preyCell]] = 'rabbit';
-        //       changeRecord[id] = changeRecord[preyCell];
-        //     } else {
-        //       changingCells[preyCell] = 'rabbit';
-        //       changeRecord[id] = preyCell;
-        //     }
-        //
-        //     changingCells[id] = false;
-        //
-        //   } else {
-        //     wander();
-        //   }
-        // };
 
         if (!typeHash['cabbage']) {
           die();
         } else {
-          wander();
-          if (!typeHash['fox'] && typeHash['rabbit']) {
-            reproduce();
+          wander(cells[id].type);
+          if (typeHash[cells[id].type]) {
+            reproduce(cells[id].type);
           }
         }
-
-      } else if (cells[id].type === 'fox') {
-
-        const validNeighbors = cellNeighbors.filter(function(cell) {
-          cell = cell - 1;
-          return !changingCells[cell]
-                  && (cells[cell].type === 'cabbage'
-                    || !cells[cell].type);
-        });
-
-        const wander = () => {
-          if (validNeighbors.length === 0) return;
-          const nextCell = this.random(validNeighbors);
-          changeRecord[id] = nextCell;
-          changingCells[nextCell] = 'fox';
-          changingCells[id] = false;
-        };
-
-        const reproduce = () => {
-          if (validNeighbors.length === 0) return;
-          const nextCell = this.random(validNeighbors);
-          changeRecord[id] = nextCell;
-          changingCells[nextCell] = 'fox';
-        };
-
-        const die = () => {
-          changingCells[id] = false;
-        };
 
         // const hunt = () => {
         //
@@ -170,14 +121,6 @@ class Automata {
         // };
 
 
-        if (!typeHash['cabbage']) {
-          die();
-        } else {
-          wander();
-          if (typeHash['fox'] && !typeHash['rabbit']) {
-            reproduce();
-          }
-        }
       }
     });
 

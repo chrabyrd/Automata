@@ -53,26 +53,26 @@ class Game {
     //   this.board.cells[startingCells[i]].changeState();
     // }
 
-    // this.startGame = setInterval(() => {
+    this.startGame = setInterval(() => {
       this.automata.cellLogic();
       // this.winCondition();
-    // }, 100);
+    }, 100);
   }
 
   handlePauseEvent (e) {
     e.preventDefault();
-    // if (this.pauseEvent && this.playEvent) {
-    //   this.pauseEvent = false;
-    //
-    //   this.startGame = setInterval(() => {
+    if (this.pauseEvent && this.playEvent) {
+      this.pauseEvent = false;
+
+      this.startGame = setInterval(() => {
         this.automata.cellLogic();
         // this.winCondition();
-    //   }, 100);
-    //
-    // } else if (this.playEvent) {
-    //   this.pauseEvent = true;
-    //   clearInterval(this.startGame);
-    // }
+      }, 100);
+
+    } else if (this.playEvent) {
+      this.pauseEvent = true;
+      clearInterval(this.startGame);
+    }
   }
 
   handleResetEvent () {
