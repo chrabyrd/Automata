@@ -22,7 +22,7 @@ class Automata {
     const changingCells = {};
     const cells = this.board.cells;
     const shuffledCells = this.shuffle(cells.map(cell => cell.id - 1));
-
+    
     shuffledCells.forEach(id => {
       if (!cells[id].type) return;
 
@@ -104,8 +104,8 @@ class Automata {
         // });
 
       } else if (type === 'typeTwo') {
-        // EXAMPLE: NON-PREDATOR SPECIES
         this.validNeighbors = getValidNeighbors([false, 'typeOne']);
+        // EXAMPLE: NON-PREDATOR SPECIES
         live({
           'dieCon': !typeHash['typeOne'],
           'stayCon': this.validNeighbors.length === 0,
@@ -114,8 +114,8 @@ class Automata {
         });
 
       } else if (type === 'typeThree') {
-        // EXAMPLE: NON-PREDATOR SPECIES
         this.validNeighbors = getValidNeighbors([false, 'typeOne']);
+        // EXAMPLE: NON-PREDATOR SPECIES
         live({
           'dieCon': !typeHash['typeOne'],
           'stayCon': this.validNeighbors.length === 0,

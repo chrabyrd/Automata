@@ -37,19 +37,9 @@ class Cell {
     const bottomLeft = this.id + (offsetValue - 1);
     const topRight = this.id - (offsetValue - 1);
     const bottomRight = this.id + (offsetValue + 1);
-    let neighborArray;
 
-    if (this.id % offsetValue === 1) {
-      // Left side
-      neighborArray = [top, topRight, right, bottomRight, bottom];
-    } else if (this.id % offsetValue === 0) {
-      // Right side
-      neighborArray = [top, bottom, bottomLeft + 1, left, topLeft];
-    } else {
-      // Center
-      neighborArray = [top, topRight, right, bottomRight, bottom,
-        bottomLeft, left, topLeft];
-    }
+    const neighborArray = [top, topRight, right, bottomRight, bottom,
+                           bottomLeft, left, topLeft];
 
     neighborArray.forEach(num => {
       if (num > 0 && num <= maxCellId) {this.neighbors.push(num);}

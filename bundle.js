@@ -60,7 +60,7 @@
 	  var rulesModal = document.getElementById("rulesModal");
 	  var openerModal = document.getElementById("openerModal");
 
-	  var game = new _game2.default(mainCtx);
+	  var game = new _game2.default(mainCanvas, mainCtx);
 
 	  mainCanvas.addEventListener('click', function (e) {
 	    return game.handleClickEvent(e);
@@ -114,22 +114,58 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Game = function () {
-	  function Game(mainCtx) {
+	  function Game(mainCanvas, mainCtx) {
 	    _classCallCheck(this, Game);
 
+	    this.mainCanvas = mainCanvas;
 	    this.mainCtx = mainCtx;
-	    this.pauseEvent = false;
-	    this.board = new _board2.default(this.mainCtx, 5, 800, 600);
+	    this.validCellSizes = [];
+	    this.cellSize = 6;
+	    this.width = window.outerWidth % 2 === 0 ? window.outerWidth : window.outerWidth - 1;
+	    this.height = window.outerHeight % 2 === 0 ? window.outerHeight : window.outerHeight - 1;
+	    this.getGridSize();
+	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
 	    this.automata = new _automata2.default(this.board);
+	    this.pauseEvent = false;
 	    this.cellType = 'typeOne';
 	    this.startGame = null;
-
 	    this.handlePlayEvent();
 	    // this.levels = levels;
 	    // this.currentLevel = 0;
 	  }
 
 	  _createClass(Game, [{
+	    key: "getCellSizes",
+	    value: function getCellSizes() {
+	      var temp = [];
+
+	      for (var i = 0; i < Math.sqrt(this.width); i++) {
+	        if (this.width % i === 0) temp.push(i);
+	      }
+
+	      for (var _i = 0; _i < Math.sqrt(this.height); _i++) {
+	        if (this.height % _i === 0) temp.push(_i);
+	      }
+
+	      for (var _i2 = 0; _i2 < temp.length; _i2++) {
+	        var num = temp.shift();
+	        if (temp.includes(num)) this.validCellSizes.push(num);
+	      }
+	    }
+	  }, {
+	    key: "getGridSize",
+	    value: function getGridSize() {
+	      while (this.validCellSizes.length !== 8) {
+	        this.validCellSizes = [];
+	        Math.floor(Math.random() * 2) === 1 ? this.width++ : this.width--;
+	        Math.floor(Math.random() * 2) === 1 ? this.height++ : this.height--;
+	        this.getCellSizes();
+	        this.mainCanvas.width = this.width;
+	        this.mainCanvas.height = this.height;
+	      }
+	      console.log(this.validCellSizes);
+	    }
+	  }, {
 	    key: "handleClickEvent",
 	    value: function handleClickEvent(e) {
 	      e.preventDefault();
@@ -153,7 +189,7 @@
 
 	      this.startGame = setInterval(function () {
 	        _this.automata.cellLogic();
-	      }, 100);
+	      }, 50);
 	    }
 	  }, {
 	    key: "handlePauseEvent",
@@ -223,6 +259,7 @@
 	        }
 	      });
 
+	      console.log(clickedCell.id, clickedCell.neighbors);
 	      clickedCell.changeState(type);
 	    }
 	  }, {
@@ -312,18 +349,8 @@
 	      var bottomLeft = this.id + (offsetValue - 1);
 	      var topRight = this.id - (offsetValue - 1);
 	      var bottomRight = this.id + (offsetValue + 1);
-	      var neighborArray = void 0;
 
-	      if (this.id % offsetValue === 1) {
-	        // Left side
-	        neighborArray = [top, topRight, right, bottomRight, bottom];
-	      } else if (this.id % offsetValue === 0) {
-	        // Right side
-	        neighborArray = [top, bottom, bottomLeft + 1, left, topLeft];
-	      } else {
-	        // Center
-	        neighborArray = [top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft];
-	      }
+	      var neighborArray = [top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft];
 
 	      neighborArray.forEach(function (num) {
 	        if (num > 0 && num <= maxCellId) {
@@ -495,8 +522,8 @@
 	          //   'reproduceCon': !typeHash['typeTwo'] && !typeHash['typeThree']
 	          // });
 	        } else if (type === 'typeTwo') {
-	          // EXAMPLE: NON-PREDATOR SPECIES
 	          _this.validNeighbors = getValidNeighbors([false, 'typeOne']);
+	          // EXAMPLE: NON-PREDATOR SPECIES
 	          live({
 	            'dieCon': !typeHash['typeOne'],
 	            'stayCon': _this.validNeighbors.length === 0,
@@ -504,8 +531,8 @@
 	            'reproduceCon': typeHash[type]
 	          });
 	        } else if (type === 'typeThree') {
-	          // EXAMPLE: NON-PREDATOR SPECIES
 	          _this.validNeighbors = getValidNeighbors([false, 'typeOne']);
+	          // EXAMPLE: NON-PREDATOR SPECIES
 	          live({
 	            'dieCon': !typeHash['typeOne'],
 	            'stayCon': _this.validNeighbors.length === 0,

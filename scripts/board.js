@@ -18,6 +18,7 @@ class Board {
       }
     });
 
+    console.log(clickedCell.id, clickedCell.neighbors);
     clickedCell.changeState(type);
   }
 

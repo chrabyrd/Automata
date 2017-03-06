@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const rulesModal = document.getElementById("rulesModal");
   const openerModal = document.getElementById("openerModal");
 
-  const game = new Game(mainCtx);
+  const game = new Game(mainCanvas, mainCtx);
 
   mainCanvas.addEventListener('click', (e) => game.handleClickEvent(e), false);
 
