@@ -119,51 +119,55 @@
 
 	    this.mainCanvas = mainCanvas;
 	    this.mainCtx = mainCtx;
-	    this.validCellSizes = [];
-	    this.cellSize = 6;
-	    this.width = window.outerWidth % 2 === 0 ? window.outerWidth : window.outerWidth - 1;
-	    this.height = window.outerHeight % 2 === 0 ? window.outerHeight : window.outerHeight - 1;
-	    this.getGridSize();
-	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	    this.automata = new _automata2.default(this.board);
+	    this.cellSize = 16;
+	    this.width = window.outerWidth;
+	    this.height = window.outerHeight;
 	    this.pauseEvent = false;
 	    this.cellType = 'typeOne';
 	    this.startGame = null;
+	    this.getGridSize();
+	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	    this.automata = new _automata2.default(this.board);
 	    this.handlePlayEvent();
 	    // this.levels = levels;
 	    // this.currentLevel = 0;
 	  }
 
 	  _createClass(Game, [{
-	    key: "getCellSizes",
-	    value: function getCellSizes() {
-	      var temp = [];
-
-	      for (var i = 0; i < Math.sqrt(this.width); i++) {
-	        if (this.width % i === 0) temp.push(i);
-	      }
-
-	      for (var _i = 0; _i < Math.sqrt(this.height); _i++) {
-	        if (this.height % _i === 0) temp.push(_i);
-	      }
-
-	      for (var _i2 = 0; _i2 < temp.length; _i2++) {
-	        var num = temp.shift();
-	        if (temp.includes(num)) this.validCellSizes.push(num);
-	      }
+	    key: "closestValue",
+	    value: function closestValue(num, array) {
+	      return array.sort(function (a, b) {
+	        return Math.abs(num - a) - Math.abs(num - b);
+	      })[0];
 	    }
 	  }, {
 	    key: "getGridSize",
 	    value: function getGridSize() {
-	      while (this.validCellSizes.length !== 8) {
-	        this.validCellSizes = [];
-	        Math.floor(Math.random() * 2) === 1 ? this.width++ : this.width--;
-	        Math.floor(Math.random() * 2) === 1 ? this.height++ : this.height--;
-	        this.getCellSizes();
-	        this.mainCanvas.width = this.width;
-	        this.mainCanvas.height = this.height;
+	      var min = this.height - 20;
+	      var max = this.width;
+
+	      if (this.width < this.height) {
+	        min = this.width - 20;
+	        max = this.height;
 	      }
-	      console.log(this.validCellSizes);
+
+	      var valid = [];
+
+	      var _loop = function _loop(i) {
+	        var isValid = [2, 4, 8, 16].every(function (num) {
+	          return i % num === 0;
+	        });
+	        if (isValid) valid.push(i);
+	      };
+
+	      for (var i = min; i <= max; i++) {
+	        _loop(i);
+	      }
+
+	      this.width = this.closestValue(this.width, valid);
+	      this.height = this.closestValue(this.height, valid);
+	      this.mainCanvas.width = this.width;
+	      this.mainCanvas.height = this.height;
 	    }
 	  }, {
 	    key: "handleClickEvent",
@@ -195,6 +199,10 @@
 	    key: "handlePauseEvent",
 	    value: function handlePauseEvent(e) {
 	      e.preventDefault();
+
+	      this.board = new _board2.default(this.mainCtx, 2, this.width, this.height);
+	      this.automata = new _automata2.default(this.board);
+	      this.handlePlayEvent();
 
 	      if (this.pauseEvent) {
 	        this.pauseEvent = false;

@@ -6,48 +6,47 @@ class Game {
   constructor (mainCanvas, mainCtx) {
     this.mainCanvas = mainCanvas;
     this.mainCtx = mainCtx;
-    this.validCellSizes = [];
-    this.cellSize = 6;
-    this.width = window.outerWidth % 2 === 0 ? window.outerWidth : window.outerWidth - 1;
-    this.height = window.outerHeight % 2 === 0 ? window.outerHeight : window.outerHeight - 1;
-    this.getGridSize();
-    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
-    this.automata = new Automata(this.board);
+    this.cellSize = 16;
+    this.width = window.outerWidth;
+    this.height = window.outerHeight;
     this.pauseEvent = false;
     this.cellType = 'typeOne';
     this.startGame = null;
+    this.getGridSize();
+    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
+    this.automata = new Automata(this.board);
     this.handlePlayEvent();
     // this.levels = levels;
     // this.currentLevel = 0;
+
   }
 
-  getCellSizes () {
-    const temp = [];
-
-    for (let i = 0; i < Math.sqrt(this.width); i++) {
-      if (this.width % i === 0) temp.push(i);
-    }
-
-    for (let i = 0; i < Math.sqrt(this.height); i++) {
-      if (this.height % i === 0) temp.push(i);
-    }
-
-    for (let i = 0; i < temp.length; i++) {
-      let num = temp.shift();
-      if (temp.includes(num)) this.validCellSizes.push(num);
-    }
+  closestValue (num, array) {
+    return array.sort( (a, b) => Math.abs(num - a) - Math.abs(num - b) )[0];
   }
 
   getGridSize () {
-    while (this.validCellSizes.length !== 8) {
-      this.validCellSizes = [];
-      Math.floor(Math.random() * 2) === 1 ? this.width++ : this.width--;
-      Math.floor(Math.random() * 2) === 1 ? this.height++ : this.height--;
-      this.getCellSizes();
-      this.mainCanvas.width = this.width;
-      this.mainCanvas.height = this.height;
+    let min = this.height - 20;
+    let max = this.width;
+
+    if (this.width < this.height) {
+      min = this.width - 20;
+      max = this.height;
     }
-    console.log(this.validCellSizes);
+
+    const valid = [];
+
+    for (let i = min; i <= max; i++) {
+      let isValid = [2, 4, 8, 16].every(num => (
+        i % num === 0
+      ));
+      if (isValid) valid.push(i);
+    }
+
+    this.width = this.closestValue(this.width, valid);
+    this.height = this.closestValue(this.height, valid);
+    this.mainCanvas.width = this.width;
+    this.mainCanvas.height = this.height;
   }
 
   handleClickEvent (e) {
@@ -73,6 +72,10 @@ class Game {
 
   handlePauseEvent (e) {
     e.preventDefault();
+
+    this.board = new Board(this.mainCtx, 2, this.width, this.height);
+    this.automata = new Automata(this.board);
+    this.handlePlayEvent();
 
     if (this.pauseEvent) {
       this.pauseEvent = false;
