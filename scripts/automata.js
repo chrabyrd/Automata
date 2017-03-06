@@ -1,6 +1,7 @@
 class Automata {
   constructor (board) {
     this.board = board;
+    this.validNeighbors = [];
   }
 
   random(array) {
@@ -30,6 +31,27 @@ class Automata {
       const cellNeighbors = cells[id].neighbors;
       cellNeighbors.forEach(num => {typeHash[cells[num - 1].type]++;});
 
+      const getValidNeighbors = cellTypeArray => {
+        let validNeighbors = cellNeighbors;
+
+        validNeighbors = cellNeighbors.filter(function(cell) {
+          return !changingCells[cell - 1];
+        });
+
+        if (!cellTypeArray) return validNeighbors;
+
+        validNeighbors = validNeighbors.filter(function(cell) {
+          cell = cell - 1;
+          let isValid = false;
+          cellTypeArray.forEach(cellType => {
+            if (cells[cell].type === cellType) isValid = true;
+          });
+          return isValid;
+        });
+
+        return validNeighbors;
+      };
+
       const wander = array => {
         const nextCell = this.random(array) - 1;
         changingCells[nextCell] = type;
@@ -49,60 +71,57 @@ class Automata {
         changingCells[id] = false;
       };
 
+      const live = conditionalHash => {
+
+        if (conditionalHash['skipCon']) {
+          return;
+        } else if (conditionalHash['dieCon']) {
+          die();
+        } else if (conditionalHash['stayCon']) {
+          stay();
+        } else if (conditionalHash['reproduceCon']) {
+          reproduce(this.validNeighbors);
+          if (conditionalHash['wanderCon']) wander(this.validNeighbors);
+        } else if (conditionalHash['wanderCon']) {
+          wander(this.validNeighbors);
+        }
+
+      };
+
       if (type === 'typeOne') {
+        this.validNeighbors = getValidNeighbors([false]);
+
         // EXAMPLE: CABBAGE
-        const validNeighbors = cellNeighbors.filter(function(cell) {
-          cell = cell - 1;
-          return !changingCells[cell]
-          && !cells[cell].type;
+        live({
+          'skipCon': this.validNeighbors.length === 0,
+          'reproduceCon': true
         });
 
-        if (validNeighbors.length === 0) return;
-        // FRACTALS (DISABLE GENDER)
-        // if (!typeHash['typeTwo'] && !typeHash['typeThree']) {
-          reproduce(validNeighbors);
-        // }
+        // EXAMPLE: FRACTALS (DISABLE GENDER)
+        // live({
+        //   'skipCon': this.validNeighbors.length === 0,
+        //   'reproduceCon': !typeHash['typeTwo'] && !typeHash['typeThree']
+        // });
 
       } else if (type === 'typeTwo') {
         // EXAMPLE: NON-PREDATOR SPECIES
-        const validNeighbors = cellNeighbors.filter(function(cell) {
-          cell = cell - 1;
-          return !changingCells[cell]
-          && (!cells[cell].type || cells[cell].type === 'typeOne');
+        this.validNeighbors = getValidNeighbors([false, 'typeOne']);
+        live({
+          'dieCon': !typeHash['typeOne'],
+          'stayCon': this.validNeighbors.length === 0,
+          'wanderCon': true,
+          'reproduceCon': typeHash[type]
         });
-
-        if (!typeHash['typeOne']) {
-          die();
-        } else if (validNeighbors.length === 0) {
-          stay();
-        } else {
-          wander(validNeighbors);
-          if (typeHash[type]) {
-            // 50% CHANCE TO REPRODUCE, ACCOUNTING FOR GENDER
-            if (this.random([0, 1]) === 1) reproduce(validNeighbors);
-          }
-        }
 
       } else if (type === 'typeThree') {
         // EXAMPLE: NON-PREDATOR SPECIES
-        const validNeighbors = cellNeighbors.filter(function(cell) {
-          cell = cell - 1;
-          return !changingCells[cell]
-          && (!cells[cell].type || cells[cell].type === 'typeOne');
+        this.validNeighbors = getValidNeighbors([false, 'typeOne']);
+        live({
+          'dieCon': !typeHash['typeOne'],
+          'stayCon': this.validNeighbors.length === 0,
+          'wanderCon': true,
+          'reproduceCon': typeHash[type]
         });
-
-        if (!typeHash['typeOne']) {
-          die();
-        } else if (validNeighbors.length === 0) {
-          stay();
-        } else {
-          wander(validNeighbors);
-          if (typeHash[type]) {
-            // 50% CHANCE TO REPRODUCE, ACCOUNTING FOR GENDER
-            if (this.random([0, 1]) === 1) reproduce(validNeighbors);
-          }
-        }
-
       }
 
     });

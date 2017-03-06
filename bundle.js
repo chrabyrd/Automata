@@ -122,7 +122,7 @@
 	    this.board = new _board2.default(this.mainCtx, 5, 800, 600);
 	    this.automata = new _automata2.default(this.board);
 	    this.cellType = 'typeOne';
-	    this.startGame;
+	    this.startGame = null;
 
 	    this.handlePlayEvent();
 	    // this.levels = levels;
@@ -384,6 +384,7 @@
 	    _classCallCheck(this, Automata);
 
 	    this.board = board;
+	    this.validNeighbors = [];
 	  }
 
 	  _createClass(Automata, [{
@@ -423,6 +424,27 @@
 	          typeHash[cells[num - 1].type]++;
 	        });
 
+	        var getValidNeighbors = function getValidNeighbors(cellTypeArray) {
+	          var validNeighbors = cellNeighbors;
+
+	          validNeighbors = cellNeighbors.filter(function (cell) {
+	            return !changingCells[cell - 1];
+	          });
+
+	          if (!cellTypeArray) return validNeighbors;
+
+	          validNeighbors = validNeighbors.filter(function (cell) {
+	            cell = cell - 1;
+	            var isValid = false;
+	            cellTypeArray.forEach(function (cellType) {
+	              if (cells[cell].type === cellType) isValid = true;
+	            });
+	            return isValid;
+	          });
+
+	          return validNeighbors;
+	        };
+
 	        var wander = function wander(array) {
 	          var nextCell = _this.random(array) - 1;
 	          changingCells[nextCell] = type;
@@ -442,54 +464,54 @@
 	          changingCells[id] = false;
 	        };
 
+	        var live = function live(conditionalHash) {
+
+	          if (conditionalHash['skipCon']) {
+	            return;
+	          } else if (conditionalHash['dieCon']) {
+	            die();
+	          } else if (conditionalHash['stayCon']) {
+	            stay();
+	          } else if (conditionalHash['reproduceCon']) {
+	            reproduce(_this.validNeighbors);
+	            if (conditionalHash['wanderCon']) wander(_this.validNeighbors);
+	          } else if (conditionalHash['wanderCon']) {
+	            wander(_this.validNeighbors);
+	          }
+	        };
+
 	        if (type === 'typeOne') {
+	          _this.validNeighbors = getValidNeighbors([false]);
+
 	          // EXAMPLE: CABBAGE
-	          var validNeighbors = cellNeighbors.filter(function (cell) {
-	            cell = cell - 1;
-	            return !changingCells[cell] && !cells[cell].type;
+	          live({
+	            'skipCon': _this.validNeighbors.length === 0,
+	            'reproduceCon': true
 	          });
 
-	          if (validNeighbors.length === 0) return;
-	          // FRACTALS (DISABLE GENDER)
-	          // if (!typeHash['typeTwo'] && !typeHash['typeThree']) {
-	          reproduce(validNeighbors);
-	          // }
+	          // EXAMPLE: FRACTALS (DISABLE GENDER)
+	          // live({
+	          //   'skipCon': this.validNeighbors.length === 0,
+	          //   'reproduceCon': !typeHash['typeTwo'] && !typeHash['typeThree']
+	          // });
 	        } else if (type === 'typeTwo') {
 	          // EXAMPLE: NON-PREDATOR SPECIES
-	          var _validNeighbors = cellNeighbors.filter(function (cell) {
-	            cell = cell - 1;
-	            return !changingCells[cell] && (!cells[cell].type || cells[cell].type === 'typeOne');
+	          _this.validNeighbors = getValidNeighbors([false, 'typeOne']);
+	          live({
+	            'dieCon': !typeHash['typeOne'],
+	            'stayCon': _this.validNeighbors.length === 0,
+	            'wanderCon': true,
+	            'reproduceCon': typeHash[type]
 	          });
-
-	          if (!typeHash['typeOne']) {
-	            die();
-	          } else if (_validNeighbors.length === 0) {
-	            stay();
-	          } else {
-	            wander(_validNeighbors);
-	            if (typeHash[type]) {
-	              // 50% CHANCE TO REPRODUCE, ACCOUNTING FOR GENDER
-	              if (_this.random([0, 1]) === 1) reproduce(_validNeighbors);
-	            }
-	          }
 	        } else if (type === 'typeThree') {
 	          // EXAMPLE: NON-PREDATOR SPECIES
-	          var _validNeighbors2 = cellNeighbors.filter(function (cell) {
-	            cell = cell - 1;
-	            return !changingCells[cell] && (!cells[cell].type || cells[cell].type === 'typeOne');
+	          _this.validNeighbors = getValidNeighbors([false, 'typeOne']);
+	          live({
+	            'dieCon': !typeHash['typeOne'],
+	            'stayCon': _this.validNeighbors.length === 0,
+	            'wanderCon': true,
+	            'reproduceCon': typeHash[type]
 	          });
-
-	          if (!typeHash['typeOne']) {
-	            die();
-	          } else if (_validNeighbors2.length === 0) {
-	            stay();
-	          } else {
-	            wander(_validNeighbors2);
-	            if (typeHash[type]) {
-	              // 50% CHANCE TO REPRODUCE, ACCOUNTING FOR GENDER
-	              if (_this.random([0, 1]) === 1) reproduce(_validNeighbors2);
-	            }
-	          }
 	        }
 	      });
 

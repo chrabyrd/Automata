@@ -9,7 +9,7 @@ class Game {
     this.board = new Board(this.mainCtx, 5, 800, 600);
     this.automata = new Automata(this.board);
     this.cellType = 'typeOne';
-    this.startGame;
+    this.startGame = null;
 
     this.handlePlayEvent();
     // this.levels = levels;
