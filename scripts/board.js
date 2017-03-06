@@ -2,12 +2,11 @@ import Cell from "./cell";
 
 class Board {
 
-  constructor (ctx) {
-    const cells = [];
+  constructor (ctx, cellSize, gridWidth, gridHeight) {
     this.ctx = ctx;
-    this.cells = cells;
+    this.cells = [];
 
-    this.populateGrid();
+    this.populateGrid(cellSize, gridWidth, gridHeight);
   }
 
   toggleCell (e, type) {
@@ -22,20 +21,24 @@ class Board {
     clickedCell.changeState(type);
   }
 
-  populateGrid () {
+  populateGrid (cellSize, gridWidth, gridHeight) {
+    const maxWidthCellCount = gridWidth / (Math.pow(cellSize, 2));
+    const maxHeightCellCount = gridHeight / (Math.pow(cellSize, 2));
     let y = 0;
     let id = 1;
 
-    for (let i=0; i < 60; i++) {
+    for (let i=0; i < (cellSize * maxHeightCellCount); i++) {
       let x = 0;
 
-      for (let j=0; j < 80; j++) {
-        this.cells.push(new Cell(this.ctx, id, x, y));
-        x += 10;
+      for (let j=0; j < (cellSize * maxWidthCellCount); j++) {
+        this.cells.push(
+          new Cell(this.ctx, gridWidth, gridHeight, cellSize, id, x, y)
+        );
+        x += cellSize;
         id++;
       }
 
-      y += 10;
+      y += cellSize;
     }
   }
 }

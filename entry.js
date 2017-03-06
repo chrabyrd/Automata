@@ -4,14 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainCanvas = document.getElementById("mainCanvas");
   const mainCtx = mainCanvas.getContext("2d");
 
-  const clickCanvas = document.getElementById("clickCanvas");
-  const clickCtx = clickCanvas.getContext("2d");
-
   const rulesButton = document.getElementById("rulesButton");
   const rulesModal = document.getElementById("rulesModal");
   const openerModal = document.getElementById("openerModal");
 
-  const game = new Game(mainCtx, clickCtx);
+  const game = new Game(mainCtx);
 
   mainCanvas.addEventListener('click', (e) => game.handleClickEvent(e), false);
 

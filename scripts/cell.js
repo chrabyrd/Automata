@@ -1,18 +1,20 @@
 class Cell {
-  constructor (ctx, id, x, y) {
+  constructor (ctx, gridWidth, gridHeight, cellSize, id, x, y) {
     this.id = id;
     this.xmin = x + 1;
-    this.xmax = x + 10;
+    this.xmax = x + cellSize;
     this.ymin = y + 1;
-    this.ymax = y + 10;
+    this.ymax = y + cellSize;
     this.type = false;
     this.neighbors = [];
 
     this.ctx = ctx;
+    this.cellSize = cellSize;
+    this.gridWidth = gridWidth;
     this.x = x;
     this.y = y;
 
-    this.getNeighbors();
+    this.getNeighbors(gridWidth, gridHeight, cellSize);
     this.render();
   }
 
@@ -21,21 +23,26 @@ class Cell {
     this.render();
   }
 
-  getNeighbors () {
-    const top = this.id - 80;
-    const topRight = this.id - 79;
-    const right = this.id + 1;
-    const bottomRight = this.id + 81;
-    const bottom = this.id + 80;
-    const bottomLeft = this.id + 79;
+  getNeighbors (gridWidth, gridHeight, cellSize) {
+    const offsetValue = gridWidth / cellSize;
+    const maxWidthCount = gridWidth / (Math.pow(cellSize, 2));
+    const maxHeightCount = gridHeight / (Math.pow(cellSize, 2));
+    const maxCellId = Math.pow(cellSize, 2) * maxWidthCount * maxHeightCount;
+
+    const top = this.id - offsetValue;
+    const bottom = this.id + offsetValue;
     const left = this.id - 1;
-    const topLeft = this.id - 81;
+    const right = this.id + 1;
+    const topLeft = this.id - (offsetValue + 1);
+    const bottomLeft = this.id + (offsetValue - 1);
+    const topRight = this.id - (offsetValue - 1);
+    const bottomRight = this.id + (offsetValue + 1);
     let neighborArray;
 
-    if (this.id % 80 === 1) {
+    if (this.id % offsetValue === 1) {
       // Left side
       neighborArray = [top, topRight, right, bottomRight, bottom];
-    } else if (this.id % 80 === 0) {
+    } else if (this.id % offsetValue === 0) {
       // Right side
       neighborArray = [top, bottom, bottomLeft + 1, left, topLeft];
     } else {
@@ -45,15 +52,8 @@ class Cell {
     }
 
     neighborArray.forEach(num => {
-      if (num > 0 && num <= 4800) {this.neighbors.push(num);}
+      if (num > 0 && num <= maxCellId) {this.neighbors.push(num);}
     });
-
-    // Edge case
-    if (this.id === 4722) {
-      this.neighbors = this.neighbors.filter(function(num){
-        return num < 4800;
-      });
-    }
   }
 
   // getRandomColor() {
@@ -65,20 +65,20 @@ class Cell {
   // }
 
   render () {
-    this.ctx.clearRect(this.x, this.y, 10, 10);
+    this.ctx.clearRect(this.x, this.y, this.cellSize, this.cellSize);
+
+    if (!this.type) return;
 
     if (this.type === 'typeOne') {
       this.ctx.fillStyle = 'green';
-      this.ctx.fillRect(this.x, this.y, 10, 10);
     } else if (this.type === 'typeTwo') {
       this.ctx.fillStyle = 'blue';
-      this.ctx.fillRect(this.x, this.y, 10, 10);
     } else if (this.type === 'typeThree') {
       this.ctx.fillStyle = 'purple';
-      this.ctx.fillRect(this.x, this.y, 10, 10);
     }
 
-    // this.ctx.strokeRect(this.x, this.y, 10, 10);
+    this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
+    // this.ctx.strokeRect(this.x, this.y, this.cellSize, this.cellSize);
   }
 }
 

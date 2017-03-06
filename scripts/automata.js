@@ -4,7 +4,7 @@ class Automata {
   }
 
   random(array) {
-    return array[Math.floor(Math.random() * array.length)] - 1;
+    return array[Math.floor(Math.random() * array.length)];
   }
 
   shuffle(array) {
@@ -30,14 +30,18 @@ class Automata {
       const cellNeighbors = cells[id].neighbors;
       cellNeighbors.forEach(num => {typeHash[cells[num - 1].type]++;});
 
-      const wander = (array) => {
-        const nextCell = this.random(array);
+      const wander = array => {
+        const nextCell = this.random(array) - 1;
         changingCells[nextCell] = type;
         changingCells[id] = false;
       };
 
-      const reproduce = (array) => {
-        const nextCell = this.random(array);
+      const stay = () => {
+        changingCells[id] = type;
+      };
+
+      const reproduce = array => {
+        const nextCell = this.random(array) - 1;
         changingCells[nextCell] = type;
       };
 
@@ -54,8 +58,7 @@ class Automata {
         });
 
         if (validNeighbors.length === 0) return;
-
-        // FRACTALS
+        // FRACTALS (DISABLE GENDER)
         // if (!typeHash['typeTwo'] && !typeHash['typeThree']) {
           reproduce(validNeighbors);
         // }
@@ -65,17 +68,18 @@ class Automata {
         const validNeighbors = cellNeighbors.filter(function(cell) {
           cell = cell - 1;
           return !changingCells[cell]
-          && (cells[cell].type !== type);
+          && (!cells[cell].type || cells[cell].type === 'typeOne');
         });
-
-        if (validNeighbors.length === 0) return;
 
         if (!typeHash['typeOne']) {
           die();
+        } else if (validNeighbors.length === 0) {
+          stay();
         } else {
           wander(validNeighbors);
           if (typeHash[type]) {
-            reproduce(validNeighbors);
+            // 50% CHANCE TO REPRODUCE, ACCOUNTING FOR GENDER
+            if (this.random([0, 1]) === 1) reproduce(validNeighbors);
           }
         }
 
@@ -84,19 +88,21 @@ class Automata {
         const validNeighbors = cellNeighbors.filter(function(cell) {
           cell = cell - 1;
           return !changingCells[cell]
-          && (cells[cell].type !== type);
+          && (!cells[cell].type || cells[cell].type === 'typeOne');
         });
-
-        if (validNeighbors.length === 0) return;
 
         if (!typeHash['typeOne']) {
           die();
+        } else if (validNeighbors.length === 0) {
+          stay();
         } else {
           wander(validNeighbors);
           if (typeHash[type]) {
-            reproduce(validNeighbors);
+            // 50% CHANCE TO REPRODUCE, ACCOUNTING FOR GENDER
+            if (this.random([0, 1]) === 1) reproduce(validNeighbors);
           }
         }
+
       }
 
     });

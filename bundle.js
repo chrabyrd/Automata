@@ -56,14 +56,11 @@
 	  var mainCanvas = document.getElementById("mainCanvas");
 	  var mainCtx = mainCanvas.getContext("2d");
 
-	  var clickCanvas = document.getElementById("clickCanvas");
-	  var clickCtx = clickCanvas.getContext("2d");
-
 	  var rulesButton = document.getElementById("rulesButton");
 	  var rulesModal = document.getElementById("rulesModal");
 	  var openerModal = document.getElementById("openerModal");
 
-	  var game = new _game2.default(mainCtx, clickCtx);
+	  var game = new _game2.default(mainCtx);
 
 	  mainCanvas.addEventListener('click', function (e) {
 	    return game.handleClickEvent(e);
@@ -117,45 +114,36 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Game = function () {
-	  function Game(mainCtx, clickCtx) {
+	  function Game(mainCtx) {
 	    _classCallCheck(this, Game);
 
 	    this.mainCtx = mainCtx;
-	    this.clickCtx = clickCtx;
-	    this.playEvent = false;
 	    this.pauseEvent = false;
-	    this.gameWon = false;
-	    this.clickCount = 0;
-	    this.board = new _board2.default(this.mainCtx);
+	    this.board = new _board2.default(this.mainCtx, 5, 800, 600);
 	    this.automata = new _automata2.default(this.board);
-	    this.levels = _levels.levels;
-	    this.currentLevel = 0;
+	    this.cellType = 'typeOne';
 	    this.startGame;
 
-	    this.type = 'typeOne';
+	    this.handlePlayEvent();
+	    // this.levels = levels;
+	    // this.currentLevel = 0;
 	  }
 
 	  _createClass(Game, [{
 	    key: "handleClickEvent",
 	    value: function handleClickEvent(e) {
 	      e.preventDefault();
-	      if (this.playEvent) {
-	        this.board.toggleCell(e, this.type);
-	        this.clickCount--;
-	        this.clickCounter();
-	      } else {
-	        this.handlePlayEvent();
-	      }
+	      this.board.toggleCell(e, this.cellType);
 	    }
 	  }, {
 	    key: "toggleColor",
 	    value: function toggleColor(e) {
 	      if (e.keyCode === 49) {
-	        this.type = 'typeOne';
+	        this.cellType = 'typeOne';
 	      } else if (e.keyCode === 50) {
-	        this.type = 'typeTwo';
+	        this.cellType = 'typeTwo';
 	      } else if (e.keyCode === 51) {
-	        this.type = 'typeThree';
+	        this.cellType = 'typeThree';
 	      }
 	    }
 	  }, {
@@ -163,36 +151,19 @@
 	    value: function handlePlayEvent() {
 	      var _this = this;
 
-	      this.handleResetEvent();
-	      this.playEvent = true;
-	      // const currentLevel = this.levels[this.currentLevel];
-	      // const startingCells = currentLevel.startingCells;
-	      // this.clickCount = currentLevel.clickCount;
-	      // this.clickCounter();
-	      //
-	      // for (let i = 0; i < startingCells.length; i++) {
-	      //   this.board.cells[startingCells[i]].changeState();
-	      // }
-
 	      this.startGame = setInterval(function () {
 	        _this.automata.cellLogic();
-	        // this.winCondition();
 	      }, 100);
 	    }
 	  }, {
 	    key: "handlePauseEvent",
 	    value: function handlePauseEvent(e) {
-	      var _this2 = this;
-
 	      e.preventDefault();
-	      if (this.pauseEvent && this.playEvent) {
-	        this.pauseEvent = false;
 
-	        this.startGame = setInterval(function () {
-	          _this2.automata.cellLogic();
-	          // this.winCondition();
-	        }, 100);
-	      } else if (this.playEvent) {
+	      if (this.pauseEvent) {
+	        this.pauseEvent = false;
+	        this.handlePlayEvent();
+	      } else {
 	        this.pauseEvent = true;
 	        clearInterval(this.startGame);
 	      }
@@ -200,74 +171,9 @@
 	  }, {
 	    key: "handleResetEvent",
 	    value: function handleResetEvent() {
-	      this.gameWon = false;
-	      this.playEvent = false;
 	      clearInterval(this.startGame);
-	      this.board = new _board2.default(this.mainCtx);
+	      this.board = new _board2.default(this.mainCtx, 5, 800, 600);
 	      this.automata = new _automata2.default(this.board);
-	      this.clickCtx.clearRect(0, 0, 550, 550);
-	    }
-	  }, {
-	    key: "levelMessage",
-	    value: function levelMessage() {
-	      this.mainCtx.clearRect(0, 0, 550, 550);
-	      this.mainCtx.fillStyle = "black";
-	      this.mainCtx.font = "50pt sans-serif";
-	      this.mainCtx.fillText("Level " + (this.currentLevel + 1), 170, 290);
-	      this.clickCtx.clearRect(0, 0, 550, 550);
-	    }
-	  }, {
-	    key: "winMessage",
-	    value: function winMessage() {
-	      this.mainCtx.clearRect(0, 0, 550, 550);
-	      this.mainCtx.fillStyle = "black";
-	      this.mainCtx.font = "50pt sans-serif";
-	      this.mainCtx.fillText("You Win!", 140, 290);
-	      this.mainCtx.font = "30pt sans-serif";
-	      this.mainCtx.fillText("(only 3 levels so far)", 100, 360);
-	      this.clickCtx.clearRect(0, 0, 550, 550);
-	    }
-	  }, {
-	    key: "loseMessage",
-	    value: function loseMessage() {
-	      this.mainCtx.clearRect(0, 0, 550, 550);
-	      this.mainCtx.fillStyle = "black";
-	      this.mainCtx.font = "50pt sans-serif";
-	      this.mainCtx.fillText("Fail!", 210, 290);
-	      this.mainCtx.font = "30pt sans-serif";
-	      this.mainCtx.fillText("(click to play again)", 100, 360);
-	      this.clickCtx.clearRect(0, 0, 550, 550);
-	    }
-	  }, {
-	    key: "clickCounter",
-	    value: function clickCounter() {
-	      this.clickCtx.fillStyle = "black";
-	      this.clickCtx.font = "12pt sans-serif";
-	      this.clickCtx.clearRect(0, 0, 550, 550);
-	      this.clickCtx.fillText("Clicks left: " + this.clickCount, 440, 15);
-	    }
-	  }, {
-	    key: "winCondition",
-	    value: function winCondition() {
-	      if (this.clickCount <= -1) {
-	        clearInterval(this.startGame);
-	        this.playEvent = false;
-	        this.loseMessage();
-	      } else if (this.board.cells.every(function (cell) {
-	        return !cell.alive;
-	      })) {
-	        clearInterval(this.startGame);
-	        this.playEvent = false;
-
-	        if (this.currentLevel >= 2) {
-	          this.currentLevel = 0;
-	          this.winMessage();
-	        } else {
-	          this.currentLevel++;
-	          this.levelMessage();
-	          this.clickCtx.clearRect(0, 0, 550, 550);
-	        }
-	      }
 	    }
 	  }]);
 
@@ -297,14 +203,13 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Board = function () {
-	  function Board(ctx) {
+	  function Board(ctx, cellSize, gridWidth, gridHeight) {
 	    _classCallCheck(this, Board);
 
-	    var cells = [];
 	    this.ctx = ctx;
-	    this.cells = cells;
+	    this.cells = [];
 
-	    this.populateGrid();
+	    this.populateGrid(cellSize, gridWidth, gridHeight);
 	  }
 
 	  _createClass(Board, [{
@@ -322,20 +227,22 @@
 	    }
 	  }, {
 	    key: "populateGrid",
-	    value: function populateGrid() {
+	    value: function populateGrid(cellSize, gridWidth, gridHeight) {
+	      var maxWidthCellCount = gridWidth / Math.pow(cellSize, 2);
+	      var maxHeightCellCount = gridHeight / Math.pow(cellSize, 2);
 	      var y = 0;
 	      var id = 1;
 
-	      for (var i = 0; i < 60; i++) {
+	      for (var i = 0; i < cellSize * maxHeightCellCount; i++) {
 	        var x = 0;
 
-	        for (var j = 0; j < 80; j++) {
-	          this.cells.push(new _cell2.default(this.ctx, id, x, y));
-	          x += 10;
+	        for (var j = 0; j < cellSize * maxWidthCellCount; j++) {
+	          this.cells.push(new _cell2.default(this.ctx, gridWidth, gridHeight, cellSize, id, x, y));
+	          x += cellSize;
 	          id++;
 	        }
 
-	        y += 10;
+	        y += cellSize;
 	      }
 	    }
 	  }]);
@@ -360,22 +267,24 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Cell = function () {
-	  function Cell(ctx, id, x, y) {
+	  function Cell(ctx, gridWidth, gridHeight, cellSize, id, x, y) {
 	    _classCallCheck(this, Cell);
 
 	    this.id = id;
 	    this.xmin = x + 1;
-	    this.xmax = x + 10;
+	    this.xmax = x + cellSize;
 	    this.ymin = y + 1;
-	    this.ymax = y + 10;
+	    this.ymax = y + cellSize;
 	    this.type = false;
 	    this.neighbors = [];
 
 	    this.ctx = ctx;
+	    this.cellSize = cellSize;
+	    this.gridWidth = gridWidth;
 	    this.x = x;
 	    this.y = y;
 
-	    this.getNeighbors();
+	    this.getNeighbors(gridWidth, gridHeight, cellSize);
 	    this.render();
 	  }
 
@@ -387,23 +296,28 @@
 	    }
 	  }, {
 	    key: 'getNeighbors',
-	    value: function getNeighbors() {
+	    value: function getNeighbors(gridWidth, gridHeight, cellSize) {
 	      var _this = this;
 
-	      var top = this.id - 80;
-	      var topRight = this.id - 79;
-	      var right = this.id + 1;
-	      var bottomRight = this.id + 81;
-	      var bottom = this.id + 80;
-	      var bottomLeft = this.id + 79;
+	      var offsetValue = gridWidth / cellSize;
+	      var maxWidthCount = gridWidth / Math.pow(cellSize, 2);
+	      var maxHeightCount = gridHeight / Math.pow(cellSize, 2);
+	      var maxCellId = Math.pow(cellSize, 2) * maxWidthCount * maxHeightCount;
+
+	      var top = this.id - offsetValue;
+	      var bottom = this.id + offsetValue;
 	      var left = this.id - 1;
-	      var topLeft = this.id - 81;
+	      var right = this.id + 1;
+	      var topLeft = this.id - (offsetValue + 1);
+	      var bottomLeft = this.id + (offsetValue - 1);
+	      var topRight = this.id - (offsetValue - 1);
+	      var bottomRight = this.id + (offsetValue + 1);
 	      var neighborArray = void 0;
 
-	      if (this.id % 80 === 1) {
+	      if (this.id % offsetValue === 1) {
 	        // Left side
 	        neighborArray = [top, topRight, right, bottomRight, bottom];
-	      } else if (this.id % 80 === 0) {
+	      } else if (this.id % offsetValue === 0) {
 	        // Right side
 	        neighborArray = [top, bottom, bottomLeft + 1, left, topLeft];
 	      } else {
@@ -412,17 +326,10 @@
 	      }
 
 	      neighborArray.forEach(function (num) {
-	        if (num > 0 && num <= 4800) {
+	        if (num > 0 && num <= maxCellId) {
 	          _this.neighbors.push(num);
 	        }
 	      });
-
-	      // Edge case
-	      if (this.id === 4722) {
-	        this.neighbors = this.neighbors.filter(function (num) {
-	          return num < 4800;
-	        });
-	      }
 	    }
 
 	    // getRandomColor() {
@@ -436,20 +343,20 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      this.ctx.clearRect(this.x, this.y, 10, 10);
+	      this.ctx.clearRect(this.x, this.y, this.cellSize, this.cellSize);
+
+	      if (!this.type) return;
 
 	      if (this.type === 'typeOne') {
 	        this.ctx.fillStyle = 'green';
-	        this.ctx.fillRect(this.x, this.y, 10, 10);
 	      } else if (this.type === 'typeTwo') {
 	        this.ctx.fillStyle = 'blue';
-	        this.ctx.fillRect(this.x, this.y, 10, 10);
 	      } else if (this.type === 'typeThree') {
 	        this.ctx.fillStyle = 'purple';
-	        this.ctx.fillRect(this.x, this.y, 10, 10);
 	      }
 
-	      // this.ctx.strokeRect(this.x, this.y, 10, 10);
+	      this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
+	      // this.ctx.strokeRect(this.x, this.y, this.cellSize, this.cellSize);
 	    }
 	  }]);
 
@@ -482,7 +389,7 @@
 	  _createClass(Automata, [{
 	    key: "random",
 	    value: function random(array) {
-	      return array[Math.floor(Math.random() * array.length)] - 1;
+	      return array[Math.floor(Math.random() * array.length)];
 	    }
 	  }, {
 	    key: "shuffle",
@@ -517,13 +424,17 @@
 	        });
 
 	        var wander = function wander(array) {
-	          var nextCell = _this.random(array);
+	          var nextCell = _this.random(array) - 1;
 	          changingCells[nextCell] = type;
 	          changingCells[id] = false;
 	        };
 
+	        var stay = function stay() {
+	          changingCells[id] = type;
+	        };
+
 	        var reproduce = function reproduce(array) {
-	          var nextCell = _this.random(array);
+	          var nextCell = _this.random(array) - 1;
 	          changingCells[nextCell] = type;
 	        };
 
@@ -539,8 +450,7 @@
 	          });
 
 	          if (validNeighbors.length === 0) return;
-
-	          // FRACTALS
+	          // FRACTALS (DISABLE GENDER)
 	          // if (!typeHash['typeTwo'] && !typeHash['typeThree']) {
 	          reproduce(validNeighbors);
 	          // }
@@ -548,34 +458,36 @@
 	          // EXAMPLE: NON-PREDATOR SPECIES
 	          var _validNeighbors = cellNeighbors.filter(function (cell) {
 	            cell = cell - 1;
-	            return !changingCells[cell] && cells[cell].type !== type;
+	            return !changingCells[cell] && (!cells[cell].type || cells[cell].type === 'typeOne');
 	          });
-
-	          if (_validNeighbors.length === 0) return;
 
 	          if (!typeHash['typeOne']) {
 	            die();
+	          } else if (_validNeighbors.length === 0) {
+	            stay();
 	          } else {
 	            wander(_validNeighbors);
 	            if (typeHash[type]) {
-	              reproduce(_validNeighbors);
+	              // 50% CHANCE TO REPRODUCE, ACCOUNTING FOR GENDER
+	              if (_this.random([0, 1]) === 1) reproduce(_validNeighbors);
 	            }
 	          }
 	        } else if (type === 'typeThree') {
 	          // EXAMPLE: NON-PREDATOR SPECIES
 	          var _validNeighbors2 = cellNeighbors.filter(function (cell) {
 	            cell = cell - 1;
-	            return !changingCells[cell] && cells[cell].type !== type;
+	            return !changingCells[cell] && (!cells[cell].type || cells[cell].type === 'typeOne');
 	          });
-
-	          if (_validNeighbors2.length === 0) return;
 
 	          if (!typeHash['typeOne']) {
 	            die();
+	          } else if (_validNeighbors2.length === 0) {
+	            stay();
 	          } else {
 	            wander(_validNeighbors2);
 	            if (typeHash[type]) {
-	              reproduce(_validNeighbors2);
+	              // 50% CHANCE TO REPRODUCE, ACCOUNTING FOR GENDER
+	              if (_this.random([0, 1]) === 1) reproduce(_validNeighbors2);
 	            }
 	          }
 	        }
