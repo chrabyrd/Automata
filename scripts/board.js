@@ -18,7 +18,7 @@ class Board {
       }
     });
 
-    console.log(clickedCell.id, clickedCell.neighbors);
+    // console.log(clickedCell.id, clickedCell.neighbors);
     clickedCell.changeState(type);
   }
 
@@ -26,7 +26,7 @@ class Board {
     const maxWidthCellCount = gridWidth / (Math.pow(cellSize, 2));
     const maxHeightCellCount = gridHeight / (Math.pow(cellSize, 2));
     let y = 0;
-    let id = 1;
+    let id = 0;
 
     for (let i=0; i < (cellSize * maxHeightCellCount); i++) {
       let x = 0;

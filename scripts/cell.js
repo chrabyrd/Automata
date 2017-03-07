@@ -28,7 +28,6 @@ class Cell {
     const maxWidthCount = gridWidth / (Math.pow(cellSize, 2));
     const maxHeightCount = gridHeight / (Math.pow(cellSize, 2));
     const maxCellId = Math.pow(cellSize, 2) * maxWidthCount * maxHeightCount;
-
     const top = this.id - offsetValue;
     const bottom = this.id + offsetValue;
     const left = this.id - 1;
@@ -42,7 +41,7 @@ class Cell {
                            bottomLeft, left, topLeft];
 
     neighborArray.forEach(num => {
-      if (num > 0 && num <= maxCellId) {this.neighbors.push(num);}
+      if (num > 0 && num <= maxCellId - 1) {this.neighbors.push(num);}
     });
   }
 

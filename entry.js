@@ -1,4 +1,4 @@
-import Game from "./scripts/game";
+import Container from "./scripts/container";
 
 document.addEventListener("DOMContentLoaded", () => {
   const mainCanvas = document.getElementById("mainCanvas");
@@ -8,16 +8,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const rulesModal = document.getElementById("rulesModal");
   const openerModal = document.getElementById("openerModal");
 
-  const game = new Game(mainCanvas, mainCtx);
+  const container = new Container(mainCanvas, mainCtx);
 
-  mainCanvas.addEventListener('click', (e) => game.handleClickEvent(e), false);
+  mainCanvas.addEventListener('click',
+  (e) => container.handleClickEvent(e),
+  false);
 
   // Pause Button && color shift
   document.body.addEventListener('keydown', e =>{
     if(e.keyCode === 32){
-      game.handlePauseEvent(e);
+      container.handlePauseEvent(e);
     } else {
-      game.toggleColor(e);
+      container.toggleColor(e);
     }
   });
 
