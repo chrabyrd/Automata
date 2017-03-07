@@ -26,6 +26,7 @@ class Container {
             'dieCon': `false`,
             'stayCon': `false`,
             'wanderCon': `false`,
+            // 'reproduceCon': `true`
             'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
           },
           'neighborArray': [false]
