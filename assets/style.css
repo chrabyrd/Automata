@@ -4,16 +4,59 @@ body {
   margin: 0;
 }
 
+li {
+  list-style: none;
+}
+
+li:hover {
+  background-color: green;
+  cursor: pointer;
+}
+
 #page {
   position: fixed;
   display: flex;
 }
 
 #playPauseButton {
-  /*background-color: yellow;*/
+  background-color: red;
+  position: absolute;
   left: 5px;
   top: 5px;
   padding: 5px;
-  position: fixed;
+  cursor: pointer;
+}
 
+#speedContainer {
+  background-color: pink;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  left: 5px;
+  bottom: 5px;
+}
+
+#currentSpeed {
+  background-color: teal;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+#speedDropdown {
+  background-color: orange;
+  position: absolute;
+  display: none;
+  bottom: 25px;
+  flex-direction: column;
+  overflow: scroll;
+  width: 100%;
+  height: 100px;
+}
+
+#faster, #slower {
+  background-color: brown;
+  padding: 5px;
+  cursor: pointer;
 }

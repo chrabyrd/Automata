@@ -5,6 +5,13 @@ class Container {
   constructor (mainCanvas, mainCtx) {
     this.mainCanvas = mainCanvas;
     this.mainCtx = mainCtx;
+    this.drawspeed = 50;
+    this.speedArray = [];
+
+    for (let i = 1; i <= 100; i++) {
+      this.speedArray.push((1000 / i).toFixed(2));
+    }
+
     this.cellSize = 16;
     this.width = 200;
     this.height = 200;
@@ -104,19 +111,16 @@ class Container {
   }
 
   handleClickEvent (e) {
-    e.preventDefault();
     this.board.toggleCell(e, this.cellType);
   }
 
   handlePlayEvent () {
     this.start = setInterval(() => {
       this.automata.cellLogic(this.conditionalHash());
-    }, 50);
+    }, this.drawspeed);
   }
 
-  handlePauseEvent (e) {
-    e.preventDefault();
-
+  handlePauseEvent () {
     if (this.pauseEvent) {
       this.pauseEvent = false;
       this.handlePlayEvent();
@@ -126,11 +130,28 @@ class Container {
     }
   }
 
-  handleNextFrameEvent (e) {
-    e.preventDefault();
-
-    if (!this.pauseEvent) this.pauseEvent = true;
+  handleNextFrameEvent () {
+    if (!this.pauseEvent) this.handlePauseEvent();
     this.automata.cellLogic(this.conditionalHash());
+  }
+
+  speedup () {
+    this.handlePauseEvent();
+    this.drawspeed--;
+    this.handlePauseEvent();
+  }
+
+  handleSpeedEvent (speed) {
+    speed = 1000 / speed;
+    this.handlePauseEvent();
+    this.drawspeed = speed;
+    this.handlePauseEvent();
+  }
+
+  slowdown () {
+    this.handlePauseEvent();
+    this.drawspeed++;
+    this.handlePauseEvent();
   }
 
   handleResetEvent () {

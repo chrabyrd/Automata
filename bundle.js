@@ -57,6 +57,10 @@
 	  var mainCtx = mainCanvas.getContext("2d");
 
 	  var playPauseButton = document.getElementById("playPauseButton");
+	  var faster = document.getElementById("faster");
+	  var currentSpeed = document.getElementById("currentSpeed");
+	  var speedDropdown = document.getElementById("speedDropdown");
+	  var slower = document.getElementById("slower");
 	  var rulesButton = document.getElementById("rulesButton");
 	  var rulesModal = document.getElementById("rulesModal");
 	  var openerModal = document.getElementById("openerModal");
@@ -70,6 +74,7 @@
 	  // Pause
 	  document.body.addEventListener('keydown', function (e) {
 	    if (e.keyCode === 32) {
+	      e.preventDefault();
 	      playPauseButton.classList.toggle("fa-pause");
 	      container.handlePauseEvent(e);
 	    }
@@ -80,9 +85,42 @@
 	    container.handlePauseEvent(e);
 	  });
 
+	  // Speed
+	  faster.addEventListener('click', function (e) {
+	    container.speedup(e);
+	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
+	  });
+
+	  currentSpeed.addEventListener('click', function (e) {
+	    if (!speedDropdown.style.display) {
+	      for (var i = 0; i < container.speedArray.length; i++) {
+	        speedDropdown.innerHTML += "<li>" + container.speedArray[i] + "</li>";
+	      }
+	      speedDropdown.style.display = "flex";
+	    } else {
+	      speedDropdown.innerHTML = "";
+	      speedDropdown.style.display = null;
+	    }
+	  });
+
+	  window.onclick = function (e) {
+	    if (e.target.parentElement.id === "speedDropdown") {
+	      container.handleSpeedEvent(e.target.innerHTML);
+	      currentSpeed.innerHTML = e.target.innerHTML;
+	      speedDropdown.innerHTML = "";
+	      speedDropdown.style.display = null;
+	    }
+	  };
+
+	  slower.addEventListener('click', function (e) {
+	    container.slowdown(e);
+	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
+	  });
+
 	  // color shift
 	  document.body.addEventListener('keydown', function (e) {
 	    if (e.keyCode === 78) {
+	      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
 	      container.handleNextFrameEvent(e);
 	    } else {
 	      container.toggleColor(e);
@@ -131,6 +169,13 @@
 
 	    this.mainCanvas = mainCanvas;
 	    this.mainCtx = mainCtx;
+	    this.drawspeed = 50;
+	    this.speedArray = [];
+
+	    for (var i = 1; i <= 100; i++) {
+	      this.speedArray.push((1000 / i).toFixed(2));
+	    }
+
 	    this.cellSize = 16;
 	    this.width = 200;
 	    this.height = 200;
@@ -234,7 +279,6 @@
 	  }, {
 	    key: "handleClickEvent",
 	    value: function handleClickEvent(e) {
-	      e.preventDefault();
 	      this.board.toggleCell(e, this.cellType);
 	    }
 	  }, {
@@ -244,13 +288,11 @@
 
 	      this.start = setInterval(function () {
 	        _this.automata.cellLogic(_this.conditionalHash());
-	      }, 50);
+	      }, this.drawspeed);
 	    }
 	  }, {
 	    key: "handlePauseEvent",
-	    value: function handlePauseEvent(e) {
-	      e.preventDefault();
-
+	    value: function handlePauseEvent() {
 	      if (this.pauseEvent) {
 	        this.pauseEvent = false;
 	        this.handlePlayEvent();
@@ -261,11 +303,31 @@
 	    }
 	  }, {
 	    key: "handleNextFrameEvent",
-	    value: function handleNextFrameEvent(e) {
-	      e.preventDefault();
-
-	      if (!this.pauseEvent) this.pauseEvent = true;
+	    value: function handleNextFrameEvent() {
+	      if (!this.pauseEvent) this.handlePauseEvent();
 	      this.automata.cellLogic(this.conditionalHash());
+	    }
+	  }, {
+	    key: "speedup",
+	    value: function speedup() {
+	      this.handlePauseEvent();
+	      this.drawspeed--;
+	      this.handlePauseEvent();
+	    }
+	  }, {
+	    key: "handleSpeedEvent",
+	    value: function handleSpeedEvent(speed) {
+	      speed = 1000 / speed;
+	      this.handlePauseEvent();
+	      this.drawspeed = speed;
+	      this.handlePauseEvent();
+	    }
+	  }, {
+	    key: "slowdown",
+	    value: function slowdown() {
+	      this.handlePauseEvent();
+	      this.drawspeed++;
+	      this.handlePauseEvent();
 	    }
 	  }, {
 	    key: "handleResetEvent",
@@ -466,7 +528,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _cellLogic = __webpack_require__(6);
+	var _cellLogic = __webpack_require__(5);
 
 	var _cellLogic2 = _interopRequireDefault(_cellLogic);
 
@@ -523,8 +585,7 @@
 	exports.default = Automata;
 
 /***/ },
-/* 5 */,
-/* 6 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";

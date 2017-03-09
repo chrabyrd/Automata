@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainCtx = mainCanvas.getContext("2d");
 
   const playPauseButton = document.getElementById("playPauseButton");
+  const faster = document.getElementById("faster");
+  const currentSpeed = document.getElementById("currentSpeed");
+  const speedDropdown = document.getElementById("speedDropdown");
+  const slower = document.getElementById("slower");
   const rulesButton = document.getElementById("rulesButton");
   const rulesModal = document.getElementById("rulesModal");
   const openerModal = document.getElementById("openerModal");
@@ -18,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Pause
   document.body.addEventListener('keydown', e => {
     if(e.keyCode === 32) {
+      e.preventDefault();
       playPauseButton.classList.toggle("fa-pause");
       container.handlePauseEvent(e);
     }
@@ -28,9 +33,42 @@ document.addEventListener("DOMContentLoaded", () => {
     container.handlePauseEvent(e);
   });
 
+  // Speed
+    faster.addEventListener('click', e => {
+      container.speedup(e);
+      currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
+    });
+
+    currentSpeed.addEventListener('click', e => {
+      if (!speedDropdown.style.display) {
+        for (let i = 0; i < container.speedArray.length; i++) {
+          speedDropdown.innerHTML += `<li>${container.speedArray[i]}</li>`;
+        }
+        speedDropdown.style.display = "flex";
+      } else {
+        speedDropdown.innerHTML = "";
+        speedDropdown.style.display = null;
+      }
+    });
+
+    window.onclick = function(e) {
+      if (e.target.parentElement.id === "speedDropdown") {
+        container.handleSpeedEvent(e.target.innerHTML);
+        currentSpeed.innerHTML = e.target.innerHTML;
+        speedDropdown.innerHTML = "";
+        speedDropdown.style.display = null;
+      }
+    };
+
+    slower.addEventListener('click', e => {
+      container.slowdown(e);
+      currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
+    });
+
   // color shift
   document.body.addEventListener('keydown', e => {
     if (e.keyCode === 78) {
+      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
       container.handleNextFrameEvent(e);
     } else {
       container.toggleColor(e);
