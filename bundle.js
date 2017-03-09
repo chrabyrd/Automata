@@ -46,7 +46,7 @@
 
 	"use strict";
 
-	var _container = __webpack_require__(7);
+	var _container = __webpack_require__(1);
 
 	var _container2 = _interopRequireDefault(_container);
 
@@ -70,6 +70,8 @@
 	  document.body.addEventListener('keydown', function (e) {
 	    if (e.keyCode === 32) {
 	      container.handlePauseEvent(e);
+	    } else if (e.keyCode === 78) {
+	      container.handleNextFrameEvent(e);
 	    } else {
 	      container.toggleColor(e);
 	    }
@@ -88,7 +90,180 @@
 	});
 
 /***/ },
-/* 1 */,
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _board = __webpack_require__(2);
+
+	var _board2 = _interopRequireDefault(_board);
+
+	var _automata = __webpack_require__(4);
+
+	var _automata2 = _interopRequireDefault(_automata);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Container = function () {
+	  function Container(mainCanvas, mainCtx) {
+	    _classCallCheck(this, Container);
+
+	    this.mainCanvas = mainCanvas;
+	    this.mainCtx = mainCtx;
+	    this.cellSize = 8;
+	    this.width = 800;
+	    this.height = 600;
+	    this.pauseEvent = false;
+	    this.cellType = 'typeOne';
+	    this.start = null;
+	    this.getGridSize();
+	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	    this.automata = new _automata2.default(this.board);
+	    this.handlePlayEvent();
+	  }
+
+	  _createClass(Container, [{
+	    key: "conditionalHash",
+	    value: function conditionalHash() {
+	      return {
+	        'typeOne': {
+	          'conditions': {
+	            'skipCon': "validNeighbors.length === 0",
+	            'dieCon': "false",
+	            'stayCon': "false",
+	            'wanderCon': "false",
+	            // 'reproduceCon': `true`
+	            'reproduceCon': "!typeHash['typeTwo'] && !typeHash['typeThree']"
+	          },
+	          'neighborArray': [false]
+	        },
+
+	        'typeTwo': {
+	          'conditions': {
+	            'skipCon': "false",
+	            'dieCon': "!typeHash['typeOne']",
+	            'stayCon': "validNeighbors.length === 0",
+	            'wanderCon': "true",
+	            'reproduceCon': "typeHash[type]"
+	          },
+	          'neighborArray': [false, 'typeOne']
+	        },
+
+	        'typeThree': {
+	          'conditions': {
+	            'skipCon': "false",
+	            'dieCon': "!typeHash['typeOne']",
+	            'stayCon': "validNeighbors.length === 0",
+	            'wanderCon': "true",
+	            'reproduceCon': "typeHash[type]"
+	          },
+	          'neighborArray': [false, 'typeOne']
+	        },
+
+	        'false': {
+	          'conditions': {
+	            'skipCon': "true",
+	            'dieCon': "false",
+	            'stayCon': "false",
+	            'wanderCon': "false",
+	            'reproduceCon': "false"
+	          },
+	          'neighborArray': [false]
+	        }
+	      };
+	    }
+	  }, {
+	    key: "closestValue",
+	    value: function closestValue(num, array) {
+	      return array.sort(function (a, b) {
+	        return Math.abs(num - a) - Math.abs(num - b);
+	      })[0];
+	    }
+	  }, {
+	    key: "getGridSize",
+	    value: function getGridSize() {
+	      var valid = [];
+
+	      for (var i = 0; i <= 4000; i++) {
+	        var isValid = i % 16 === 0;
+	        if (isValid) valid.push(i);
+	      }
+	      this.width = this.closestValue(this.width, valid);
+	      this.height = this.closestValue(this.height, valid);
+	      this.mainCanvas.width = this.width;
+	      this.mainCanvas.height = this.height;
+	    }
+	  }, {
+	    key: "toggleColor",
+	    value: function toggleColor(e) {
+	      if (e.keyCode === 49) {
+	        this.cellType = 'typeOne';
+	      } else if (e.keyCode === 50) {
+	        this.cellType = 'typeTwo';
+	      } else if (e.keyCode === 51) {
+	        this.cellType = 'typeThree';
+	      }
+	    }
+	  }, {
+	    key: "handleClickEvent",
+	    value: function handleClickEvent(e) {
+	      e.preventDefault();
+	      this.board.toggleCell(e, this.cellType);
+	    }
+	  }, {
+	    key: "handlePlayEvent",
+	    value: function handlePlayEvent() {
+	      var _this = this;
+
+	      this.start = setInterval(function () {
+	        _this.automata.cellLogic(_this.conditionalHash());
+	      }, 50);
+	    }
+	  }, {
+	    key: "handlePauseEvent",
+	    value: function handlePauseEvent(e) {
+	      e.preventDefault();
+
+	      if (this.pauseEvent) {
+	        this.pauseEvent = false;
+	        this.handlePlayEvent();
+	      } else {
+	        this.pauseEvent = true;
+	        clearInterval(this.start);
+	      }
+	    }
+	  }, {
+	    key: "handleNextFrameEvent",
+	    value: function handleNextFrameEvent(e) {
+	      e.preventDefault();
+
+	      if (!this.pauseEvent) this.pauseEvent = true;
+	      this.automata.cellLogic(this.conditionalHash());
+	    }
+	  }, {
+	    key: "handleResetEvent",
+	    value: function handleResetEvent() {
+	      clearInterval(this.start);
+	      this.board = new _board2.default(this.mainCtx, 5, 800, 600);
+	      this.automata = new _automata2.default(this.board);
+	    }
+	  }]);
+
+	  return Container;
+	}();
+
+	exports.default = Container;
+
+/***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -222,7 +397,7 @@
 	      var neighborArray = [top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft];
 
 	      neighborArray.forEach(function (num) {
-	        if (num > 0 && num <= maxCellId - 1) {
+	        if (num >= 0 && num <= maxCellId - 1) {
 	          _this.neighbors.push(num);
 	        }
 	      });
@@ -273,9 +448,9 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _cellType = __webpack_require__(6);
+	var _cellLogic = __webpack_require__(6);
 
-	var _cellType2 = _interopRequireDefault(_cellType);
+	var _cellLogic2 = _interopRequireDefault(_cellLogic);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -314,14 +489,12 @@
 	      }));
 
 	      shuffledCells.forEach(function (id) {
-	        if (!cells[id].type) return;
-
-	        var cellType = new _cellType2.default(cells, changingCells, id);
-	        cellType.live(conditionalHash);
+	        var cellLogic = new _cellLogic2.default(cells, changingCells, id);
+	        cellLogic.live(conditionalHash);
 	      });
 
 	      Object.keys(changingCells).forEach(function (key) {
-	        cells[parseInt(key)].changeState(changingCells[key]);
+	        cells[key].changeState(changingCells[key]);
 	      });
 	    }
 	  }]);
@@ -346,24 +519,18 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var CellType = function () {
-	  function CellType(cellList, changingCells, id) {
-	    var _this = this;
-
-	    _classCallCheck(this, CellType);
+	var CellLogic = function () {
+	  function CellLogic(cellList, changingCells, id) {
+	    _classCallCheck(this, CellLogic);
 
 	    this.id = id;
 	    this.changingCells = changingCells;
 	    this.cells = cellList;
 	    this.cellNeighbors = this.cells[id].neighbors;
 	    this.type = this.cells[id].type;
-	    this.typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0 };
-	    this.cellNeighbors.forEach(function (num) {
-	      _this.typeHash[_this.cells[num].type]++;
-	    });
 	  }
 
-	  _createClass(CellType, [{
+	  _createClass(CellLogic, [{
 	    key: "random",
 	    value: function random(array) {
 	      return array[Math.floor(Math.random() * array.length)];
@@ -375,16 +542,12 @@
 	      var changingCells = this.changingCells;
 	      var cells = this.cells;
 
-	      validNeighbors = this.cellNeighbors.filter(function (cell) {
-	        return !changingCells[cell];
-	      });
-
-	      if (!cellTypeArray) return validNeighbors;
-
 	      validNeighbors = validNeighbors.filter(function (cell) {
 	        var isValid = false;
 	        cellTypeArray.forEach(function (neighborType) {
-	          if (cells[cell].type === neighborType) isValid = true;
+	          if (cells[cell].type === neighborType && !changingCells[cell]) {
+	            isValid = true;
+	          }
 	        });
 	        return isValid;
 	      });
@@ -417,8 +580,18 @@
 	  }, {
 	    key: "live",
 	    value: function live(conditionalHash) {
+	      var _this = this;
+
+	      if (this.changingCells[this.id]) return;
 	      var type = this.type;
-	      var typeHash = this.typeHash;
+	      var typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0, "false": 0 };
+	      this.cellNeighbors.forEach(function (num) {
+	        if (_this.changingCells[num]) {
+	          typeHash[_this.changingCells[num]]++;
+	        } else {
+	          typeHash[_this.cells[num].type]++;
+	        }
+	      });
 
 	      var validNeighbors = this.getValidNeighbors(conditionalHash[type]['neighborArray']);
 
@@ -437,175 +610,10 @@
 	    }
 	  }]);
 
-	  return CellType;
+	  return CellLogic;
 	}();
 
-	exports.default = CellType;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _board = __webpack_require__(2);
-
-	var _board2 = _interopRequireDefault(_board);
-
-	var _automata = __webpack_require__(4);
-
-	var _automata2 = _interopRequireDefault(_automata);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Container = function () {
-	  function Container(mainCanvas, mainCtx) {
-	    _classCallCheck(this, Container);
-
-	    this.mainCanvas = mainCanvas;
-	    this.mainCtx = mainCtx;
-	    this.cellSize = 16;
-	    this.width = window.outerWidth;
-	    this.height = window.outerHeight;
-	    this.pauseEvent = false;
-	    this.cellType = 'typeOne';
-	    this.start = null;
-	    this.getGridSize();
-	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	    this.automata = new _automata2.default(this.board);
-	    this.handlePlayEvent(this.conditionalHash());
-	  }
-
-	  _createClass(Container, [{
-	    key: "conditionalHash",
-	    value: function conditionalHash() {
-	      return {
-	        'typeOne': {
-	          'conditions': {
-	            'skipCon': "validNeighbors.length === 0",
-	            'dieCon': "false",
-	            'stayCon': "false",
-	            'wanderCon': "false",
-	            // 'reproduceCon': `true`
-	            'reproduceCon': "!typeHash['typeTwo'] && !typeHash['typeThree']"
-	          },
-	          'neighborArray': [false]
-	        },
-
-	        'typeTwo': {
-	          'conditions': {
-	            'skipCon': "false",
-	            'dieCon': "!typeHash['typeOne']",
-	            'stayCon': "validNeighbors.length === 0",
-	            'wanderCon': "true",
-	            'reproduceCon': "typeHash[type]"
-	          },
-	          'neighborArray': [false, 'typeOne']
-	        },
-
-	        'typeThree': {
-	          'conditions': {
-	            'skipCon': "false",
-	            'dieCon': "!typeHash['typeOne']",
-	            'stayCon': "validNeighbors.length === 0",
-	            'wanderCon': "true",
-	            'reproduceCon': "typeHash[type]"
-	          },
-	          'neighborArray': [false, 'typeOne']
-	        }
-	      };
-	    }
-	  }, {
-	    key: "closestValue",
-	    value: function closestValue(num, array) {
-	      return array.sort(function (a, b) {
-	        return Math.abs(num - a) - Math.abs(num - b);
-	      })[0];
-	    }
-	  }, {
-	    key: "getGridSize",
-	    value: function getGridSize() {
-	      var valid = [];
-
-	      var _loop = function _loop(i) {
-	        var isValid = [2, 4, 8, 16].every(function (num) {
-	          return i % num === 0;
-	        });
-	        if (isValid) valid.push(i);
-	      };
-
-	      for (var i = 0; i <= 4000; i++) {
-	        _loop(i);
-	      }
-	      this.width = this.closestValue(this.width, valid);
-	      this.height = this.closestValue(this.height, valid);
-	      this.mainCanvas.width = this.width;
-	      this.mainCanvas.height = this.height;
-	    }
-	  }, {
-	    key: "handleClickEvent",
-	    value: function handleClickEvent(e) {
-	      e.preventDefault();
-	      this.board.toggleCell(e, this.cellType);
-	    }
-	  }, {
-	    key: "toggleColor",
-	    value: function toggleColor(e) {
-	      if (e.keyCode === 49) {
-	        this.cellType = 'typeOne';
-	      } else if (e.keyCode === 50) {
-	        this.cellType = 'typeTwo';
-	      } else if (e.keyCode === 51) {
-	        this.cellType = 'typeThree';
-	      }
-	    }
-	  }, {
-	    key: "handlePlayEvent",
-	    value: function handlePlayEvent(conditionalHash) {
-	      var _this = this;
-
-	      this.start = setInterval(function () {
-	        _this.automata.cellLogic(conditionalHash);
-	      }, 50);
-	    }
-	  }, {
-	    key: "handlePauseEvent",
-	    value: function handlePauseEvent(e) {
-	      e.preventDefault();
-
-	      // this.board = new Board(this.mainCtx, 8, this.width, this.height);
-	      // this.automata = new Automata(this.board);
-	      // this.handlePlayEvent();
-
-	      if (this.pauseEvent) {
-	        this.pauseEvent = false;
-	        this.handlePlayEvent(this.conditionalHash());
-	      } else {
-	        this.pauseEvent = true;
-	        clearInterval(this.start);
-	      }
-	    }
-	  }, {
-	    key: "handleResetEvent",
-	    value: function handleResetEvent() {
-	      clearInterval(this.start);
-	      this.board = new _board2.default(this.mainCtx, 5, 800, 600);
-	      this.automata = new _automata2.default(this.board);
-	    }
-	  }]);
-
-	  return Container;
-	}();
-
-	exports.default = Container;
+	exports.default = CellLogic;
 
 /***/ }
 /******/ ]);

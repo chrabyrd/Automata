@@ -1,4 +1,4 @@
-import CellType from './cellType';
+import CellLogic from './cellLogic';
 
 class Automata {
   constructor (board) {
@@ -25,14 +25,12 @@ class Automata {
     const shuffledCells = this.shuffle(cells.map(cell => cell.id));
 
     shuffledCells.forEach(id => {
-      if (!cells[id].type) return;
-
-      let cellType = new CellType(cells, changingCells, id);
-      cellType.live(conditionalHash);
+      let cellLogic = new CellLogic(cells, changingCells, id);
+      cellLogic.live(conditionalHash);
     });
 
     Object.keys(changingCells).forEach(key => {
-      cells[parseInt(key)].changeState(changingCells[key]);
+      cells[key].changeState(changingCells[key]);
     });
   }
 }

@@ -41,7 +41,7 @@ class Cell {
                            bottomLeft, left, topLeft];
 
     neighborArray.forEach(num => {
-      if (num > 0 && num <= maxCellId - 1) {this.neighbors.push(num);}
+      if (num >= 0 && num <= maxCellId - 1) {this.neighbors.push(num);}
     });
   }
 

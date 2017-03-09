@@ -1,12 +1,10 @@
-class CellType {
+class CellLogic {
   constructor (cellList, changingCells, id) {
     this.id = id;
     this.changingCells = changingCells;
     this.cells = cellList;
     this.cellNeighbors = this.cells[id].neighbors;
     this.type = this.cells[id].type;
-    this.typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0 };
-    this.cellNeighbors.forEach(num => {this.typeHash[this.cells[num].type]++;});
   }
 
   random(array) {
@@ -18,16 +16,12 @@ class CellType {
     let changingCells = this.changingCells;
     let cells = this.cells;
 
-    validNeighbors = this.cellNeighbors.filter(function(cell) {
-      return !changingCells[cell];
-    });
-
-    if (!cellTypeArray) return validNeighbors;
-
     validNeighbors = validNeighbors.filter(function(cell) {
       let isValid = false;
       cellTypeArray.forEach(neighborType => {
-        if (cells[cell].type === neighborType) isValid = true;
+        if (cells[cell].type === neighborType && !changingCells[cell]) {
+          isValid = true;
+        }
       });
       return isValid;
     });
@@ -55,8 +49,16 @@ class CellType {
   }
 
   live (conditionalHash) {
+    if (this.changingCells[this.id]) return;
     const type = this.type;
-    const typeHash = this.typeHash;
+    const typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0, "false": 0};
+    this.cellNeighbors.forEach(num => {
+      if (this.changingCells[num]) {
+        typeHash[this.changingCells[num]]++;
+      } else {
+        typeHash[this.cells[num].type]++;
+      }
+    });
 
     const validNeighbors = this.getValidNeighbors(conditionalHash[type]['neighborArray']);
 
@@ -77,4 +79,4 @@ class CellType {
 
 }
 
-export default CellType;
+export default CellLogic;

@@ -5,16 +5,16 @@ class Container {
   constructor (mainCanvas, mainCtx) {
     this.mainCanvas = mainCanvas;
     this.mainCtx = mainCtx;
-    this.cellSize = 16;
-    this.width = window.outerWidth;
-    this.height = window.outerHeight;
+    this.cellSize = 8;
+    this.width = 800;
+    this.height = 600;
     this.pauseEvent = false;
     this.cellType = 'typeOne';
     this.start = null;
     this.getGridSize();
     this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
     this.automata = new Automata(this.board);
-    this.handlePlayEvent(this.conditionalHash());
+    this.handlePlayEvent();
   }
 
   conditionalHash () {
@@ -52,6 +52,17 @@ class Container {
             'reproduceCon': `typeHash[type]`
           },
           'neighborArray': [false, 'typeOne']
+        },
+
+        'false': {
+          'conditions': {
+            'skipCon': `true`,
+            'dieCon': `false`,
+            'stayCon': `false`,
+            'wanderCon': `false`,
+            'reproduceCon': `false`
+          },
+          'neighborArray': [false]
         }
       }
     );
@@ -65,20 +76,13 @@ class Container {
     const valid = [];
 
     for (let i = 0; i <= 4000; i++) {
-      let isValid = [2, 4, 8, 16].every(num => (
-        i % num === 0
-      ));
+      let isValid = i % 16 === 0;
       if (isValid) valid.push(i);
     }
     this.width = this.closestValue(this.width, valid);
     this.height = this.closestValue(this.height, valid);
     this.mainCanvas.width = this.width;
     this.mainCanvas.height = this.height;
-  }
-
-  handleClickEvent (e) {
-    e.preventDefault();
-    this.board.toggleCell(e, this.cellType);
   }
 
   toggleColor (e) {
@@ -91,26 +95,34 @@ class Container {
     }
   }
 
-  handlePlayEvent (conditionalHash) {
+  handleClickEvent (e) {
+    e.preventDefault();
+    this.board.toggleCell(e, this.cellType);
+  }
+
+  handlePlayEvent () {
     this.start = setInterval(() => {
-      this.automata.cellLogic(conditionalHash);
+      this.automata.cellLogic(this.conditionalHash());
     }, 50);
   }
 
   handlePauseEvent (e) {
     e.preventDefault();
 
-    // this.board = new Board(this.mainCtx, 8, this.width, this.height);
-    // this.automata = new Automata(this.board);
-    // this.handlePlayEvent();
-
     if (this.pauseEvent) {
       this.pauseEvent = false;
-      this.handlePlayEvent(this.conditionalHash());
+      this.handlePlayEvent();
     } else {
       this.pauseEvent = true;
       clearInterval(this.start);
     }
+  }
+
+  handleNextFrameEvent (e) {
+    e.preventDefault();
+
+    if (!this.pauseEvent) this.pauseEvent = true;
+    this.automata.cellLogic(this.conditionalHash());
   }
 
   handleResetEvent () {

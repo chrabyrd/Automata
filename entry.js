@@ -16,8 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Pause Button && color shift
   document.body.addEventListener('keydown', e =>{
-    if(e.keyCode === 32){
+    if(e.keyCode === 32) {
       container.handlePauseEvent(e);
+    } else if (e.keyCode === 78) {
+      container.handleNextFrameEvent(e);
     } else {
       container.toggleColor(e);
     }
