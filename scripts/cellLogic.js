@@ -16,10 +16,10 @@ class CellLogic {
     let changingCells = this.changingCells;
     let cells = this.cells;
 
-    validNeighbors = validNeighbors.filter(function(cell) {
+    validNeighbors = validNeighbors.filter(function(neighbor) {
       let isValid = false;
-      cellTypeArray.forEach(neighborType => {
-        if (cells[cell].type === neighborType && !changingCells[cell]) {
+      cellTypeArray.forEach(type => {
+        if (cells[neighbor].type === type && !changingCells[neighbor]) {
           isValid = true;
         }
       });
@@ -50,17 +50,14 @@ class CellLogic {
 
   live (conditionalHash) {
     if (this.changingCells[this.id]) return;
+
     const type = this.type;
     const typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0, "false": 0};
-    this.cellNeighbors.forEach(num => {
-      if (this.changingCells[num]) {
-        typeHash[this.changingCells[num]]++;
-      } else {
-        typeHash[this.cells[num].type]++;
-      }
-    });
+    const validNeighbors = this.getValidNeighbors(
+      conditionalHash[type]['neighborArray']
+    );
 
-    const validNeighbors = this.getValidNeighbors(conditionalHash[type]['neighborArray']);
+    this.cellNeighbors.forEach(num => {typeHash[this.cells[num].type]++;});
 
     if (eval(conditionalHash[type]['conditions']['skipCon'])) {
       return;
@@ -69,7 +66,6 @@ class CellLogic {
     } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
       this.stay();
     } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
-      if (eval(conditionalHash[type]['conditions']['wanderCon'])) this.wander(validNeighbors);
       this.reproduce(validNeighbors);
     } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
       this.wander(validNeighbors);

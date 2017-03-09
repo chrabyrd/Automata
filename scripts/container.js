@@ -5,9 +5,11 @@ class Container {
   constructor (mainCanvas, mainCtx) {
     this.mainCanvas = mainCanvas;
     this.mainCtx = mainCtx;
-    this.cellSize = 8;
-    this.width = 800;
-    this.height = 600;
+    this.cellSize = 16;
+    this.width = 200;
+    this.height = 200;
+    // this.width = window.innerWidth;
+    // this.height = window.innerHeight;
     this.pauseEvent = false;
     this.cellType = 'typeOne';
     this.start = null;
@@ -38,7 +40,7 @@ class Container {
             'dieCon': `!typeHash['typeOne']`,
             'stayCon': `validNeighbors.length === 0`,
             'wanderCon': `true`,
-            'reproduceCon': `typeHash[type]`
+            'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 4) === 0`
           },
           'neighborArray': [false, 'typeOne']
         },
@@ -49,7 +51,7 @@ class Container {
             'dieCon': `!typeHash['typeOne']`,
             'stayCon': `validNeighbors.length === 0`,
             'wanderCon': `true`,
-            'reproduceCon': `typeHash[type]`
+            'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 4) === 0`
           },
           'neighborArray': [false, 'typeOne']
         },
@@ -69,7 +71,13 @@ class Container {
   }
 
   closestValue (num, array) {
-    return array.sort( (a, b) => Math.abs(num - a) - Math.abs(num - b) )[0];
+    const sortedArray = array.sort((a, b) => (
+      Math.abs(num - a) - Math.abs(num - b)
+    ));
+
+    return sortedArray.filter(function(val) {
+      return val >= num;
+    })[0];
   }
 
   getGridSize () {

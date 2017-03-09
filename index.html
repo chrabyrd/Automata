@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="./assets/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <script src="./bundle.js"></script>
     <title>Automata</title>
@@ -13,54 +12,39 @@
     <!-- <body style="background-image: url(./assets/background.png)"> -->
       <div id="page">
 
-        <!-- <div id="header">
-          <h1>
-            Conway's Game of
-            <span style='color:red;text-decoration:line-through'>
-              <span style='color:black'>Life</span>
-            </span>
-            <span style="color:red;text-shadow:none;font-family:Gloria Hallelujah">
-              DEATH!
-            </span>
-          </h1>
-
-          <div id="header-buttons">
-            <a href="https://github.com/chrabyrd" id="gitHub"><i class="fa fa-github fa-3x"></i></a>
-            <a href="https://www.linkedin.com/in/chrabyrd" id="linkedIn"><i class="fa fa-linkedin-square fa-3x"></i></a>
-          </div>
+      <!-- <div id="header-buttons">
+          <a href="https://github.com/chrabyrd" id="gitHub"><i class="fa fa-github fa-3x"></i></a>
+          <a href="https://www.linkedin.com/in/chrabyrd" id="linkedIn"><i class="fa fa-linkedin-square fa-3x"></i></a>
         </div> -->
+        <!-- <div id="playPauseButton"> -->
+          <i id="playPauseButton" class="fa fa-play fa"></i>
+        <!-- </div> -->
+        <canvas id="mainCanvas"></canvas>
 
-        <div id="body">
-
-          <div id="canvasContainer">
-            <canvas id="mainCanvas" width="800" height="600"></canvas>
+        <!-- <div id="rulesModal">
+          <div id="modal-content">
+            <h1>Information</h1>
+            <h3>Hello! This is a gamefied version of Conway's Game of Life.</h3>
+            <p>Any live cell with fewer than two live neighbours dies.</p>
+            <p>Any live cell with two or three live neighbours lives.</p>
+            <p>Any live cell with more than three live neighbours dies.</p>
+            <p>Any dead cell with exactly three live neighbours becomes a live cell.</p>
           </div>
-
-          <!-- <div id="rulesModal">
-            <div id="modal-content">
-              <h1>Information</h1>
-              <h3>Hello! This is a gamefied version of Conway's Game of Life.</h3>
-              <p>Any live cell with fewer than two live neighbours dies.</p>
-              <p>Any live cell with two or three live neighbours lives.</p>
-              <p>Any live cell with more than three live neighbours dies.</p>
-              <p>Any dead cell with exactly three live neighbours becomes a live cell.</p>
-            </div>
-          </div>
-
-          <div id="openerModal">
-            <div id="modal-content">
-              <h1>The Basics</h1>
-              <p>You can create a colored box by clicking empty space.</p>
-              <p>Your goal is to eliminate all colored boxes from the board.</p>
-              <p>Spacebar to pause.</p>
-              <p>For more board rules, click ? on the main page.</p>
-            </div>
-          </div>
-
-          <div id="buttons-container">
-            <button id="rulesButton"><i class="fa fa-question fa-2x"></i></button>
-          </div> -->
         </div>
+
+        <div id="openerModal">
+          <div id="modal-content">
+            <h1>The Basics</h1>
+            <p>You can create a colored box by clicking empty space.</p>
+            <p>Your goal is to eliminate all colored boxes from the board.</p>
+            <p>Spacebar to pause.</p>
+            <p>For more board rules, click ? on the main page.</p>
+          </div>
+        </div>
+
+        <div id="buttons-container">
+          <button id="rulesButton"><i class="fa fa-question fa-2x"></i></button>
+        </div> -->
       </div>
     </body>
 </html>

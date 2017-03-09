@@ -1,2 +1,19 @@
-#mainCanvas {
+body {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+#page {
+  position: fixed;
+  display: flex;
+}
+
+#playPauseButton {
+  /*background-color: yellow;*/
+  left: 5px;
+  top: 5px;
+  padding: 5px;
+  position: fixed;
+
 }

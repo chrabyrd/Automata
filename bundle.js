@@ -56,6 +56,7 @@
 	  var mainCanvas = document.getElementById("mainCanvas");
 	  var mainCtx = mainCanvas.getContext("2d");
 
+	  var playPauseButton = document.getElementById("playPauseButton");
 	  var rulesButton = document.getElementById("rulesButton");
 	  var rulesModal = document.getElementById("rulesModal");
 	  var openerModal = document.getElementById("openerModal");
@@ -66,11 +67,22 @@
 	    return container.handleClickEvent(e);
 	  }, false);
 
-	  // Pause Button && color shift
+	  // Pause
 	  document.body.addEventListener('keydown', function (e) {
 	    if (e.keyCode === 32) {
+	      playPauseButton.classList.toggle("fa-pause");
 	      container.handlePauseEvent(e);
-	    } else if (e.keyCode === 78) {
+	    }
+	  });
+
+	  playPauseButton.addEventListener('click', function (e) {
+	    playPauseButton.classList.toggle("fa-pause");
+	    container.handlePauseEvent(e);
+	  });
+
+	  // color shift
+	  document.body.addEventListener('keydown', function (e) {
+	    if (e.keyCode === 78) {
 	      container.handleNextFrameEvent(e);
 	    } else {
 	      container.toggleColor(e);
@@ -119,9 +131,11 @@
 
 	    this.mainCanvas = mainCanvas;
 	    this.mainCtx = mainCtx;
-	    this.cellSize = 8;
-	    this.width = 800;
-	    this.height = 600;
+	    this.cellSize = 16;
+	    this.width = 200;
+	    this.height = 200;
+	    // this.width = window.innerWidth;
+	    // this.height = window.innerHeight;
 	    this.pauseEvent = false;
 	    this.cellType = 'typeOne';
 	    this.start = null;
@@ -153,7 +167,7 @@
 	            'dieCon': "!typeHash['typeOne']",
 	            'stayCon': "validNeighbors.length === 0",
 	            'wanderCon': "true",
-	            'reproduceCon': "typeHash[type]"
+	            'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 4) === 0"
 	          },
 	          'neighborArray': [false, 'typeOne']
 	        },
@@ -164,7 +178,7 @@
 	            'dieCon': "!typeHash['typeOne']",
 	            'stayCon': "validNeighbors.length === 0",
 	            'wanderCon': "true",
-	            'reproduceCon': "typeHash[type]"
+	            'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 4) === 0"
 	          },
 	          'neighborArray': [false, 'typeOne']
 	        },
@@ -184,8 +198,12 @@
 	  }, {
 	    key: "closestValue",
 	    value: function closestValue(num, array) {
-	      return array.sort(function (a, b) {
+	      var sortedArray = array.sort(function (a, b) {
 	        return Math.abs(num - a) - Math.abs(num - b);
+	      });
+
+	      return sortedArray.filter(function (val) {
+	        return val >= num;
 	      })[0];
 	    }
 	  }, {
@@ -542,10 +560,10 @@
 	      var changingCells = this.changingCells;
 	      var cells = this.cells;
 
-	      validNeighbors = validNeighbors.filter(function (cell) {
+	      validNeighbors = validNeighbors.filter(function (neighbor) {
 	        var isValid = false;
-	        cellTypeArray.forEach(function (neighborType) {
-	          if (cells[cell].type === neighborType && !changingCells[cell]) {
+	        cellTypeArray.forEach(function (type) {
+	          if (cells[neighbor].type === type && !changingCells[neighbor]) {
 	            isValid = true;
 	          }
 	        });
@@ -583,17 +601,14 @@
 	      var _this = this;
 
 	      if (this.changingCells[this.id]) return;
+
 	      var type = this.type;
 	      var typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0, "false": 0 };
-	      this.cellNeighbors.forEach(function (num) {
-	        if (_this.changingCells[num]) {
-	          typeHash[_this.changingCells[num]]++;
-	        } else {
-	          typeHash[_this.cells[num].type]++;
-	        }
-	      });
-
 	      var validNeighbors = this.getValidNeighbors(conditionalHash[type]['neighborArray']);
+
+	      this.cellNeighbors.forEach(function (num) {
+	        typeHash[_this.cells[num].type]++;
+	      });
 
 	      if (eval(conditionalHash[type]['conditions']['skipCon'])) {
 	        return;
@@ -602,7 +617,6 @@
 	      } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
 	        this.stay();
 	      } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
-	        if (eval(conditionalHash[type]['conditions']['wanderCon'])) this.wander(validNeighbors);
 	        this.reproduce(validNeighbors);
 	      } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
 	        this.wander(validNeighbors);
