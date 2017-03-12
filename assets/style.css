@@ -2,6 +2,8 @@ body {
   display: flex;
   justify-content: center;
   margin: 0;
+  overflow: auto;
+  background-color: teal;
 }
 
 li {
@@ -13,13 +15,7 @@ li:hover {
   cursor: pointer;
 }
 
-#page {
-  position: fixed;
-  display: flex;
-}
-
 #playPauseButton {
-  background-color: red;
   position: absolute;
   left: 5px;
   top: 5px;
@@ -27,36 +23,97 @@ li:hover {
   cursor: pointer;
 }
 
+#gridControls {
+  background-color: red;
+  position: fixed;
+  display: flex;
+  align-self: flex-end;
+  padding-bottom: 5px;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+}
+
+/* Speed Controls */
+
 #speedContainer {
-  background-color: pink;
-  position: absolute;
+  display: flex;
+}
+
+#currentSpeed {
+  display: flex;
+  align-items: center;
+  /*padding: 0 10px;*/
+  cursor: pointer;
+}
+
+#faster, #slower {
+  /*padding: 5px;*/
+  cursor: pointer;
+}
+
+/* Grid Size Controls */
+
+#gridSizeContainer {
   display: flex;
   justify-content: space-between;
   left: 5px;
   bottom: 5px;
 }
 
-#currentSpeed {
-  background-color: teal;
+#currentWidth {
   display: flex;
   align-items: center;
   padding: 0 10px;
   cursor: pointer;
 }
 
-#speedDropdown {
-  background-color: orange;
-  position: absolute;
+#gridDropdownContainer {
   display: none;
-  bottom: 25px;
-  flex-direction: column;
   overflow: scroll;
+  justify-content: space-around;
+  margin-bottom: 30px;
+  height: 70px;
   width: 100%;
-  height: 100px;
+  background-color: pink;
+  align-self: flex-end;
 }
 
-#faster, #slower {
+#dimensionsDropdownContainer {
+  display: flex;
+  overflow: scroll;
+  align-items: center;
+  width: 84px;
+}
+
+#speedDropdownContainer {
+  overflow: scroll;
+  width: 52px;
+  background-color: gold;
+}
+
+.gridDropdown {
+  display: flex;
+  flex-direction: column;
   background-color: brown;
-  padding: 5px;
+  align-items: center;
+  overflow: scroll;
+}
+
+#currentHeight {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
   cursor: pointer;
+}
+
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.2);
 }

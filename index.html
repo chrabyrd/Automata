@@ -10,7 +10,7 @@
   </head>
     <body>
     <!-- <body style="background-image: url(./assets/background.png)"> -->
-      <div id="page">
+      <!-- <div id="page"> -->
 
       <!-- <div id="header-buttons">
           <a href="https://github.com/chrabyrd" id="gitHub"><i class="fa fa-github fa-3x"></i></a>
@@ -18,15 +18,36 @@
         </div> -->
         <i id="playPauseButton" class="fa fa-play fa"></i>
 
-        <div id="speedContainer">
-          <i id="slower" class="fa fa-backward fa"></i>
+        <div id="modal-backdrop" class="modal-backdrop">
+          <div id="gridDropdownContainer">
 
-          <span id="currentSpeed">20.00</span id="currentSpeed">
-          <div id="speedDropdown"></div>
+            <div id="speedDropdownContainer">
+              <div id="speedDropdown" class="gridDropdown"></div>
+            </div>
 
-          <i id="faster" class="fa fa-forward fa"></i>
+            <div id="dimensionsDropdownContainer">
+              <div id="widthDropdown" class="gridDropdown"></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+              <div id="heightDropdown" class="gridDropdown"></div>
+            </div>
+
+          </div>
         </div>
 
+
+        <div id="gridControls">
+          <div id="speedContainer">
+            <i id="slower" class="fa fa-backward fa"></i>
+            <span id="currentSpeed">20.00</span>
+            <i id="faster" class="fa fa-forward fa"></i>
+          </div>
+
+          <div id="gridSizeContainer">
+            <span id="currentWidth">*</span>
+            <span>x</span>
+            <span id="currentHeight">*</span>
+          </div>
+        </div>
 
         <canvas id="mainCanvas"></canvas>
 
@@ -54,6 +75,6 @@
         <div id="buttons-container">
           <button id="rulesButton"><i class="fa fa-question fa-2x"></i></button>
         </div> -->
-      </div>
+      <!-- </div> -->
     </body>
 </html>

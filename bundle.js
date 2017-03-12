@@ -56,11 +56,21 @@
 	  var mainCanvas = document.getElementById("mainCanvas");
 	  var mainCtx = mainCanvas.getContext("2d");
 
-	  var playPauseButton = document.getElementById("playPauseButton");
 	  var faster = document.getElementById("faster");
 	  var currentSpeed = document.getElementById("currentSpeed");
 	  var speedDropdown = document.getElementById("speedDropdown");
 	  var slower = document.getElementById("slower");
+
+	  var widthDropdown = document.getElementById("widthDropdown");
+	  var heightDropdown = document.getElementById("heightDropdown");
+	  var gridDropdownContainer = document.getElementById("gridDropdownContainer");
+	  var currentWidth = document.getElementById("currentWidth");
+	  var currentHeight = document.getElementById("currentHeight");
+	  var gridSizeContainer = document.getElementById("gridSizeContainer");
+
+	  var modalBackdrop = document.getElementById("modal-backdrop");
+
+	  var playPauseButton = document.getElementById("playPauseButton");
 	  var rulesButton = document.getElementById("rulesButton");
 	  var rulesModal = document.getElementById("rulesModal");
 	  var openerModal = document.getElementById("openerModal");
@@ -87,35 +97,79 @@
 
 	  // Speed
 	  faster.addEventListener('click', function (e) {
-	    container.speedup(e);
+	    container.incrementSpeed('+');
+	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
+	  });
+
+	  slower.addEventListener('click', function (e) {
+	    container.slowdown();
 	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
 	  });
 
 	  currentSpeed.addEventListener('click', function (e) {
-	    if (!speedDropdown.style.display) {
-	      for (var i = 0; i < container.speedArray.length; i++) {
-	        speedDropdown.innerHTML += "<li>" + container.speedArray[i] + "</li>";
-	      }
-	      speedDropdown.style.display = "flex";
-	    } else {
-	      speedDropdown.innerHTML = "";
-	      speedDropdown.style.display = null;
+
+	    var speedArray = [];
+
+	    for (var i = 1; i <= 100; i++) {
+	      speedArray.push((1000 / i).toFixed(2));
 	    }
+
+	    speedArray.forEach(function (num) {
+	      speedDropdown.innerHTML += "<li>" + num + "</li>";
+	    });
+
+	    gridDropdownContainer.style.display = "flex";
+	    modalBackdrop.style.display = "flex";
 	  });
 
-	  window.onclick = function (e) {
-	    if (e.target.parentElement.id === "speedDropdown") {
-	      container.handleSpeedEvent(e.target.innerHTML);
-	      currentSpeed.innerHTML = e.target.innerHTML;
-	      speedDropdown.innerHTML = "";
-	      speedDropdown.style.display = null;
-	    }
-	  };
-
-	  slower.addEventListener('click', function (e) {
-	    container.slowdown(e);
-	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
+	  speedDropdown.addEventListener('click', function (e) {
+	    container.handleSpeedEvent(e.target.innerHTML);
+	    currentSpeed.innerHTML = e.target.innerHTML;
+	    speedDropdown.innerHTML = "";
+	    speedDropdown.style.display = null;
+	    modalBackdrop.style.display = null;
 	  });
+
+	  // Grid Size
+	  currentWidth.innerHTML = container.width;
+	  currentHeight.innerHTML = container.height;
+
+	  gridSizeContainer.addEventListener('click', function (e) {
+
+	    var gridDimensions = container.getGridSize().sort(function (a, b) {
+	      return a - b;
+	    });
+
+	    gridDimensions.forEach(function (num) {
+	      widthDropdown.innerHTML += "<li>" + num + "</li>";
+	      heightDropdown.innerHTML += "<li>" + num + "</li>";
+	    });
+
+	    gridDropdownContainer.style.display = "flex";
+	    modalBackdrop.style.display = "flex";
+	  });
+
+	  // window.onclick = function(e) {
+	  //   // console.log(e);
+	  //     if (e.target.parentElement.id === "gridDropdown") {
+	  //       container.handleWidthSizeEvent(e.target.innerHTML);
+	  //       currentWidth.innerHTML = e.target.innerHTML;
+	  //       // gridDropdown.innerHTML = "";
+	  //       // gridDropdown.style.display = null;
+	  //       modalBackdrop.style.display = "none";
+	  //     } else if (e.target.parentElement.id === "gridDropdown") {
+	  //       container.handleHeightSizeEvent(e.target.innerHTML);
+	  //       // currentHeight.innerHTML = e.target.innerHTML;
+	  //       // gridDropdown.innerHTML = "";
+	  //       // gridDropdown.style.display = null;
+	  //       modalBackdrop.style.display = "none";
+	  //     } else if (e.target === modalBackdrop) {
+	  //       // gridDropdown.style.display = null;
+	  //       // gridDropdown.style.display = null;
+	  //       modalBackdrop.style.display = null;
+	  //     }
+	  // };
+
 
 	  // color shift
 	  document.body.addEventListener('keydown', function (e) {
@@ -170,17 +224,14 @@
 	    this.mainCanvas = mainCanvas;
 	    this.mainCtx = mainCtx;
 	    this.drawspeed = 50;
-	    this.speedArray = [];
 
-	    for (var i = 1; i <= 100; i++) {
-	      this.speedArray.push((1000 / i).toFixed(2));
-	    }
+	    this.gridDimensions = [];
 
 	    this.cellSize = 16;
-	    this.width = 200;
-	    this.height = 200;
-	    // this.width = window.innerWidth;
-	    // this.height = window.innerHeight;
+	    // this.width = 200;
+	    // this.height = 200;
+	    this.width = window.innerWidth;
+	    this.height = window.innerHeight;
 	    this.pauseEvent = false;
 	    this.cellType = 'typeOne';
 	    this.start = null;
@@ -200,8 +251,8 @@
 	            'dieCon': "false",
 	            'stayCon': "false",
 	            'wanderCon': "false",
-	            // 'reproduceCon': `true`
-	            'reproduceCon': "!typeHash['typeTwo'] && !typeHash['typeThree']"
+	            'reproduceCon': "true"
+	            // 'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
 	          },
 	          'neighborArray': [false]
 	        },
@@ -212,7 +263,7 @@
 	            'dieCon': "!typeHash['typeOne']",
 	            'stayCon': "validNeighbors.length === 0",
 	            'wanderCon': "true",
-	            'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 4) === 0"
+	            'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 2) === 0"
 	          },
 	          'neighborArray': [false, 'typeOne']
 	        },
@@ -223,7 +274,7 @@
 	            'dieCon': "!typeHash['typeOne']",
 	            'stayCon': "validNeighbors.length === 0",
 	            'wanderCon': "true",
-	            'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 4) === 0"
+	            'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 2) === 0"
 	          },
 	          'neighborArray': [false, 'typeOne']
 	        },
@@ -254,16 +305,18 @@
 	  }, {
 	    key: "getGridSize",
 	    value: function getGridSize() {
-	      var valid = [];
 
-	      for (var i = 0; i <= 4000; i++) {
-	        var isValid = i % 16 === 0;
-	        if (isValid) valid.push(i);
+	      var gridDimensions = [];
+
+	      for (var i = 200; i <= 4000; i++) {
+	        if (i % 32 === 0) gridDimensions.push(i);
 	      }
-	      this.width = this.closestValue(this.width, valid);
-	      this.height = this.closestValue(this.height, valid);
+
+	      this.width = this.closestValue(this.width, gridDimensions);
+	      this.height = this.closestValue(this.height, gridDimensions);
 	      this.mainCanvas.width = this.width;
 	      this.mainCanvas.height = this.height;
+	      return gridDimensions;
 	    }
 	  }, {
 	    key: "toggleColor",
@@ -308,10 +361,10 @@
 	      this.automata.cellLogic(this.conditionalHash());
 	    }
 	  }, {
-	    key: "speedup",
-	    value: function speedup() {
+	    key: "incrementSpeed",
+	    value: function incrementSpeed(str) {
 	      this.handlePauseEvent();
-	      this.drawspeed--;
+	      str === '+' ? this.drawspeed++ : this.drawspeed--;
 	      this.handlePauseEvent();
 	    }
 	  }, {
@@ -323,10 +376,23 @@
 	      this.handlePauseEvent();
 	    }
 	  }, {
-	    key: "slowdown",
-	    value: function slowdown() {
+	    key: "handleWidthSizeEvent",
+	    value: function handleWidthSizeEvent(size) {
 	      this.handlePauseEvent();
-	      this.drawspeed++;
+	      this.width = size;
+	      this.mainCanvas.width = size;
+	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	      this.automata = new _automata2.default(this.board);
+	      this.handlePauseEvent();
+	    }
+	  }, {
+	    key: "handleHeightSizeEvent",
+	    value: function handleHeightSizeEvent(size) {
+	      this.handlePauseEvent();
+	      this.height = size;
+	      this.mainCanvas.height = size;
+	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	      this.automata = new _automata2.default(this.board);
 	      this.handlePauseEvent();
 	    }
 	  }, {

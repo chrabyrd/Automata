@@ -6,17 +6,15 @@ class Container {
     this.mainCanvas = mainCanvas;
     this.mainCtx = mainCtx;
     this.drawspeed = 50;
-    this.speedArray = [];
 
-    for (let i = 1; i <= 100; i++) {
-      this.speedArray.push((1000 / i).toFixed(2));
-    }
+    this.gridDimensions = [];
+
 
     this.cellSize = 16;
-    this.width = 200;
-    this.height = 200;
-    // this.width = window.innerWidth;
-    // this.height = window.innerHeight;
+    // this.width = 200;
+    // this.height = 200;
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
     this.pauseEvent = false;
     this.cellType = 'typeOne';
     this.start = null;
@@ -35,8 +33,8 @@ class Container {
             'dieCon': `false`,
             'stayCon': `false`,
             'wanderCon': `false`,
-            // 'reproduceCon': `true`
-            'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
+            'reproduceCon': `true`
+            // 'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
           },
           'neighborArray': [false]
         },
@@ -47,7 +45,7 @@ class Container {
             'dieCon': `!typeHash['typeOne']`,
             'stayCon': `validNeighbors.length === 0`,
             'wanderCon': `true`,
-            'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 4) === 0`
+            'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
           },
           'neighborArray': [false, 'typeOne']
         },
@@ -58,7 +56,7 @@ class Container {
             'dieCon': `!typeHash['typeOne']`,
             'stayCon': `validNeighbors.length === 0`,
             'wanderCon': `true`,
-            'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 4) === 0`
+            'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
           },
           'neighborArray': [false, 'typeOne']
         },
@@ -88,16 +86,18 @@ class Container {
   }
 
   getGridSize () {
-    const valid = [];
 
-    for (let i = 0; i <= 4000; i++) {
-      let isValid = i % 16 === 0;
-      if (isValid) valid.push(i);
+    const gridDimensions = [];
+
+    for (let i = 200; i <= 4000; i++) {
+      if (i % 32 === 0) gridDimensions.push(i);
     }
-    this.width = this.closestValue(this.width, valid);
-    this.height = this.closestValue(this.height, valid);
+
+    this.width = this.closestValue(this.width, gridDimensions);
+    this.height = this.closestValue(this.height, gridDimensions);
     this.mainCanvas.width = this.width;
     this.mainCanvas.height = this.height;
+    return gridDimensions;
   }
 
   toggleColor (e) {
@@ -135,9 +135,9 @@ class Container {
     this.automata.cellLogic(this.conditionalHash());
   }
 
-  speedup () {
+  incrementSpeed (str) {
     this.handlePauseEvent();
-    this.drawspeed--;
+    str === '+' ? this.drawspeed++ : this.drawspeed--;
     this.handlePauseEvent();
   }
 
@@ -148,11 +148,31 @@ class Container {
     this.handlePauseEvent();
   }
 
-  slowdown () {
+
+
+
+
+  handleWidthSizeEvent (size) {
     this.handlePauseEvent();
-    this.drawspeed++;
+    this.width = size;
+    this.mainCanvas.width = size;
+    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
+    this.automata = new Automata(this.board);
     this.handlePauseEvent();
   }
+
+  handleHeightSizeEvent (size) {
+    this.handlePauseEvent();
+    this.height = size;
+    this.mainCanvas.height = size;
+    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
+    this.automata = new Automata(this.board);
+    this.handlePauseEvent();
+  }
+
+
+
+
 
   handleResetEvent () {
     clearInterval(this.start);
