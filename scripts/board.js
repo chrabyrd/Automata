@@ -5,7 +5,6 @@ class Board {
   constructor (ctx, cellSize, gridWidth, gridHeight) {
     this.ctx = ctx;
     this.cells = [];
-
     this.populateGrid(cellSize, gridWidth, gridHeight);
   }
 

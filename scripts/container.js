@@ -94,7 +94,7 @@ class Container {
     this.height = this.closestValue(this.height, gridDimensions);
     this.mainCanvas.width = this.width;
     this.mainCanvas.height = this.height;
-    return gridDimensions;
+    this.gridDimensions = gridDimensions;
   }
 
   populateValidDrawspeeds () {
@@ -151,8 +151,12 @@ class Container {
     this.handlePauseEvent();
   }
 
-  handleCellResizeEvent () {
-
+  handleCellResizeEvent (size) {
+    this.handlePauseEvent();
+    this.cellSize = size;
+    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
+    this.automata = new Automata(this.board);
+    this.handlePauseEvent();
   }
 
   handleResizeEvent (dimension, size) {

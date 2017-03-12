@@ -91,10 +91,12 @@
 	  // Grid Controls Modal
 
 	  modalBackdrop.addEventListener('click', function (e) {
+	    speedDropdown.innerHTML = "";
+	    cellSizeDropdown.innerHTML = "";
 	    widthDropdown.innerHTML = "";
 	    heightDropdown.innerHTML = "";
-	    speedDropdown.innerHTML = "";
 	    speedDropdownContainer.style.display = null;
+	    cellSizeDropdownContainer.style.display = null;
 	    widthDropdownContainer.style.display = null;
 	    heightDropdownContainer.style.display = null;
 	    modalBackdrop.style.display = null;
@@ -148,7 +150,7 @@
 	  currentHeight.innerHTML = container.height;
 
 	  gridSizeContainer.addEventListener('click', function (e) {
-	    var gridDimensions = container.getGridSize().sort(function (a, b) {
+	    var gridDimensions = container.gridDimensions.sort(function (a, b) {
 	      return a - b;
 	    });
 
@@ -189,6 +191,14 @@
 	    cellSizeDropdownContainer.style.display = "flex";
 	    gridDropdownContainer.style.display = "flex";
 	    modalBackdrop.style.display = "flex";
+	  });
+
+	  cellSizeDropdown.addEventListener('click', function (e) {
+	    container.handleCellResizeEvent(parseInt(e.target.innerHTML));
+	    cellSize.innerHTML = e.target.innerHTML;
+	    cellSizeDropdown.innerHTML = "";
+	    cellSizeDropdown.style.display = null;
+	    modalBackdrop.style.display = null;
 	  });
 
 	  // color shift
@@ -329,7 +339,7 @@
 	      this.height = this.closestValue(this.height, gridDimensions);
 	      this.mainCanvas.width = this.width;
 	      this.mainCanvas.height = this.height;
-	      return gridDimensions;
+	      this.gridDimensions = gridDimensions;
 	    }
 	  }, {
 	    key: "populateValidDrawspeeds",
@@ -397,7 +407,13 @@
 	    }
 	  }, {
 	    key: "handleCellResizeEvent",
-	    value: function handleCellResizeEvent() {}
+	    value: function handleCellResizeEvent(size) {
+	      this.handlePauseEvent();
+	      this.cellSize = size;
+	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	      this.automata = new _automata2.default(this.board);
+	      this.handlePauseEvent();
+	    }
 	  }, {
 	    key: "handleResizeEvent",
 	    value: function handleResizeEvent(dimension, size) {
@@ -455,7 +471,6 @@
 
 	    this.ctx = ctx;
 	    this.cells = [];
-
 	    this.populateGrid(cellSize, gridWidth, gridHeight);
 	  }
 

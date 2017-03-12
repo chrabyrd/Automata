@@ -39,10 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Grid Controls Modal
 
   modalBackdrop.addEventListener('click', e => {
+    speedDropdown.innerHTML = "";
+    cellSizeDropdown.innerHTML = "";
     widthDropdown.innerHTML = "";
     heightDropdown.innerHTML = "";
-    speedDropdown.innerHTML = "";
     speedDropdownContainer.style.display = null;
+    cellSizeDropdownContainer.style.display = null;
     widthDropdownContainer.style.display = null;
     heightDropdownContainer.style.display = null;
     modalBackdrop.style.display = null;
@@ -96,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentHeight.innerHTML = container.height;
 
     gridSizeContainer.addEventListener('click', e => {
-      const gridDimensions = container.getGridSize().sort((a, b) => a - b);
+      const gridDimensions = container.gridDimensions.sort((a, b) => a - b);
 
       gridDimensions.forEach(function(num) {
         widthDropdown.innerHTML += `<li>${num}</li>`;
@@ -135,6 +137,14 @@ document.addEventListener("DOMContentLoaded", () => {
     cellSizeDropdownContainer.style.display = "flex";
     gridDropdownContainer.style.display = "flex";
     modalBackdrop.style.display = "flex";
+  });
+
+  cellSizeDropdown.addEventListener('click', e => {
+    container.handleCellResizeEvent(parseInt(e.target.innerHTML));
+    cellSize.innerHTML = e.target.innerHTML;
+    cellSizeDropdown.innerHTML = "";
+    cellSizeDropdown.style.display = null;
+    modalBackdrop.style.display = null;
   });
 
   // color shift
