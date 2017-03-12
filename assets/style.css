@@ -1,19 +1,78 @@
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
 body {
-  display: flex;
-  justify-content: center;
-  margin: 0;
-  overflow: auto;
-  background-color: teal;
+	line-height: 1;
+}
+ol, ul, li {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 
-li {
-  list-style: none;
+/* End CSS Reset */
+
+body {
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  background-color: teal;
 }
 
 li:hover {
   background-color: green;
   cursor: pointer;
 }
+
+#gridControls {
+  background-color: red;
+  display: flex;
+  position: fixed;
+  bottom: 0px;
+  margin-bottom: 10px;
+  justify-content: space-around;
+  width: 100%;
+}
+
+/* Dropdowns */
 
 .modal-backdrop {
   display: none;
@@ -26,30 +85,16 @@ li:hover {
   background-color: rgba(0,0,0,0.2);
 }
 
-#gridControls {
-  background-color: red;
-  position: fixed;
-  bottom: 0px;
-  display: flex;
-  align-self: flex-end;
-  padding-bottom: 5px;
-  justify-content: space-around;
-  width: 100%;
-}
-
 #gridDropdownContainer {
   display: none;
   position: fixed;
   overflow: scroll;
   justify-content: space-around;
-  margin-bottom: 30px;
   height: 70px;
   width: 100%;
   background-color: pink;
   align-self: flex-end;
 }
-
-/* Dropdowns */
 
 #speedDropdownContainer,
 #cellSizeDropdownContainer,

@@ -85,14 +85,65 @@
 	  var rulesModal = document.getElementById("rulesModal");
 	  var openerModal = document.getElementById("openerModal");
 
-	  var container = new _container2.default(mainCanvas, mainCtx);
+	  var conditionalHash = {
+	    'typeOne': {
+	      'conditions': {
+	        'skipCon': "validNeighbors.length === 0",
+	        'dieCon': "false",
+	        'stayCon': "false",
+	        'wanderCon': "false",
+	        // 'reproduceCon': `true`
+	        'reproduceCon': "!typeHash['typeTwo'] && !typeHash['typeThree']"
+	      },
+	      'neighborArray': [false]
+	    },
+
+	    'typeTwo': {
+	      'conditions': {
+	        'skipCon': "false",
+	        'dieCon': "!typeHash['typeOne']",
+	        'stayCon': "validNeighbors.length === 0",
+	        'wanderCon': "true",
+	        'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 2) === 0"
+	      },
+	      'neighborArray': [false, 'typeOne']
+	    },
+
+	    'typeThree': {
+	      'conditions': {
+	        'skipCon': "false",
+	        'dieCon': "!typeHash['typeOne']",
+	        'stayCon': "validNeighbors.length === 0",
+	        'wanderCon': "true",
+	        'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 2) === 0"
+	      },
+	      'neighborArray': [false, 'typeOne']
+	    },
+
+	    'false': {
+	      'conditions': {
+	        'skipCon': "true",
+	        'dieCon': "false",
+	        'stayCon': "false",
+	        'wanderCon': "false",
+	        'reproduceCon': "false"
+	      },
+	      'neighborArray': [false]
+	    }
+	  };
+
+	  var container = new _container2.default(mainCanvas, mainCtx, conditionalHash);
 
 	  mainCanvas.addEventListener('click', function (e) {
 	    return container.handleClickEvent(e);
 	  }, false);
 
-	  // Grid Controls Modal
+	  // Color shift
+	  document.body.addEventListener('keydown', function (e) {
+	    container.toggleColor(e);
+	  });
 
+	  // Grid Controls Modal
 	  modalBackdrop.addEventListener('click', function (e) {
 	    speedDropdown.innerHTML = "";
 	    cellSizeDropdown.innerHTML = "";
@@ -134,12 +185,12 @@
 
 	  // Speed
 	  faster.addEventListener('click', function (e) {
-	    container.incrementSpeed('+');
+	    container.handleSpeedChangeEvent(container.drawspeed - 1);
 	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
 	  });
 
 	  slower.addEventListener('click', function (e) {
-	    container.incrementSpeed();
+	    container.handleSpeedChangeEvent(container.drawspeed + 1);
 	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
 	  });
 
@@ -154,7 +205,7 @@
 	  });
 
 	  speedDropdown.addEventListener('click', function (e) {
-	    container.handleSpeedChangeEvent(e.target.innerHTML);
+	    container.handleSpeedChangeEvent(1000 / e.target.innerHTML);
 	    currentSpeed.innerHTML = e.target.innerHTML;
 	    speedDropdown.innerHTML = "";
 	    speedDropdown.style.display = null;
@@ -198,7 +249,6 @@
 	  });
 
 	  // Cell Size
-
 	  cellSize.addEventListener('click', function (e) {
 	    container.cellSizes.forEach(function (num) {
 	      cellSizeDropdown.innerHTML += "<li>" + num + "</li>";
@@ -215,18 +265,6 @@
 	    cellSizeDropdown.innerHTML = "";
 	    cellSizeDropdown.style.display = null;
 	    modalBackdrop.style.display = null;
-	  });
-
-	  // color shift
-	  document.body.addEventListener('keydown', function (e) {
-	    if (e.keyCode === 78) {
-	      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
-	      container.handleNextFrameEvent(e);
-	    } else if (e.keyCode === 82) {
-	      container.handleResetEvent();
-	    } else {
-	      container.toggleColor(e);
-	    }
 	  });
 
 	  // Rules Modal
@@ -266,11 +304,12 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Container = function () {
-	  function Container(mainCanvas, mainCtx) {
+	  function Container(mainCanvas, mainCtx, conditionalHash) {
 	    _classCallCheck(this, Container);
 
 	    this.mainCanvas = mainCanvas;
 	    this.mainCtx = mainCtx;
+	    this.conditionalHash = conditionalHash;
 	    this.gridDimensions = [];
 	    this.validDrawspeeds = [];
 	    this.cellSizes = [1, 2, 4, 8, 16, 32];
@@ -289,54 +328,15 @@
 	  }
 
 	  _createClass(Container, [{
-	    key: "conditionalHash",
-	    value: function conditionalHash() {
-	      return {
-	        'typeOne': {
-	          'conditions': {
-	            'skipCon': "validNeighbors.length === 0",
-	            'dieCon': "false",
-	            'stayCon': "false",
-	            'wanderCon': "false",
-	            // 'reproduceCon': `true`
-	            'reproduceCon': "!typeHash['typeTwo'] && !typeHash['typeThree']"
-	          },
-	          'neighborArray': [false]
-	        },
-
-	        'typeTwo': {
-	          'conditions': {
-	            'skipCon': "false",
-	            'dieCon': "!typeHash['typeOne']",
-	            'stayCon': "validNeighbors.length === 0",
-	            'wanderCon': "true",
-	            'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 2) === 0"
-	          },
-	          'neighborArray': [false, 'typeOne']
-	        },
-
-	        'typeThree': {
-	          'conditions': {
-	            'skipCon': "false",
-	            'dieCon': "!typeHash['typeOne']",
-	            'stayCon': "validNeighbors.length === 0",
-	            'wanderCon': "true",
-	            'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 2) === 0"
-	          },
-	          'neighborArray': [false, 'typeOne']
-	        },
-
-	        'false': {
-	          'conditions': {
-	            'skipCon': "true",
-	            'dieCon': "false",
-	            'stayCon': "false",
-	            'wanderCon': "false",
-	            'reproduceCon': "false"
-	          },
-	          'neighborArray': [false]
-	        }
-	      };
+	    key: "toggleColor",
+	    value: function toggleColor(e) {
+	      if (e.keyCode === 49) {
+	        this.cellType = 'typeOne';
+	      } else if (e.keyCode === 50) {
+	        this.cellType = 'typeTwo';
+	      } else if (e.keyCode === 51) {
+	        this.cellType = 'typeThree';
+	      }
 	    }
 	  }, {
 	    key: "closestValue",
@@ -367,19 +367,8 @@
 	  }, {
 	    key: "populateValidDrawspeeds",
 	    value: function populateValidDrawspeeds() {
-	      for (var i = 1; i <= 100; i++) {
+	      for (var i = 1; i <= 200; i++) {
 	        this.validDrawspeeds.push((1000 / i).toFixed(2));
-	      }
-	    }
-	  }, {
-	    key: "toggleColor",
-	    value: function toggleColor(e) {
-	      if (e.keyCode === 49) {
-	        this.cellType = 'typeOne';
-	      } else if (e.keyCode === 50) {
-	        this.cellType = 'typeTwo';
-	      } else if (e.keyCode === 51) {
-	        this.cellType = 'typeThree';
 	      }
 	    }
 	  }, {
@@ -393,7 +382,7 @@
 	      var _this = this;
 
 	      this.start = setInterval(function () {
-	        _this.automata.cellLogic(_this.conditionalHash());
+	        _this.automata.cellLogic(_this.conditionalHash);
 	      }, this.drawspeed);
 	    }
 	  }, {
@@ -411,19 +400,19 @@
 	    key: "handleNextFrameEvent",
 	    value: function handleNextFrameEvent() {
 	      if (!this.pauseEvent) this.handlePauseEvent();
-	      this.automata.cellLogic(this.conditionalHash());
+	      this.automata.cellLogic(this.conditionalHash);
 	    }
 	  }, {
-	    key: "incrementSpeed",
-	    value: function incrementSpeed(str) {
+	    key: "handleResetEvent",
+	    value: function handleResetEvent() {
 	      this.handlePauseEvent();
-	      str === '+' ? this.drawspeed-- : this.drawspeed++;
+	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	      this.automata = new _automata2.default(this.board);
 	      this.handlePauseEvent();
 	    }
 	  }, {
 	    key: "handleSpeedChangeEvent",
 	    value: function handleSpeedChangeEvent(speed) {
-	      speed = 1000 / speed;
 	      this.handlePauseEvent();
 	      this.drawspeed = speed;
 	      this.handlePauseEvent();
@@ -431,17 +420,12 @@
 	  }, {
 	    key: "handleCellResizeEvent",
 	    value: function handleCellResizeEvent(size) {
-	      this.handlePauseEvent();
 	      this.cellSize = size;
-	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	      this.automata = new _automata2.default(this.board);
-	      this.handlePauseEvent();
+	      this.handleResetEvent();
 	    }
 	  }, {
 	    key: "handleResizeEvent",
 	    value: function handleResizeEvent(dimension, size) {
-	      this.handlePauseEvent();
-
 	      if (dimension === 'width') {
 	        this.width = size;
 	        this.mainCanvas.width = size;
@@ -450,18 +434,7 @@
 	        this.mainCanvas.height = size;
 	      }
 
-	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	      this.automata = new _automata2.default(this.board);
-	      this.handlePauseEvent();
-	    }
-	  }, {
-	    key: "handleResetEvent",
-	    value: function handleResetEvent() {
-	      this.handlePauseEvent();
-	      clearInterval(this.start);
-	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	      this.automata = new _automata2.default(this.board);
-	      this.handlePauseEvent();
+	      this.handleResetEvent();
 	    }
 	  }]);
 

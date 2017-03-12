@@ -33,14 +33,66 @@ document.addEventListener("DOMContentLoaded", () => {
   const rulesModal = document.getElementById("rulesModal");
   const openerModal = document.getElementById("openerModal");
 
-  const container = new Container(mainCanvas, mainCtx);
+  const conditionalHash = {
+    'typeOne': {
+      'conditions': {
+        'skipCon': `validNeighbors.length === 0`,
+        'dieCon': `false`,
+        'stayCon': `false`,
+        'wanderCon': `false`,
+        // 'reproduceCon': `true`
+        'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
+      },
+      'neighborArray': [false]
+    },
+
+    'typeTwo': {
+      'conditions': {
+        'skipCon': `false`,
+        'dieCon': `!typeHash['typeOne']`,
+        'stayCon': `validNeighbors.length === 0`,
+        'wanderCon': `true`,
+        'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
+      },
+      'neighborArray': [false, 'typeOne']
+    },
+
+    'typeThree': {
+      'conditions': {
+        'skipCon': `false`,
+        'dieCon': `!typeHash['typeOne']`,
+        'stayCon': `validNeighbors.length === 0`,
+        'wanderCon': `true`,
+        'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
+      },
+      'neighborArray': [false, 'typeOne']
+    },
+
+    'false': {
+      'conditions': {
+        'skipCon': `true`,
+        'dieCon': `false`,
+        'stayCon': `false`,
+        'wanderCon': `false`,
+        'reproduceCon': `false`
+      },
+      'neighborArray': [false]
+    }
+  };
+
+
+  const container = new Container(mainCanvas, mainCtx, conditionalHash);
 
   mainCanvas.addEventListener('click',(e) => (
     container.handleClickEvent(e)
   ), false);
 
-  // Grid Controls Modal
+  // Color shift
+  document.body.addEventListener('keydown', e => {
+      container.toggleColor(e);
+  });
 
+  // Grid Controls Modal
   modalBackdrop.addEventListener('click', e => {
     speedDropdown.innerHTML = "";
     cellSizeDropdown.innerHTML = "";
@@ -82,12 +134,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Speed
     faster.addEventListener('click', e => {
-      container.incrementSpeed('+');
+      container.handleSpeedChangeEvent(container.drawspeed - 1);
       currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
     });
 
     slower.addEventListener('click', e => {
-      container.incrementSpeed();
+      container.handleSpeedChangeEvent(container.drawspeed + 1);
       currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
     });
 
@@ -102,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     speedDropdown.addEventListener('click', e => {
-      container.handleSpeedChangeEvent(e.target.innerHTML);
+      container.handleSpeedChangeEvent(1000 / e.target.innerHTML);
       currentSpeed.innerHTML = e.target.innerHTML;
       speedDropdown.innerHTML = "";
       speedDropdown.style.display = null;
@@ -144,7 +196,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   // Cell Size
-
   cellSize.addEventListener('click', e => {
     container.cellSizes.forEach(function(num) {
       cellSizeDropdown.innerHTML += `<li>${num}</li>`;
@@ -161,18 +212,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cellSizeDropdown.innerHTML = "";
     cellSizeDropdown.style.display = null;
     modalBackdrop.style.display = null;
-  });
-
-  // color shift
-  document.body.addEventListener('keydown', e => {
-    if (e.keyCode === 78) {
-      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
-      container.handleNextFrameEvent(e);
-    } else if (e.keyCode === 82)  {
-      container.handleResetEvent();
-    } else {
-      container.toggleColor(e);
-    }
   });
 
   // Rules Modal

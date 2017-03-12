@@ -2,9 +2,10 @@ import Board from "./board";
 import Automata from "./automata";
 
 class Container {
-  constructor (mainCanvas, mainCtx) {
+  constructor (mainCanvas, mainCtx, conditionalHash) {
     this.mainCanvas = mainCanvas;
     this.mainCtx = mainCtx;
+    this.conditionalHash = conditionalHash;
     this.gridDimensions = [];
     this.validDrawspeeds = [];
     this.cellSizes = [1, 2, 4, 8, 16, 32];
@@ -22,55 +23,14 @@ class Container {
     this.handlePlayEvent();
   }
 
-  conditionalHash () {
-    return (
-      {
-        'typeOne': {
-          'conditions': {
-            'skipCon': `validNeighbors.length === 0`,
-            'dieCon': `false`,
-            'stayCon': `false`,
-            'wanderCon': `false`,
-            // 'reproduceCon': `true`
-            'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
-          },
-          'neighborArray': [false]
-        },
-
-        'typeTwo': {
-          'conditions': {
-            'skipCon': `false`,
-            'dieCon': `!typeHash['typeOne']`,
-            'stayCon': `validNeighbors.length === 0`,
-            'wanderCon': `true`,
-            'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
-          },
-          'neighborArray': [false, 'typeOne']
-        },
-
-        'typeThree': {
-          'conditions': {
-            'skipCon': `false`,
-            'dieCon': `!typeHash['typeOne']`,
-            'stayCon': `validNeighbors.length === 0`,
-            'wanderCon': `true`,
-            'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
-          },
-          'neighborArray': [false, 'typeOne']
-        },
-
-        'false': {
-          'conditions': {
-            'skipCon': `true`,
-            'dieCon': `false`,
-            'stayCon': `false`,
-            'wanderCon': `false`,
-            'reproduceCon': `false`
-          },
-          'neighborArray': [false]
-        }
-      }
-    );
+  toggleColor (e) {
+    if (e.keyCode === 49) {
+      this.cellType = 'typeOne';
+    } else if (e.keyCode === 50) {
+      this.cellType = 'typeTwo';
+    } else if (e.keyCode === 51) {
+      this.cellType = 'typeThree';
+    }
   }
 
   closestValue (num, array) {
@@ -98,18 +58,8 @@ class Container {
   }
 
   populateValidDrawspeeds () {
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 200; i++) {
       this.validDrawspeeds.push((1000 / i).toFixed(2));
-    }
-  }
-
-  toggleColor (e) {
-    if (e.keyCode === 49) {
-      this.cellType = 'typeOne';
-    } else if (e.keyCode === 50) {
-      this.cellType = 'typeTwo';
-    } else if (e.keyCode === 51) {
-      this.cellType = 'typeThree';
     }
   }
 
@@ -119,7 +69,7 @@ class Container {
 
   handlePlayEvent () {
     this.start = setInterval(() => {
-      this.automata.cellLogic(this.conditionalHash());
+      this.automata.cellLogic(this.conditionalHash);
     }, this.drawspeed);
   }
 
@@ -135,33 +85,28 @@ class Container {
 
   handleNextFrameEvent () {
     if (!this.pauseEvent) this.handlePauseEvent();
-    this.automata.cellLogic(this.conditionalHash());
+    this.automata.cellLogic(this.conditionalHash);
   }
 
-  incrementSpeed (str) {
+  handleResetEvent () {
     this.handlePauseEvent();
-    str === '+' ? this.drawspeed-- : this.drawspeed++;
+    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
+    this.automata = new Automata(this.board);
     this.handlePauseEvent();
   }
 
   handleSpeedChangeEvent (speed) {
-    speed = 1000 / speed;
     this.handlePauseEvent();
     this.drawspeed = speed;
     this.handlePauseEvent();
   }
 
   handleCellResizeEvent (size) {
-    this.handlePauseEvent();
     this.cellSize = size;
-    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
-    this.automata = new Automata(this.board);
-    this.handlePauseEvent();
+    this.handleResetEvent();
   }
 
   handleResizeEvent (dimension, size) {
-    this.handlePauseEvent();
-
     if (dimension === 'width') {
       this.width = size;
       this.mainCanvas.width = size;
@@ -170,17 +115,7 @@ class Container {
       this.mainCanvas.height = size;
     }
 
-    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
-    this.automata = new Automata(this.board);
-    this.handlePauseEvent();
-  }
-
-  handleResetEvent () {
-    this.handlePauseEvent();
-    clearInterval(this.start);
-    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
-    this.automata = new Automata(this.board);
-    this.handlePauseEvent();
+    this.handleResetEvent();
   }
 }
 
