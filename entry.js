@@ -51,19 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     slower.addEventListener('click', e => {
-      container.slowdown();
+      container.incrementSpeed();
       currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
     });
 
     currentSpeed.addEventListener('click', e => {
-
-      const speedArray = [];
-
-      for (let i = 1; i <= 100; i++) {
-        speedArray.push((1000 / i).toFixed(2));
-      }
-
-      speedArray.forEach(function(num) {
+      container.speedArray.forEach(function(num) {
         speedDropdown.innerHTML += `<li>${num}</li>`;
       });
 
@@ -72,20 +65,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     speedDropdown.addEventListener('click', e => {
-      container.handleSpeedEvent(e.target.innerHTML);
+      container.handleSpeedChangeEvent(e.target.innerHTML);
       currentSpeed.innerHTML = e.target.innerHTML;
       speedDropdown.innerHTML = "";
       speedDropdown.style.display = null;
       modalBackdrop.style.display = null;
     });
 
-
   // Grid Size
     currentWidth.innerHTML = container.width;
     currentHeight.innerHTML = container.height;
 
     gridSizeContainer.addEventListener('click', e => {
-
       const gridDimensions = container.getGridSize().sort((a, b) => a - b);
 
       gridDimensions.forEach(function(num) {
@@ -95,6 +86,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
       gridDropdownContainer.style.display = "flex";
       modalBackdrop.style.display = "flex";
+    });
+
+    widthDropdown.addEventListener('click', e => {
+      container.handleResizeEvent('width', e.target.innerHTML);
+      currentWidth.innerHTML = e.target.innerHTML;
+      widthDropdown.innerHTML = "";
+      widthDropdown.style.display = null;
+      modalBackdrop.style.display = null;
+    });
+
+    heightDropdown.addEventListener('click', e => {
+      container.handleResizeEvent('height', e.target.innerHTML);
+      currentHeight.innerHTML = e.target.innerHTML;
+      heightDropdown.innerHTML = "";
+      heightDropdown.style.display = null;
+      modalBackdrop.style.display = null;
+    });
+
+    modalBackdrop.addEventListener('click', e => {
+      widthDropdown.innerHTML = "";
+      heightDropdown.innerHTML = "";
+      speedDropdown.innerHTML = "";
+      speedDropdown.style.display = null;
+      widthDropdown.style.display = null;
+      heightDropdown.style.display = null;
+      modalBackdrop.style.display = null;
     });
 
     // window.onclick = function(e) {

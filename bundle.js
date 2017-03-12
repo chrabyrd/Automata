@@ -102,19 +102,12 @@
 	  });
 
 	  slower.addEventListener('click', function (e) {
-	    container.slowdown();
+	    container.incrementSpeed();
 	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
 	  });
 
 	  currentSpeed.addEventListener('click', function (e) {
-
-	    var speedArray = [];
-
-	    for (var i = 1; i <= 100; i++) {
-	      speedArray.push((1000 / i).toFixed(2));
-	    }
-
-	    speedArray.forEach(function (num) {
+	    container.speedArray.forEach(function (num) {
 	      speedDropdown.innerHTML += "<li>" + num + "</li>";
 	    });
 
@@ -123,7 +116,7 @@
 	  });
 
 	  speedDropdown.addEventListener('click', function (e) {
-	    container.handleSpeedEvent(e.target.innerHTML);
+	    container.handleSpeedChangeEvent(e.target.innerHTML);
 	    currentSpeed.innerHTML = e.target.innerHTML;
 	    speedDropdown.innerHTML = "";
 	    speedDropdown.style.display = null;
@@ -135,7 +128,6 @@
 	  currentHeight.innerHTML = container.height;
 
 	  gridSizeContainer.addEventListener('click', function (e) {
-
 	    var gridDimensions = container.getGridSize().sort(function (a, b) {
 	      return a - b;
 	    });
@@ -147,6 +139,32 @@
 
 	    gridDropdownContainer.style.display = "flex";
 	    modalBackdrop.style.display = "flex";
+	  });
+
+	  widthDropdown.addEventListener('click', function (e) {
+	    container.handleResizeEvent('width', e.target.innerHTML);
+	    currentWidth.innerHTML = e.target.innerHTML;
+	    widthDropdown.innerHTML = "";
+	    widthDropdown.style.display = null;
+	    modalBackdrop.style.display = null;
+	  });
+
+	  heightDropdown.addEventListener('click', function (e) {
+	    container.handleResizeEvent('height', e.target.innerHTML);
+	    currentHeight.innerHTML = e.target.innerHTML;
+	    heightDropdown.innerHTML = "";
+	    heightDropdown.style.display = null;
+	    modalBackdrop.style.display = null;
+	  });
+
+	  modalBackdrop.addEventListener('click', function (e) {
+	    widthDropdown.innerHTML = "";
+	    heightDropdown.innerHTML = "";
+	    speedDropdown.innerHTML = "";
+	    speedDropdown.style.display = null;
+	    widthDropdown.style.display = null;
+	    heightDropdown.style.display = null;
+	    modalBackdrop.style.display = null;
 	  });
 
 	  // window.onclick = function(e) {
@@ -226,6 +244,12 @@
 	    this.drawspeed = 50;
 
 	    this.gridDimensions = [];
+
+	    this.speedArray = [];
+
+	    for (var i = 1; i <= 100; i++) {
+	      this.speedArray.push((1000 / i).toFixed(2));
+	    }
 
 	    this.cellSize = 16;
 	    // this.width = 200;
@@ -364,33 +388,30 @@
 	    key: "incrementSpeed",
 	    value: function incrementSpeed(str) {
 	      this.handlePauseEvent();
-	      str === '+' ? this.drawspeed++ : this.drawspeed--;
+	      str === '+' ? this.drawspeed-- : this.drawspeed++;
 	      this.handlePauseEvent();
 	    }
 	  }, {
-	    key: "handleSpeedEvent",
-	    value: function handleSpeedEvent(speed) {
+	    key: "handleSpeedChangeEvent",
+	    value: function handleSpeedChangeEvent(speed) {
 	      speed = 1000 / speed;
 	      this.handlePauseEvent();
 	      this.drawspeed = speed;
 	      this.handlePauseEvent();
 	    }
 	  }, {
-	    key: "handleWidthSizeEvent",
-	    value: function handleWidthSizeEvent(size) {
+	    key: "handleResizeEvent",
+	    value: function handleResizeEvent(dimension, size) {
 	      this.handlePauseEvent();
-	      this.width = size;
-	      this.mainCanvas.width = size;
-	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	      this.automata = new _automata2.default(this.board);
-	      this.handlePauseEvent();
-	    }
-	  }, {
-	    key: "handleHeightSizeEvent",
-	    value: function handleHeightSizeEvent(size) {
-	      this.handlePauseEvent();
-	      this.height = size;
-	      this.mainCanvas.height = size;
+
+	      if (dimension === 'width') {
+	        this.width = size;
+	        this.mainCanvas.width = size;
+	      } else if (dimension === 'height') {
+	        this.height = size;
+	        this.mainCanvas.height = size;
+	      }
+
 	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
 	      this.automata = new _automata2.default(this.board);
 	      this.handlePauseEvent();

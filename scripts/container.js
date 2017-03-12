@@ -10,6 +10,12 @@ class Container {
     this.gridDimensions = [];
 
 
+    this.speedArray = [];
+
+    for (let i = 1; i <= 100; i++) {
+      this.speedArray.push((1000 / i).toFixed(2));
+    }
+
     this.cellSize = 16;
     // this.width = 200;
     // this.height = 200;
@@ -137,11 +143,11 @@ class Container {
 
   incrementSpeed (str) {
     this.handlePauseEvent();
-    str === '+' ? this.drawspeed++ : this.drawspeed--;
+    str === '+' ? this.drawspeed-- : this.drawspeed++;
     this.handlePauseEvent();
   }
 
-  handleSpeedEvent (speed) {
+  handleSpeedChangeEvent (speed) {
     speed = 1000 / speed;
     this.handlePauseEvent();
     this.drawspeed = speed;
@@ -149,29 +155,21 @@ class Container {
   }
 
 
-
-
-
-  handleWidthSizeEvent (size) {
+  handleResizeEvent (dimension, size) {
     this.handlePauseEvent();
-    this.width = size;
-    this.mainCanvas.width = size;
+
+    if (dimension === 'width') {
+      this.width = size;
+      this.mainCanvas.width = size;
+    } else if (dimension === 'height') {
+      this.height = size;
+      this.mainCanvas.height = size;
+    }
+
     this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
     this.automata = new Automata(this.board);
     this.handlePauseEvent();
   }
-
-  handleHeightSizeEvent (size) {
-    this.handlePauseEvent();
-    this.height = size;
-    this.mainCanvas.height = size;
-    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
-    this.automata = new Automata(this.board);
-    this.handlePauseEvent();
-  }
-
-
-
 
 
   handleResetEvent () {

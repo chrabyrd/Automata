@@ -26,6 +26,7 @@ li:hover {
 #gridControls {
   background-color: red;
   position: fixed;
+  bottom: 0px;
   display: flex;
   align-self: flex-end;
   padding-bottom: 5px;
@@ -82,14 +83,12 @@ li:hover {
 #dimensionsDropdownContainer {
   display: flex;
   overflow: scroll;
-  align-items: center;
   width: 84px;
 }
 
 #speedDropdownContainer {
   overflow: scroll;
   width: 52px;
-  background-color: gold;
 }
 
 .gridDropdown {
