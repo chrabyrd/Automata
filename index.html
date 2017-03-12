@@ -16,28 +16,23 @@
           <a href="https://github.com/chrabyrd" id="gitHub"><i class="fa fa-github fa-3x"></i></a>
           <a href="https://www.linkedin.com/in/chrabyrd" id="linkedIn"><i class="fa fa-linkedin-square fa-3x"></i></a>
         </div> -->
-        <i id="playPauseButton" class="fa fa-play fa"></i>
 
-        <div id="modal-backdrop" class="modal-backdrop">
-          <div id="gridDropdownContainer">
-            <div id="speedDropdownContainer">
-              <div id="speedDropdown" class="gridDropdown"></div>
-            </div>
+        <canvas id="mainCanvas"></canvas>
 
-            <div id="dimensionsDropdownContainer">
-              <div id="widthDropdown" class="gridDropdown"></div>
-              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-              <div id="heightDropdown" class="gridDropdown"></div>
-            </div>
-          </div>
+        <div>
+          <i id="playPauseButton" class="fa fa-play fa"></i>
         </div>
 
-
         <div id="gridControls">
+
           <div id="speedContainer">
             <i id="slower" class="fa fa-backward fa"></i>
             <span id="currentSpeed">20.00</span>
             <i id="faster" class="fa fa-forward fa"></i>
+          </div>
+
+          <div id="cellSizeContainer">
+            <span id="cellSize">16</span>
           </div>
 
           <div id="gridSizeContainer">
@@ -47,7 +42,31 @@
           </div>
         </div>
 
-        <canvas id="mainCanvas"></canvas>
+        <div id="modal-backdrop" class="modal-backdrop">
+          <div id="gridDropdownContainer">
+            <div id="speedDropdownContainer">
+              <div>Frames Per Second: </div>
+              <div id="speedDropdown"></div>
+            </div>
+
+            <div id="cellSizeDropdownContainer">
+              <div>Cell Sizes: </div>
+              <div id="cellSizeDropdown"></div>
+            </div>
+
+            <div id="widthDropdownContainer">
+              <div>Dimensions: </div>
+              <div id="widthDropdown"></div>
+            </div>
+
+            <div id="heightDropdownContainer">
+              <div id="heightDropdown"></div>
+            </div>
+          </div>
+        </div>
+
+
+
 
         <!-- <div id="rulesModal">
           <div id="modal-content">

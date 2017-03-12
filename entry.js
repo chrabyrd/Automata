@@ -4,20 +4,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainCanvas = document.getElementById("mainCanvas");
   const mainCtx = mainCanvas.getContext("2d");
 
+  const modalBackdrop = document.getElementById("modal-backdrop");
+
   const faster = document.getElementById("faster");
   const currentSpeed = document.getElementById("currentSpeed");
   const speedDropdown = document.getElementById("speedDropdown");
+  const speedDropdownContainer = document.getElementById("speedDropdownContainer");
   const slower = document.getElementById("slower");
 
+  const gridDropdownContainer = document.getElementById("gridDropdownContainer");
+  const widthDropdownContainer = document.getElementById("widthDropdownContainer");
+  const heightDropdownContainer = document.getElementById("heightDropdownContainer");
   const widthDropdown = document.getElementById("widthDropdown");
   const heightDropdown = document.getElementById("heightDropdown");
-  const gridDropdownContainer = document.getElementById("gridDropdownContainer");
+  const gridSizeContainer = document.getElementById("gridSizeContainer");
   const currentWidth = document.getElementById("currentWidth");
   const currentHeight = document.getElementById("currentHeight");
-  const gridSizeContainer = document.getElementById("gridSizeContainer");
 
-  const modalBackdrop = document.getElementById("modal-backdrop");
-
+  const cellSize = document.getElementById("cellSize");
+  const cellSizeDropdown = document.getElementById("cellSizeDropdown");
+  const cellSizeDropdownContainer = document.getElementById("cellSizeDropdownContainer");
 
   const playPauseButton = document.getElementById("playPauseButton");
   const rulesButton = document.getElementById("rulesButton");
@@ -29,6 +35,18 @@ document.addEventListener("DOMContentLoaded", () => {
   mainCanvas.addEventListener('click',(e) => (
     container.handleClickEvent(e)
   ), false);
+
+  // Grid Controls Modal
+
+  modalBackdrop.addEventListener('click', e => {
+    widthDropdown.innerHTML = "";
+    heightDropdown.innerHTML = "";
+    speedDropdown.innerHTML = "";
+    speedDropdownContainer.style.display = null;
+    widthDropdownContainer.style.display = null;
+    heightDropdownContainer.style.display = null;
+    modalBackdrop.style.display = null;
+  });
 
   // Pause
   document.body.addEventListener('keydown', e => {
@@ -56,10 +74,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     currentSpeed.addEventListener('click', e => {
-      container.speedArray.forEach(function(num) {
+      container.validDrawspeeds.forEach(function(num) {
         speedDropdown.innerHTML += `<li>${num}</li>`;
       });
 
+      speedDropdownContainer.style.display = "flex";
       gridDropdownContainer.style.display = "flex";
       modalBackdrop.style.display = "flex";
     });
@@ -84,6 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
         heightDropdown.innerHTML += `<li>${num}</li>`;
       });
 
+      widthDropdownContainer.style.display = "flex";
+      heightDropdownContainer.style.display = "flex";
       gridDropdownContainer.style.display = "flex";
       modalBackdrop.style.display = "flex";
     });
@@ -104,46 +125,21 @@ document.addEventListener("DOMContentLoaded", () => {
       modalBackdrop.style.display = null;
     });
 
-    modalBackdrop.addEventListener('click', e => {
-      widthDropdown.innerHTML = "";
-      heightDropdown.innerHTML = "";
-      speedDropdown.innerHTML = "";
-      speedDropdown.style.display = null;
-      widthDropdown.style.display = null;
-      heightDropdown.style.display = null;
-      modalBackdrop.style.display = null;
+  // Cell Size
+
+  cellSize.addEventListener('click', e => {
+    container.cellSizes.forEach(function(num) {
+      cellSizeDropdown.innerHTML += `<li>${num}</li>`;
     });
 
-    // window.onclick = function(e) {
-    //   // console.log(e);
-    //     if (e.target.parentElement.id === "gridDropdown") {
-    //       container.handleWidthSizeEvent(e.target.innerHTML);
-    //       currentWidth.innerHTML = e.target.innerHTML;
-    //       // gridDropdown.innerHTML = "";
-    //       // gridDropdown.style.display = null;
-    //       modalBackdrop.style.display = "none";
-    //     } else if (e.target.parentElement.id === "gridDropdown") {
-    //       container.handleHeightSizeEvent(e.target.innerHTML);
-    //       // currentHeight.innerHTML = e.target.innerHTML;
-    //       // gridDropdown.innerHTML = "";
-    //       // gridDropdown.style.display = null;
-    //       modalBackdrop.style.display = "none";
-    //     } else if (e.target === modalBackdrop) {
-    //       // gridDropdown.style.display = null;
-    //       // gridDropdown.style.display = null;
-    //       modalBackdrop.style.display = null;
-    //     }
-    // };
-
+    cellSizeDropdownContainer.style.display = "flex";
+    gridDropdownContainer.style.display = "flex";
+    modalBackdrop.style.display = "flex";
+  });
 
   // color shift
   document.body.addEventListener('keydown', e => {
-    if (e.keyCode === 78) {
-      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
-      container.handleNextFrameEvent(e);
-    } else {
-      container.toggleColor(e);
-    }
+    container.toggleColor(e);
   });
 
   // Rules Modal

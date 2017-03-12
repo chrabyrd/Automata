@@ -56,19 +56,26 @@
 	  var mainCanvas = document.getElementById("mainCanvas");
 	  var mainCtx = mainCanvas.getContext("2d");
 
+	  var modalBackdrop = document.getElementById("modal-backdrop");
+
 	  var faster = document.getElementById("faster");
 	  var currentSpeed = document.getElementById("currentSpeed");
 	  var speedDropdown = document.getElementById("speedDropdown");
+	  var speedDropdownContainer = document.getElementById("speedDropdownContainer");
 	  var slower = document.getElementById("slower");
 
+	  var gridDropdownContainer = document.getElementById("gridDropdownContainer");
+	  var widthDropdownContainer = document.getElementById("widthDropdownContainer");
+	  var heightDropdownContainer = document.getElementById("heightDropdownContainer");
 	  var widthDropdown = document.getElementById("widthDropdown");
 	  var heightDropdown = document.getElementById("heightDropdown");
-	  var gridDropdownContainer = document.getElementById("gridDropdownContainer");
+	  var gridSizeContainer = document.getElementById("gridSizeContainer");
 	  var currentWidth = document.getElementById("currentWidth");
 	  var currentHeight = document.getElementById("currentHeight");
-	  var gridSizeContainer = document.getElementById("gridSizeContainer");
 
-	  var modalBackdrop = document.getElementById("modal-backdrop");
+	  var cellSize = document.getElementById("cellSize");
+	  var cellSizeDropdown = document.getElementById("cellSizeDropdown");
+	  var cellSizeDropdownContainer = document.getElementById("cellSizeDropdownContainer");
 
 	  var playPauseButton = document.getElementById("playPauseButton");
 	  var rulesButton = document.getElementById("rulesButton");
@@ -80,6 +87,18 @@
 	  mainCanvas.addEventListener('click', function (e) {
 	    return container.handleClickEvent(e);
 	  }, false);
+
+	  // Grid Controls Modal
+
+	  modalBackdrop.addEventListener('click', function (e) {
+	    widthDropdown.innerHTML = "";
+	    heightDropdown.innerHTML = "";
+	    speedDropdown.innerHTML = "";
+	    speedDropdownContainer.style.display = null;
+	    widthDropdownContainer.style.display = null;
+	    heightDropdownContainer.style.display = null;
+	    modalBackdrop.style.display = null;
+	  });
 
 	  // Pause
 	  document.body.addEventListener('keydown', function (e) {
@@ -107,10 +126,11 @@
 	  });
 
 	  currentSpeed.addEventListener('click', function (e) {
-	    container.speedArray.forEach(function (num) {
+	    container.validDrawspeeds.forEach(function (num) {
 	      speedDropdown.innerHTML += "<li>" + num + "</li>";
 	    });
 
+	    speedDropdownContainer.style.display = "flex";
 	    gridDropdownContainer.style.display = "flex";
 	    modalBackdrop.style.display = "flex";
 	  });
@@ -137,6 +157,8 @@
 	      heightDropdown.innerHTML += "<li>" + num + "</li>";
 	    });
 
+	    widthDropdownContainer.style.display = "flex";
+	    heightDropdownContainer.style.display = "flex";
 	    gridDropdownContainer.style.display = "flex";
 	    modalBackdrop.style.display = "flex";
 	  });
@@ -157,46 +179,21 @@
 	    modalBackdrop.style.display = null;
 	  });
 
-	  modalBackdrop.addEventListener('click', function (e) {
-	    widthDropdown.innerHTML = "";
-	    heightDropdown.innerHTML = "";
-	    speedDropdown.innerHTML = "";
-	    speedDropdown.style.display = null;
-	    widthDropdown.style.display = null;
-	    heightDropdown.style.display = null;
-	    modalBackdrop.style.display = null;
+	  // Cell Size
+
+	  cellSize.addEventListener('click', function (e) {
+	    container.cellSizes.forEach(function (num) {
+	      cellSizeDropdown.innerHTML += "<li>" + num + "</li>";
+	    });
+
+	    cellSizeDropdownContainer.style.display = "flex";
+	    gridDropdownContainer.style.display = "flex";
+	    modalBackdrop.style.display = "flex";
 	  });
-
-	  // window.onclick = function(e) {
-	  //   // console.log(e);
-	  //     if (e.target.parentElement.id === "gridDropdown") {
-	  //       container.handleWidthSizeEvent(e.target.innerHTML);
-	  //       currentWidth.innerHTML = e.target.innerHTML;
-	  //       // gridDropdown.innerHTML = "";
-	  //       // gridDropdown.style.display = null;
-	  //       modalBackdrop.style.display = "none";
-	  //     } else if (e.target.parentElement.id === "gridDropdown") {
-	  //       container.handleHeightSizeEvent(e.target.innerHTML);
-	  //       // currentHeight.innerHTML = e.target.innerHTML;
-	  //       // gridDropdown.innerHTML = "";
-	  //       // gridDropdown.style.display = null;
-	  //       modalBackdrop.style.display = "none";
-	  //     } else if (e.target === modalBackdrop) {
-	  //       // gridDropdown.style.display = null;
-	  //       // gridDropdown.style.display = null;
-	  //       modalBackdrop.style.display = null;
-	  //     }
-	  // };
-
 
 	  // color shift
 	  document.body.addEventListener('keydown', function (e) {
-	    if (e.keyCode === 78) {
-	      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
-	      container.handleNextFrameEvent(e);
-	    } else {
-	      container.toggleColor(e);
-	    }
+	    container.toggleColor(e);
 	  });
 
 	  // Rules Modal
@@ -241,27 +238,20 @@
 
 	    this.mainCanvas = mainCanvas;
 	    this.mainCtx = mainCtx;
-	    this.drawspeed = 50;
-
 	    this.gridDimensions = [];
-
-	    this.speedArray = [];
-
-	    for (var i = 1; i <= 100; i++) {
-	      this.speedArray.push((1000 / i).toFixed(2));
-	    }
-
-	    this.cellSize = 16;
-	    // this.width = 200;
-	    // this.height = 200;
+	    this.validDrawspeeds = [];
+	    this.cellSizes = [1, 2, 4, 8, 16, 32];
 	    this.width = window.innerWidth;
 	    this.height = window.innerHeight;
+	    this.drawspeed = 50;
+	    this.cellSize = 16;
 	    this.pauseEvent = false;
 	    this.cellType = 'typeOne';
 	    this.start = null;
 	    this.getGridSize();
 	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
 	    this.automata = new _automata2.default(this.board);
+	    this.populateValidDrawspeeds();
 	    this.handlePlayEvent();
 	  }
 
@@ -329,7 +319,6 @@
 	  }, {
 	    key: "getGridSize",
 	    value: function getGridSize() {
-
 	      var gridDimensions = [];
 
 	      for (var i = 200; i <= 4000; i++) {
@@ -341,6 +330,13 @@
 	      this.mainCanvas.width = this.width;
 	      this.mainCanvas.height = this.height;
 	      return gridDimensions;
+	    }
+	  }, {
+	    key: "populateValidDrawspeeds",
+	    value: function populateValidDrawspeeds() {
+	      for (var i = 1; i <= 100; i++) {
+	        this.validDrawspeeds.push((1000 / i).toFixed(2));
+	      }
 	    }
 	  }, {
 	    key: "toggleColor",
@@ -399,6 +395,9 @@
 	      this.drawspeed = speed;
 	      this.handlePauseEvent();
 	    }
+	  }, {
+	    key: "handleCellResizeEvent",
+	    value: function handleCellResizeEvent() {}
 	  }, {
 	    key: "handleResizeEvent",
 	    value: function handleResizeEvent(dimension, size) {

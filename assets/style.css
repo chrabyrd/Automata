@@ -15,12 +15,15 @@ li:hover {
   cursor: pointer;
 }
 
-#playPauseButton {
-  position: absolute;
-  left: 5px;
-  top: 5px;
-  padding: 5px;
-  cursor: pointer;
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.2);
 }
 
 #gridControls {
@@ -30,9 +33,35 @@ li:hover {
   display: flex;
   align-self: flex-end;
   padding-bottom: 5px;
-  align-items: center;
   justify-content: space-around;
   width: 100%;
+}
+
+#gridDropdownContainer {
+  display: none;
+  position: fixed;
+  overflow: scroll;
+  justify-content: space-around;
+  margin-bottom: 30px;
+  height: 70px;
+  width: 100%;
+  background-color: pink;
+  align-self: flex-end;
+}
+
+/* Play Buttons */
+
+
+/*#playButtonsContainer {
+  position: relative
+  float: left;
+}*/
+
+#playPauseButton {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  cursor: pointer;
 }
 
 /* Speed Controls */
@@ -44,16 +73,15 @@ li:hover {
 #currentSpeed {
   display: flex;
   align-items: center;
-  /*padding: 0 10px;*/
   cursor: pointer;
 }
 
 #faster, #slower {
-  /*padding: 5px;*/
   cursor: pointer;
 }
 
 /* Grid Size Controls */
+
 
 #gridSizeContainer {
   display: flex;
@@ -62,57 +90,22 @@ li:hover {
   bottom: 5px;
 }
 
-#currentWidth {
+#currentWidth, #currentHeight {
   display: flex;
   align-items: center;
   padding: 0 10px;
   cursor: pointer;
 }
 
-#gridDropdownContainer {
+
+/* Cell Size Controls */
+
+
+/* Dropdowns */
+
+#speedDropdownContainer,
+#cellSizeDropdownContainer,
+#widthDropdownContainer,
+#heightDropdownContainer {
   display: none;
-  overflow: scroll;
-  justify-content: space-around;
-  margin-bottom: 30px;
-  height: 70px;
-  width: 100%;
-  background-color: pink;
-  align-self: flex-end;
-}
-
-#dimensionsDropdownContainer {
-  display: flex;
-  overflow: scroll;
-  width: 84px;
-}
-
-#speedDropdownContainer {
-  overflow: scroll;
-  width: 52px;
-}
-
-.gridDropdown {
-  display: flex;
-  flex-direction: column;
-  background-color: brown;
-  align-items: center;
-  overflow: scroll;
-}
-
-#currentHeight {
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  cursor: pointer;
-}
-
-.modal-backdrop {
-  display: none;
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.2);
 }

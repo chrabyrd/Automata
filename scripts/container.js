@@ -5,28 +5,20 @@ class Container {
   constructor (mainCanvas, mainCtx) {
     this.mainCanvas = mainCanvas;
     this.mainCtx = mainCtx;
-    this.drawspeed = 50;
-
     this.gridDimensions = [];
-
-
-    this.speedArray = [];
-
-    for (let i = 1; i <= 100; i++) {
-      this.speedArray.push((1000 / i).toFixed(2));
-    }
-
-    this.cellSize = 16;
-    // this.width = 200;
-    // this.height = 200;
+    this.validDrawspeeds = [];
+    this.cellSizes = [1, 2, 4, 8, 16, 32];
     this.width = window.innerWidth;
     this.height = window.innerHeight;
+    this.drawspeed = 50;
+    this.cellSize = 16;
     this.pauseEvent = false;
     this.cellType = 'typeOne';
     this.start = null;
     this.getGridSize();
     this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
     this.automata = new Automata(this.board);
+    this.populateValidDrawspeeds();
     this.handlePlayEvent();
   }
 
@@ -92,7 +84,6 @@ class Container {
   }
 
   getGridSize () {
-
     const gridDimensions = [];
 
     for (let i = 200; i <= 4000; i++) {
@@ -104,6 +95,12 @@ class Container {
     this.mainCanvas.width = this.width;
     this.mainCanvas.height = this.height;
     return gridDimensions;
+  }
+
+  populateValidDrawspeeds () {
+    for (let i = 1; i <= 100; i++) {
+      this.validDrawspeeds.push((1000 / i).toFixed(2));
+    }
   }
 
   toggleColor (e) {
@@ -154,6 +151,9 @@ class Container {
     this.handlePauseEvent();
   }
 
+  handleCellResizeEvent () {
+
+  }
 
   handleResizeEvent (dimension, size) {
     this.handlePauseEvent();
