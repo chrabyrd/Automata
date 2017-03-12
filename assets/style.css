@@ -49,58 +49,6 @@ li:hover {
   align-self: flex-end;
 }
 
-/* Play Buttons */
-
-
-/*#playButtonsContainer {
-  position: relative
-  float: left;
-}*/
-
-#playPauseButton {
-  position: fixed;
-  left: 0px;
-  top: 0px;
-  cursor: pointer;
-}
-
-/* Speed Controls */
-
-#speedContainer {
-  display: flex;
-}
-
-#currentSpeed {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-#faster, #slower {
-  cursor: pointer;
-}
-
-/* Grid Size Controls */
-
-
-#gridSizeContainer {
-  display: flex;
-  justify-content: space-between;
-  left: 5px;
-  bottom: 5px;
-}
-
-#currentWidth, #currentHeight {
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  cursor: pointer;
-}
-
-
-/* Cell Size Controls */
-
-
 /* Dropdowns */
 
 #speedDropdownContainer,

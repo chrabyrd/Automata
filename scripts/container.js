@@ -31,8 +31,8 @@ class Container {
             'dieCon': `false`,
             'stayCon': `false`,
             'wanderCon': `false`,
-            'reproduceCon': `true`
-            // 'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
+            // 'reproduceCon': `true`
+            'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
           },
           'neighborArray': [false]
         },
@@ -175,11 +175,12 @@ class Container {
     this.handlePauseEvent();
   }
 
-
   handleResetEvent () {
+    this.handlePauseEvent();
     clearInterval(this.start);
-    this.board = new Board(this.mainCtx, 5, 800, 600);
+    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
     this.automata = new Automata(this.board);
+    this.handlePauseEvent();
   }
 }
 

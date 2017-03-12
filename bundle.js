@@ -58,6 +58,10 @@
 
 	  var modalBackdrop = document.getElementById("modal-backdrop");
 
+	  var playPauseButton = document.getElementById("playPauseButton");
+	  var nextFrameButton = document.getElementById("nextFrameButton");
+	  var resetButton = document.getElementById("resetButton");
+
 	  var faster = document.getElementById("faster");
 	  var currentSpeed = document.getElementById("currentSpeed");
 	  var speedDropdown = document.getElementById("speedDropdown");
@@ -77,7 +81,6 @@
 	  var cellSizeDropdown = document.getElementById("cellSizeDropdown");
 	  var cellSizeDropdownContainer = document.getElementById("cellSizeDropdownContainer");
 
-	  var playPauseButton = document.getElementById("playPauseButton");
 	  var rulesButton = document.getElementById("rulesButton");
 	  var rulesModal = document.getElementById("rulesModal");
 	  var openerModal = document.getElementById("openerModal");
@@ -102,18 +105,31 @@
 	    modalBackdrop.style.display = null;
 	  });
 
-	  // Pause
+	  // Play Buttons
 	  document.body.addEventListener('keydown', function (e) {
 	    if (e.keyCode === 32) {
 	      e.preventDefault();
 	      playPauseButton.classList.toggle("fa-pause");
 	      container.handlePauseEvent(e);
+	    } else if (e.keyCode === 78) {
+	      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
+	      container.handleNextFrameEvent(e);
+	    } else if (e.keyCode === 82) {
+	      container.handleResetEvent();
 	    }
 	  });
 
 	  playPauseButton.addEventListener('click', function (e) {
 	    playPauseButton.classList.toggle("fa-pause");
 	    container.handlePauseEvent(e);
+	  });
+
+	  nextFrameButton.addEventListener('click', function (e) {
+	    container.handleNextFrameEvent(e);
+	  });
+
+	  resetButton.addEventListener('click', function (e) {
+	    container.handleResetEvent(e);
 	  });
 
 	  // Speed
@@ -203,7 +219,14 @@
 
 	  // color shift
 	  document.body.addEventListener('keydown', function (e) {
-	    container.toggleColor(e);
+	    if (e.keyCode === 78) {
+	      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
+	      container.handleNextFrameEvent(e);
+	    } else if (e.keyCode === 82) {
+	      container.handleResetEvent();
+	    } else {
+	      container.toggleColor(e);
+	    }
 	  });
 
 	  // Rules Modal
@@ -275,8 +298,8 @@
 	            'dieCon': "false",
 	            'stayCon': "false",
 	            'wanderCon': "false",
-	            'reproduceCon': "true"
-	            // 'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
+	            // 'reproduceCon': `true`
+	            'reproduceCon': "!typeHash['typeTwo'] && !typeHash['typeThree']"
 	          },
 	          'neighborArray': [false]
 	        },
@@ -434,9 +457,11 @@
 	  }, {
 	    key: "handleResetEvent",
 	    value: function handleResetEvent() {
+	      this.handlePauseEvent();
 	      clearInterval(this.start);
-	      this.board = new _board2.default(this.mainCtx, 5, 800, 600);
+	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
 	      this.automata = new _automata2.default(this.board);
+	      this.handlePauseEvent();
 	    }
 	  }]);
 

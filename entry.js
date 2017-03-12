@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const modalBackdrop = document.getElementById("modal-backdrop");
 
+  const playPauseButton = document.getElementById("playPauseButton");
+  const nextFrameButton = document.getElementById("nextFrameButton");
+  const resetButton = document.getElementById("resetButton");
+
   const faster = document.getElementById("faster");
   const currentSpeed = document.getElementById("currentSpeed");
   const speedDropdown = document.getElementById("speedDropdown");
@@ -25,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellSizeDropdown = document.getElementById("cellSizeDropdown");
   const cellSizeDropdownContainer = document.getElementById("cellSizeDropdownContainer");
 
-  const playPauseButton = document.getElementById("playPauseButton");
   const rulesButton = document.getElementById("rulesButton");
   const rulesModal = document.getElementById("rulesModal");
   const openerModal = document.getElementById("openerModal");
@@ -50,18 +53,31 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBackdrop.style.display = null;
   });
 
-  // Pause
+  // Play Buttons
   document.body.addEventListener('keydown', e => {
-    if(e.keyCode === 32) {
+    if (e.keyCode === 32) {
       e.preventDefault();
       playPauseButton.classList.toggle("fa-pause");
       container.handlePauseEvent(e);
+    } else if (e.keyCode === 78) {
+      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
+      container.handleNextFrameEvent(e);
+    } else if (e.keyCode === 82)  {
+      container.handleResetEvent();
     }
   });
 
   playPauseButton.addEventListener('click', e => {
     playPauseButton.classList.toggle("fa-pause");
     container.handlePauseEvent(e);
+  });
+
+  nextFrameButton.addEventListener('click', e => {
+    container.handleNextFrameEvent(e);
+  });
+
+  resetButton.addEventListener('click', e => {
+    container.handleResetEvent(e);
   });
 
   // Speed
@@ -149,7 +165,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // color shift
   document.body.addEventListener('keydown', e => {
-    container.toggleColor(e);
+    if (e.keyCode === 78) {
+      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
+      container.handleNextFrameEvent(e);
+    } else if (e.keyCode === 82)  {
+      container.handleResetEvent();
+    } else {
+      container.toggleColor(e);
+    }
   });
 
   // Rules Modal

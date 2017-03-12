@@ -19,23 +19,28 @@
 
         <canvas id="mainCanvas"></canvas>
 
-        <div>
-          <i id="playPauseButton" class="fa fa-play fa"></i>
-        </div>
 
         <div id="gridControls">
+          <div id="playButtonsContainer">
+            <i id="playPauseButton" class="fa fa-play fa"></i>
+            <i id="nextFrameButton" class="fa fa-step-forward fa"></i>
+            <i id="resetButton" class="fa fa-refresh fa"></i>
+          </div>
 
           <div id="speedContainer">
             <i id="slower" class="fa fa-backward fa"></i>
             <span id="currentSpeed">20.00</span>
+            <span>&nbsp;fps</span>
             <i id="faster" class="fa fa-forward fa"></i>
           </div>
 
           <div id="cellSizeContainer">
+            <span>Cell Size:&nbsp;</span>
             <span id="cellSize">16</span>
           </div>
 
           <div id="gridSizeContainer">
+            <span>Grid Size:&nbsp;</span>
             <span id="currentWidth">*</span>
             <span>x</span>
             <span id="currentHeight">*</span>
