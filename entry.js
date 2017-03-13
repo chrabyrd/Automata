@@ -6,6 +6,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const modalBackdrop = document.getElementById("modal-backdrop");
 
+  const typeOne = document.getElementById("typeOne");
+  const typeTwo = document.getElementById("typeTwo");
+  const typeThree = document.getElementById("typeThree");
+  const falseCell = document.getElementById("falseCell");
+  const typeOneContainer = document.getElementById("typeOneContainer");
+  const typeTwoContainer = document.getElementById("typeTwoContainer");
+  const typeThreeContainer = document.getElementById("typeThreeContainer");
+  const falseCellContainer = document.getElementById("falseCellContainer");
+  const cellLogicModal = document.getElementById("cellLogicModal");
+  const cellName = document.getElementById("cellName");
+  const submitButton = document.getElementById("submitButton");
+
   const playPauseButton = document.getElementById("playPauseButton");
   const nextFrameButton = document.getElementById("nextFrameButton");
   const resetButton = document.getElementById("resetButton");
@@ -35,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const conditionalHash = {
     'typeOne': {
+      'name': 'Type One',
       'conditions': {
         'skipCon': `validNeighbors.length === 0`,
         'dieCon': `false`,
@@ -47,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'typeTwo': {
+      'name': 'Type Two',
       'conditions': {
         'skipCon': `false`,
         'dieCon': `!typeHash['typeOne']`,
@@ -58,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'typeThree': {
+      'name': 'Type Three',
       'conditions': {
         'skipCon': `false`,
         'dieCon': `!typeHash['typeOne']`,
@@ -69,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'false': {
+      'name': 'False Cell',
       'conditions': {
         'skipCon': `true`,
         'dieCon': `false`,
@@ -92,8 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
       container.toggleColor(e);
   });
 
-  // Grid Controls Modal
+  // Modal Backdrop
   modalBackdrop.addEventListener('click', e => {
+    if (e.target.id !== 'modal-backdrop') return;
     speedDropdown.innerHTML = "";
     cellSizeDropdown.innerHTML = "";
     widthDropdown.innerHTML = "";
@@ -102,7 +119,58 @@ document.addEventListener("DOMContentLoaded", () => {
     cellSizeDropdownContainer.style.display = null;
     widthDropdownContainer.style.display = null;
     heightDropdownContainer.style.display = null;
+    gridDropdownContainer.style.display = null;
+    cellLogicModal.style.display = null;
     modalBackdrop.style.display = null;
+  });
+
+  // Cell Logic Bar
+  typeOne.innerText = conditionalHash['typeOne'].name;
+  typeTwo.innerText = conditionalHash['typeTwo'].name;
+  typeThree.innerText = conditionalHash['typeThree'].name;
+  falseCell.innerText = conditionalHash['false'].name;
+
+  let currentType;
+
+  typeOneContainer.addEventListener('click', e => {
+    currentType = 'typeOne';
+    cellName.value = e.target.parentElement.innerText;
+    cellLogicModal.style.display = 'flex';
+    modalBackdrop.style.display = "flex";
+  });
+
+  typeTwoContainer.addEventListener('click', e => {
+    currentType = 'typeTwo';
+    cellName.value = e.target.parentElement.innerText;
+    cellLogicModal.style.display = 'flex';
+    modalBackdrop.style.display = "flex";
+  });
+
+  typeThreeContainer.addEventListener('click', e => {
+    currentType = 'typeThree';
+    cellName.value = e.target.parentElement.innerText;
+    cellLogicModal.style.display = 'flex';
+    modalBackdrop.style.display = "flex";
+  });
+
+  falseCellContainer.addEventListener('click', e => {
+    currentType = 'false';
+    cellName.value = e.target.parentElement.innerText;
+    cellLogicModal.style.display = 'flex';
+    modalBackdrop.style.display = "flex";
+  });
+
+  // Cell Logic Modal
+  cellLogicModal.addEventListener('click', e => {
+    console.log(e);
+  });
+
+  submitButton.addEventListener('click', e => {
+    conditionalHash[currentType].name = cellName.value;
+    typeOne.innerText = conditionalHash['typeOne'].name;
+    typeTwo.innerText = conditionalHash['typeTwo'].name;
+    typeThree.innerText = conditionalHash['typeThree'].name;
+    falseCell.innerText = conditionalHash['false'].name;
   });
 
   // Play Buttons

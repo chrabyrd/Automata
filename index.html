@@ -19,6 +19,27 @@
 
         <canvas id="mainCanvas"></canvas>
 
+        <div id="cellLogicControls">
+          <div id="typeOneContainer" class="cellType">
+            <div id="typeOne"></div>
+            <div id="typeOneColor" class="sampleColor"></div>
+          </div>
+
+          <div id="typeTwoContainer" class="cellType">
+            <div id="typeTwo"></div>
+            <div id="typeTwoColor" class="sampleColor"></div>
+          </div>
+
+          <div id="typeThreeContainer" class="cellType">
+            <div id="typeThree"></div>
+            <div id="typeThreeColor" class="sampleColor"></div>
+          </div>
+
+          <div id="falseCellContainer" class="cellType">
+            <div id="falseCell"></div>
+            <div id="typeFourColor" class="sampleColor"></div>
+          </div>
+        </div>
 
         <div id="gridControls">
           <div id="playButtonsContainer">
@@ -47,7 +68,23 @@
           </div>
         </div>
 
-        <div id="modal-backdrop" class="modal-backdrop">
+        <div id="modal-backdrop">
+          <div id="cellLogicModal">
+
+            <div id="cellNameContainer">
+              <span>Cell Name:&nbsp;</span>
+                <input id="cellName" type="text" value="">
+                <button id="submitButton" type="button" name="button"></button>
+              <!-- <span id="cellName"></span> -->
+            </div>
+
+            <div id="cellColorContainer">
+              <span>Cell Color:&nbsp;</span>
+              <span id="cellColor"><div class="sampleColor"></div></span>
+            </div>
+
+          </div>
+
           <div id="gridDropdownContainer">
             <div id="speedDropdownContainer">
               <div>Frames Per Second: </div>

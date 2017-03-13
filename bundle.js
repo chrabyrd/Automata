@@ -58,6 +58,18 @@
 
 	  var modalBackdrop = document.getElementById("modal-backdrop");
 
+	  var typeOne = document.getElementById("typeOne");
+	  var typeTwo = document.getElementById("typeTwo");
+	  var typeThree = document.getElementById("typeThree");
+	  var falseCell = document.getElementById("falseCell");
+	  var typeOneContainer = document.getElementById("typeOneContainer");
+	  var typeTwoContainer = document.getElementById("typeTwoContainer");
+	  var typeThreeContainer = document.getElementById("typeThreeContainer");
+	  var falseCellContainer = document.getElementById("falseCellContainer");
+	  var cellLogicModal = document.getElementById("cellLogicModal");
+	  var cellName = document.getElementById("cellName");
+	  var submitButton = document.getElementById("submitButton");
+
 	  var playPauseButton = document.getElementById("playPauseButton");
 	  var nextFrameButton = document.getElementById("nextFrameButton");
 	  var resetButton = document.getElementById("resetButton");
@@ -87,6 +99,7 @@
 
 	  var conditionalHash = {
 	    'typeOne': {
+	      'name': 'Type One',
 	      'conditions': {
 	        'skipCon': "validNeighbors.length === 0",
 	        'dieCon': "false",
@@ -99,6 +112,7 @@
 	    },
 
 	    'typeTwo': {
+	      'name': 'Type Two',
 	      'conditions': {
 	        'skipCon': "false",
 	        'dieCon': "!typeHash['typeOne']",
@@ -110,6 +124,7 @@
 	    },
 
 	    'typeThree': {
+	      'name': 'Type Three',
 	      'conditions': {
 	        'skipCon': "false",
 	        'dieCon': "!typeHash['typeOne']",
@@ -121,6 +136,7 @@
 	    },
 
 	    'false': {
+	      'name': 'False Cell',
 	      'conditions': {
 	        'skipCon': "true",
 	        'dieCon': "false",
@@ -143,8 +159,9 @@
 	    container.toggleColor(e);
 	  });
 
-	  // Grid Controls Modal
+	  // Modal Backdrop
 	  modalBackdrop.addEventListener('click', function (e) {
+	    if (e.target.id !== 'modal-backdrop') return;
 	    speedDropdown.innerHTML = "";
 	    cellSizeDropdown.innerHTML = "";
 	    widthDropdown.innerHTML = "";
@@ -153,7 +170,58 @@
 	    cellSizeDropdownContainer.style.display = null;
 	    widthDropdownContainer.style.display = null;
 	    heightDropdownContainer.style.display = null;
+	    gridDropdownContainer.style.display = null;
+	    cellLogicModal.style.display = null;
 	    modalBackdrop.style.display = null;
+	  });
+
+	  // Cell Logic Bar
+	  typeOne.innerText = conditionalHash['typeOne'].name;
+	  typeTwo.innerText = conditionalHash['typeTwo'].name;
+	  typeThree.innerText = conditionalHash['typeThree'].name;
+	  falseCell.innerText = conditionalHash['false'].name;
+
+	  var currentType = void 0;
+
+	  typeOneContainer.addEventListener('click', function (e) {
+	    currentType = 'typeOne';
+	    cellName.value = e.target.parentElement.innerText;
+	    cellLogicModal.style.display = 'flex';
+	    modalBackdrop.style.display = "flex";
+	  });
+
+	  typeTwoContainer.addEventListener('click', function (e) {
+	    currentType = 'typeTwo';
+	    cellName.value = e.target.parentElement.innerText;
+	    cellLogicModal.style.display = 'flex';
+	    modalBackdrop.style.display = "flex";
+	  });
+
+	  typeThreeContainer.addEventListener('click', function (e) {
+	    currentType = 'typeThree';
+	    cellName.value = e.target.parentElement.innerText;
+	    cellLogicModal.style.display = 'flex';
+	    modalBackdrop.style.display = "flex";
+	  });
+
+	  falseCellContainer.addEventListener('click', function (e) {
+	    currentType = 'false';
+	    cellName.value = e.target.parentElement.innerText;
+	    cellLogicModal.style.display = 'flex';
+	    modalBackdrop.style.display = "flex";
+	  });
+
+	  // Cell Logic Modal
+	  cellLogicModal.addEventListener('click', function (e) {
+	    console.log(e);
+	  });
+
+	  submitButton.addEventListener('click', function (e) {
+	    conditionalHash[currentType].name = cellName.value;
+	    typeOne.innerText = conditionalHash['typeOne'].name;
+	    typeTwo.innerText = conditionalHash['typeTwo'].name;
+	    typeThree.innerText = conditionalHash['typeThree'].name;
+	    falseCell.innerText = conditionalHash['false'].name;
 	  });
 
 	  // Play Buttons
