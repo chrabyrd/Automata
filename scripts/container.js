@@ -64,7 +64,8 @@ class Container {
   }
 
   handleClickEvent (e) {
-    this.board.toggleCell(e, this.cellType);
+    const color = this.conditionalHash[this.cellType].color;
+    this.board.toggleCell(e, this.cellType, color);
   }
 
   handlePlayEvent () {

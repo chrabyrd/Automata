@@ -14,12 +14,15 @@ class Cell {
     this.x = x;
     this.y = y;
 
+    this.color = null;
+
     this.getNeighbors(gridWidth, gridHeight, cellSize);
     this.render();
   }
 
-  changeState (type) {
+  changeState (type, color) {
     this.type = type;
+    this.color = color;
     this.render();
   }
 
@@ -45,29 +48,13 @@ class Cell {
     });
   }
 
-  // getRandomColor() {
-  //   let length = 6;
-  //   const chars = '0123456789ABCDEF';
-  //   let hex = '#';
-  //   while(length--) hex += chars[(Math.random() * 16) | 0];
-  //   return hex;
-  // }
-
   render () {
     this.ctx.clearRect(this.x, this.y, this.cellSize, this.cellSize);
 
     if (!this.type) return;
 
-    if (this.type === 'typeOne') {
-      this.ctx.fillStyle = 'green';
-    } else if (this.type === 'typeTwo') {
-      this.ctx.fillStyle = 'blue';
-    } else if (this.type === 'typeThree') {
-      this.ctx.fillStyle = 'purple';
-    }
-
+    this.ctx.fillStyle = this.color;
     this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
-    // this.ctx.strokeRect(this.x, this.y, this.cellSize, this.cellSize);
   }
 }
 

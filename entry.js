@@ -10,12 +10,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const typeTwo = document.getElementById("typeTwo");
   const typeThree = document.getElementById("typeThree");
   const falseCell = document.getElementById("falseCell");
+  const typeOneColor = document.getElementById("typeOneColor");
+  const typeTwoColor = document.getElementById("typeTwoColor");
+  const typeThreeColor = document.getElementById("typeThreeColor");
+  const falseCellColor = document.getElementById("falseCellColor");
   const typeOneContainer = document.getElementById("typeOneContainer");
   const typeTwoContainer = document.getElementById("typeTwoContainer");
   const typeThreeContainer = document.getElementById("typeThreeContainer");
   const falseCellContainer = document.getElementById("falseCellContainer");
+
   const cellLogicModal = document.getElementById("cellLogicModal");
   const cellName = document.getElementById("cellName");
+  const cellColor = document.getElementById("cellColor");
   const submitButton = document.getElementById("submitButton");
 
   const playPauseButton = document.getElementById("playPauseButton");
@@ -48,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const conditionalHash = {
     'typeOne': {
       'name': 'Type One',
+      'color': 'green',
       'conditions': {
         'skipCon': `validNeighbors.length === 0`,
         'dieCon': `false`,
@@ -61,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     'typeTwo': {
       'name': 'Type Two',
+      'color': 'blue',
       'conditions': {
         'skipCon': `false`,
         'dieCon': `!typeHash['typeOne']`,
@@ -73,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     'typeThree': {
       'name': 'Type Three',
+      'color': 'purple',
       'conditions': {
         'skipCon': `false`,
         'dieCon': `!typeHash['typeOne']`,
@@ -85,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     'false': {
       'name': 'False Cell',
+      'color': 'brown',
       'conditions': {
         'skipCon': `true`,
         'dieCon': `false`,
@@ -129,33 +139,42 @@ document.addEventListener("DOMContentLoaded", () => {
   typeTwo.innerText = conditionalHash['typeTwo'].name;
   typeThree.innerText = conditionalHash['typeThree'].name;
   falseCell.innerText = conditionalHash['false'].name;
+  typeOneColor.style.background = conditionalHash['typeOne'].color;
+  typeTwoColor.style.background = conditionalHash['typeTwo'].color;
+  typeThreeColor.style.background = conditionalHash['typeThree'].color;
+  falseCellColor.style.background = conditionalHash['false'].color;
 
   let currentType;
 
   typeOneContainer.addEventListener('click', e => {
+    console.log(e);
     currentType = 'typeOne';
-    cellName.value = e.target.parentElement.innerText;
+    cellName.value = typeOne.innerText;
+    cellColor.style.background = typeOneColor.style.background;
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
   });
 
   typeTwoContainer.addEventListener('click', e => {
     currentType = 'typeTwo';
-    cellName.value = e.target.parentElement.innerText;
+    cellName.value = typeTwo.innerText;
+    cellColor.style.background = typeTwoColor.style.background;
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
   });
 
   typeThreeContainer.addEventListener('click', e => {
     currentType = 'typeThree';
-    cellName.value = e.target.parentElement.innerText;
+    cellName.value = typeThree.innerText;
+    cellColor.style.background = typeThreeColor.style.background;
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
   });
 
   falseCellContainer.addEventListener('click', e => {
     currentType = 'false';
-    cellName.value = e.target.parentElement.innerText;
+    cellName.value = falseCell.innerText;
+    cellColor.style.background = falseCellColor.style.background;
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
   });

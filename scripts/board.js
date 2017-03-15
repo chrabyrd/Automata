@@ -8,7 +8,7 @@ class Board {
     this.populateGrid(cellSize, gridWidth, gridHeight);
   }
 
-  toggleCell (e, type) {
+  toggleCell (e, type, color) {
     const clickedCell = this.cells.find((cell) => {
       if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
         if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
@@ -17,8 +17,7 @@ class Board {
       }
     });
 
-    // console.log(clickedCell.id, clickedCell.neighbors);
-    clickedCell.changeState(type);
+    clickedCell.changeState(type, color);
   }
 
   populateGrid (cellSize, gridWidth, gridHeight) {

@@ -62,12 +62,18 @@
 	  var typeTwo = document.getElementById("typeTwo");
 	  var typeThree = document.getElementById("typeThree");
 	  var falseCell = document.getElementById("falseCell");
+	  var typeOneColor = document.getElementById("typeOneColor");
+	  var typeTwoColor = document.getElementById("typeTwoColor");
+	  var typeThreeColor = document.getElementById("typeThreeColor");
+	  var falseCellColor = document.getElementById("falseCellColor");
 	  var typeOneContainer = document.getElementById("typeOneContainer");
 	  var typeTwoContainer = document.getElementById("typeTwoContainer");
 	  var typeThreeContainer = document.getElementById("typeThreeContainer");
 	  var falseCellContainer = document.getElementById("falseCellContainer");
+
 	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var cellName = document.getElementById("cellName");
+	  var cellColor = document.getElementById("cellColor");
 	  var submitButton = document.getElementById("submitButton");
 
 	  var playPauseButton = document.getElementById("playPauseButton");
@@ -100,6 +106,7 @@
 	  var conditionalHash = {
 	    'typeOne': {
 	      'name': 'Type One',
+	      'color': 'green',
 	      'conditions': {
 	        'skipCon': "validNeighbors.length === 0",
 	        'dieCon': "false",
@@ -113,6 +120,7 @@
 
 	    'typeTwo': {
 	      'name': 'Type Two',
+	      'color': 'blue',
 	      'conditions': {
 	        'skipCon': "false",
 	        'dieCon': "!typeHash['typeOne']",
@@ -125,6 +133,7 @@
 
 	    'typeThree': {
 	      'name': 'Type Three',
+	      'color': 'purple',
 	      'conditions': {
 	        'skipCon': "false",
 	        'dieCon': "!typeHash['typeOne']",
@@ -137,6 +146,7 @@
 
 	    'false': {
 	      'name': 'False Cell',
+	      'color': 'brown',
 	      'conditions': {
 	        'skipCon': "true",
 	        'dieCon': "false",
@@ -180,33 +190,42 @@
 	  typeTwo.innerText = conditionalHash['typeTwo'].name;
 	  typeThree.innerText = conditionalHash['typeThree'].name;
 	  falseCell.innerText = conditionalHash['false'].name;
+	  typeOneColor.style.background = conditionalHash['typeOne'].color;
+	  typeTwoColor.style.background = conditionalHash['typeTwo'].color;
+	  typeThreeColor.style.background = conditionalHash['typeThree'].color;
+	  falseCellColor.style.background = conditionalHash['false'].color;
 
 	  var currentType = void 0;
 
 	  typeOneContainer.addEventListener('click', function (e) {
+	    console.log(e);
 	    currentType = 'typeOne';
-	    cellName.value = e.target.parentElement.innerText;
+	    cellName.value = typeOne.innerText;
+	    cellColor.style.background = typeOneColor.style.background;
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
 	  });
 
 	  typeTwoContainer.addEventListener('click', function (e) {
 	    currentType = 'typeTwo';
-	    cellName.value = e.target.parentElement.innerText;
+	    cellName.value = typeTwo.innerText;
+	    cellColor.style.background = typeTwoColor.style.background;
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
 	  });
 
 	  typeThreeContainer.addEventListener('click', function (e) {
 	    currentType = 'typeThree';
-	    cellName.value = e.target.parentElement.innerText;
+	    cellName.value = typeThree.innerText;
+	    cellColor.style.background = typeThreeColor.style.background;
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
 	  });
 
 	  falseCellContainer.addEventListener('click', function (e) {
 	    currentType = 'false';
-	    cellName.value = e.target.parentElement.innerText;
+	    cellName.value = falseCell.innerText;
+	    cellColor.style.background = falseCellColor.style.background;
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
 	  });
@@ -442,7 +461,8 @@
 	  }, {
 	    key: "handleClickEvent",
 	    value: function handleClickEvent(e) {
-	      this.board.toggleCell(e, this.cellType);
+	      var color = this.conditionalHash[this.cellType].color;
+	      this.board.toggleCell(e, this.cellType, color);
 	    }
 	  }, {
 	    key: "handlePlayEvent",
@@ -542,7 +562,7 @@
 
 	  _createClass(Board, [{
 	    key: "toggleCell",
-	    value: function toggleCell(e, type) {
+	    value: function toggleCell(e, type, color) {
 	      var clickedCell = this.cells.find(function (cell) {
 	        if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
 	          if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
@@ -551,8 +571,7 @@
 	        }
 	      });
 
-	      // console.log(clickedCell.id, clickedCell.neighbors);
-	      clickedCell.changeState(type);
+	      clickedCell.changeState(type, color);
 	    }
 	  }, {
 	    key: "populateGrid",
@@ -585,7 +604,7 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -613,18 +632,21 @@
 	    this.x = x;
 	    this.y = y;
 
+	    this.color = null;
+
 	    this.getNeighbors(gridWidth, gridHeight, cellSize);
 	    this.render();
 	  }
 
 	  _createClass(Cell, [{
-	    key: 'changeState',
-	    value: function changeState(type) {
+	    key: "changeState",
+	    value: function changeState(type, color) {
 	      this.type = type;
+	      this.color = color;
 	      this.render();
 	    }
 	  }, {
-	    key: 'getNeighbors',
+	    key: "getNeighbors",
 	    value: function getNeighbors(gridWidth, gridHeight, cellSize) {
 	      var _this = this;
 
@@ -649,32 +671,15 @@
 	        }
 	      });
 	    }
-
-	    // getRandomColor() {
-	    //   let length = 6;
-	    //   const chars = '0123456789ABCDEF';
-	    //   let hex = '#';
-	    //   while(length--) hex += chars[(Math.random() * 16) | 0];
-	    //   return hex;
-	    // }
-
 	  }, {
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
 	      this.ctx.clearRect(this.x, this.y, this.cellSize, this.cellSize);
 
 	      if (!this.type) return;
 
-	      if (this.type === 'typeOne') {
-	        this.ctx.fillStyle = 'green';
-	      } else if (this.type === 'typeTwo') {
-	        this.ctx.fillStyle = 'blue';
-	      } else if (this.type === 'typeThree') {
-	        this.ctx.fillStyle = 'purple';
-	      }
-
+	      this.ctx.fillStyle = this.color;
 	      this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
-	      // this.ctx.strokeRect(this.x, this.y, this.cellSize, this.cellSize);
 	    }
 	  }]);
 
