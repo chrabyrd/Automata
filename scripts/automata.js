@@ -30,7 +30,8 @@ class Automata {
     });
 
     Object.keys(changingCells).forEach(key => {
-      cells[key].changeState(changingCells[key]);
+      cells[key].changeState(changingCells[key],
+        conditionalHash[changingCells[key]].color);
     });
   }
 }

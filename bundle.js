@@ -73,7 +73,7 @@
 
 	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var cellName = document.getElementById("cellName");
-	  var cellColor = document.getElementById("cellColor");
+	  var cellColorContainer = document.getElementById("cellColorContainer");
 	  var submitButton = document.getElementById("submitButton");
 
 	  var playPauseButton = document.getElementById("playPauseButton");
@@ -146,7 +146,7 @@
 
 	    'false': {
 	      'name': 'False Cell',
-	      'color': 'brown',
+	      'color': '',
 	      'conditions': {
 	        'skipCon': "true",
 	        'dieCon': "false",
@@ -193,48 +193,73 @@
 	  typeOneColor.style.background = conditionalHash['typeOne'].color;
 	  typeTwoColor.style.background = conditionalHash['typeTwo'].color;
 	  typeThreeColor.style.background = conditionalHash['typeThree'].color;
-	  falseCellColor.style.background = conditionalHash['false'].color;
 
 	  var currentType = void 0;
 
 	  typeOneContainer.addEventListener('click', function (e) {
-	    console.log(e);
 	    currentType = 'typeOne';
+	    var currentColor = conditionalHash['typeOne'].color;
+
 	    cellName.value = typeOne.innerText;
-	    cellColor.style.background = typeOneColor.style.background;
+	    cellColorContainer.style.display = 'block';
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
+
+	    $(".basic").spectrum({
+	      color: currentColor,
+	      change: function change(color) {
+	        conditionalHash[currentType].color = color.toHexString();
+	        typeOneColor.style.background = color.toHexString();
+	      }
+	    });
 	  });
 
 	  typeTwoContainer.addEventListener('click', function (e) {
 	    currentType = 'typeTwo';
+	    var currentColor = conditionalHash['typeTwo'].color;
+
 	    cellName.value = typeTwo.innerText;
-	    cellColor.style.background = typeTwoColor.style.background;
+	    cellColorContainer.style.display = 'block';
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
+
+	    $(".basic").spectrum({
+	      color: currentColor,
+	      change: function change(color) {
+	        conditionalHash[currentType].color = color.toHexString();
+	        typeTwoColor.style.background = color.toHexString();
+	      }
+	    });
 	  });
 
 	  typeThreeContainer.addEventListener('click', function (e) {
 	    currentType = 'typeThree';
+	    var currentColor = conditionalHash['typeThree'].color;
+
 	    cellName.value = typeThree.innerText;
-	    cellColor.style.background = typeThreeColor.style.background;
+	    cellColorContainer.style.display = 'block';
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
+
+	    $(".basic").spectrum({
+	      color: currentColor,
+	      change: function change(color) {
+	        conditionalHash[currentType].color = color.toHexString();
+	        typeThreeColor.style.background = color.toHexString();
+	      }
+	    });
 	  });
 
 	  falseCellContainer.addEventListener('click', function (e) {
 	    currentType = 'false';
 	    cellName.value = falseCell.innerText;
-	    cellColor.style.background = falseCellColor.style.background;
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
+
+	    cellColorContainer.style.display = 'none';
 	  });
 
 	  // Cell Logic Modal
-	  cellLogicModal.addEventListener('click', function (e) {
-	    console.log(e);
-	  });
-
 	  submitButton.addEventListener('click', function (e) {
 	    conditionalHash[currentType].name = cellName.value;
 	    typeOne.innerText = conditionalHash['typeOne'].name;
@@ -462,6 +487,7 @@
 	    key: "handleClickEvent",
 	    value: function handleClickEvent(e) {
 	      var color = this.conditionalHash[this.cellType].color;
+	      console.log(color);
 	      this.board.toggleCell(e, this.cellType, color);
 	    }
 	  }, {
@@ -623,7 +649,6 @@
 	    this.xmax = x + cellSize;
 	    this.ymin = y + 1;
 	    this.ymax = y + cellSize;
-	    this.type = false;
 	    this.neighbors = [];
 
 	    this.ctx = ctx;
@@ -632,6 +657,7 @@
 	    this.x = x;
 	    this.y = y;
 
+	    this.type = false;
 	    this.color = null;
 
 	    this.getNeighbors(gridWidth, gridHeight, cellSize);
@@ -679,6 +705,7 @@
 	      if (!this.type) return;
 
 	      this.ctx.fillStyle = this.color;
+
 	      this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
 	    }
 	  }]);
@@ -746,7 +773,7 @@
 	      });
 
 	      Object.keys(changingCells).forEach(function (key) {
-	        cells[key].changeState(changingCells[key]);
+	        cells[key].changeState(changingCells[key], conditionalHash[changingCells[key]].color);
 	      });
 	    }
 	  }]);

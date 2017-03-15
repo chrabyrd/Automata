@@ -5,7 +5,6 @@ class Cell {
     this.xmax = x + cellSize;
     this.ymin = y + 1;
     this.ymax = y + cellSize;
-    this.type = false;
     this.neighbors = [];
 
     this.ctx = ctx;
@@ -14,6 +13,7 @@ class Cell {
     this.x = x;
     this.y = y;
 
+    this.type = false;
     this.color = null;
 
     this.getNeighbors(gridWidth, gridHeight, cellSize);
@@ -54,6 +54,7 @@ class Cell {
     if (!this.type) return;
 
     this.ctx.fillStyle = this.color;
+
     this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
   }
 }

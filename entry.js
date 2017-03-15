@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const cellLogicModal = document.getElementById("cellLogicModal");
   const cellName = document.getElementById("cellName");
-  const cellColor = document.getElementById("cellColor");
+  const cellColorContainer = document.getElementById("cellColorContainer");
   const submitButton = document.getElementById("submitButton");
 
   const playPauseButton = document.getElementById("playPauseButton");
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     'false': {
       'name': 'False Cell',
-      'color': 'brown',
+      'color': '',
       'conditions': {
         'skipCon': `true`,
         'dieCon': `false`,
@@ -142,48 +142,76 @@ document.addEventListener("DOMContentLoaded", () => {
   typeOneColor.style.background = conditionalHash['typeOne'].color;
   typeTwoColor.style.background = conditionalHash['typeTwo'].color;
   typeThreeColor.style.background = conditionalHash['typeThree'].color;
-  falseCellColor.style.background = conditionalHash['false'].color;
 
   let currentType;
 
   typeOneContainer.addEventListener('click', e => {
-    console.log(e);
     currentType = 'typeOne';
+    const currentColor = conditionalHash['typeOne'].color;
+
     cellName.value = typeOne.innerText;
-    cellColor.style.background = typeOneColor.style.background;
+    cellColorContainer.style.display = 'block';
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
+
+    $(".basic").spectrum({
+      color: currentColor,
+      change: function(color) {
+        conditionalHash[currentType].color = color.toHexString();
+        typeOneColor.style.background = color.toHexString();
+      }
+    });
+
   });
 
   typeTwoContainer.addEventListener('click', e => {
     currentType = 'typeTwo';
+    const currentColor = conditionalHash['typeTwo'].color;
+
     cellName.value = typeTwo.innerText;
-    cellColor.style.background = typeTwoColor.style.background;
+    cellColorContainer.style.display = 'block';
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
+
+    $(".basic").spectrum({
+      color: currentColor,
+      change: function(color) {
+        conditionalHash[currentType].color = color.toHexString();
+        typeTwoColor.style.background = color.toHexString();
+      }
+    });
+
   });
 
   typeThreeContainer.addEventListener('click', e => {
     currentType = 'typeThree';
+    const currentColor = conditionalHash['typeThree'].color;
+
     cellName.value = typeThree.innerText;
-    cellColor.style.background = typeThreeColor.style.background;
+    cellColorContainer.style.display = 'block';
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
+
+    $(".basic").spectrum({
+      color: currentColor,
+      change: function(color) {
+        conditionalHash[currentType].color = color.toHexString();
+        typeThreeColor.style.background = color.toHexString();
+      }
+    });
+
   });
 
   falseCellContainer.addEventListener('click', e => {
     currentType = 'false';
     cellName.value = falseCell.innerText;
-    cellColor.style.background = falseCellColor.style.background;
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
+
+    cellColorContainer.style.display = 'none';
   });
 
   // Cell Logic Modal
-  cellLogicModal.addEventListener('click', e => {
-    console.log(e);
-  });
-
   submitButton.addEventListener('click', e => {
     conditionalHash[currentType].name = cellName.value;
     typeOne.innerText = conditionalHash['typeOne'].name;
