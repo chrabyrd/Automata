@@ -32,7 +32,7 @@ class CellLogic {
   wander (array) {
     const nextCell = this.random(array);
     this.changingCells[nextCell] = this.type;
-    this.changingCells[this.id] = false;
+    this.changingCells[this.id] = 'false';
   }
 
   stay () {
@@ -45,7 +45,7 @@ class CellLogic {
   }
 
   die () {
-    this.changingCells[this.id] = false;
+    this.changingCells[this.id] = 'false';
   }
 
   live (conditionalHash) {
@@ -53,9 +53,13 @@ class CellLogic {
 
     const type = this.type;
     const typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0, "false": 0};
-    const validNeighbors = this.getValidNeighbors(
-      conditionalHash[type]['neighborArray']
-    );
+
+    const neighborTypes = Object.keys(conditionalHash[type]['neighborHash']);
+    const validNeighborTypes = neighborTypes.filter(function(neighborType) {
+      return conditionalHash[type]['neighborHash'][neighborType] === true;
+    });
+
+    const validNeighbors = this.getValidNeighbors(validNeighborTypes);
 
     this.cellNeighbors.forEach(num => {typeHash[this.cells[num].type]++;});
 

@@ -37,10 +37,6 @@
             <div id="typeThree"></div>
             <div id="typeThreeColor" class="sampleColor"></div>
           </div>
-
-          <div id="falseCellContainer" class="cellType">
-            <div id="falseCell"></div>
-          </div>
         </div>
 
         <div id="gridControls">
@@ -73,18 +69,57 @@
         <div id="modal-backdrop">
           <div id="cellLogicModal">
 
+            <div id="cellInfoContainer">
+              <div id="cellNameContainer">
+                <span>Cell Name:&nbsp;</span>
+                <input id="cellName" type="text" value="">
+              </div>
 
-            <div id="cellNameContainer">
-              <span>Cell Name:&nbsp;</span>
-              <input id="cellName" type="text" value="">
-              <button id="submitButton" type="button" name="button"></button>
+              <div id="cellColorContainer">
+                <input id="colorPicker" type='text' class="basic"/>
+              </div>
             </div>
 
-            <div id="cellColorContainer">
-              <span>Cell Color:&nbsp;</span>
-              <input id="colorPicker" type='text' class="basic"/>
+            <div id="cellConditionContainer">
+              <div>
+                <span>Skip Condition:&nbsp;</span>
+                <input id='skipCondition' type='text'>
+              </div>
+
+              <div>
+                <span>Die Condition:&nbsp;</span>
+                <input id='dieCondition' type='text'>
+              </div>
+
+              <div>
+                <span>Stay Condition:&nbsp;</span>
+                <input id='stayCondition' type='text'>
+              </div>
+
+              <div>
+                <span>Wander Condition:&nbsp;</span>
+                <input id='wanderCondition' type='text'>
+              </div>
+
+              <div>
+                <span>Reproduce Condition:&nbsp;</span>
+                <input id='reproduceCondition' type='text'>
+              </div>
             </div>
 
+            <div id="validNeighborsContainer">
+              <span id="neighborTypeOne"></span>
+              <input id="neighborTypeOneBox" type="checkbox" value="">
+
+              <span id="neighborTypeTwo"></span>
+              <input id="neighborTypeTwoBox" type="checkbox" value="">
+
+              <span id="neighborTypeThree"></span>
+              <input id="neighborTypeThreeBox" type="checkbox" value="">
+
+              <span id="neighborTypeFalse">false</span>
+              <input id="neighborTypeFalseBox" type="checkbox" value="">
+            </div>
           </div>
 
           <div id="gridDropdownContainer">

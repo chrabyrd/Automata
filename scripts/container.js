@@ -23,7 +23,7 @@ class Container {
     this.handlePlayEvent();
   }
 
-  toggleColor (e) {
+  handleKeystrokeEvent (e) {
     if (e.keyCode === 49) {
       this.cellType = 'typeOne';
     } else if (e.keyCode === 50) {

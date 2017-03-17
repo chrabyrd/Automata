@@ -13,8 +13,8 @@ class Cell {
     this.x = x;
     this.y = y;
 
-    this.type = false;
-    this.color = null;
+    this.type = 'false';
+    this.color = 'rgba(255, 255, 255, 0)';
 
     this.getNeighbors(gridWidth, gridHeight, cellSize);
     this.render();
@@ -51,7 +51,7 @@ class Cell {
   render () {
     this.ctx.clearRect(this.x, this.y, this.cellSize, this.cellSize);
 
-    if (!this.type) return;
+    if (this.type === 'false') return;
 
     this.ctx.fillStyle = this.color;
 

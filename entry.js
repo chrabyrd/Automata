@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const typeOne = document.getElementById("typeOne");
   const typeTwo = document.getElementById("typeTwo");
   const typeThree = document.getElementById("typeThree");
-  const falseCell = document.getElementById("falseCell");
   const typeOneColor = document.getElementById("typeOneColor");
   const typeTwoColor = document.getElementById("typeTwoColor");
   const typeThreeColor = document.getElementById("typeThreeColor");
@@ -17,12 +16,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const typeOneContainer = document.getElementById("typeOneContainer");
   const typeTwoContainer = document.getElementById("typeTwoContainer");
   const typeThreeContainer = document.getElementById("typeThreeContainer");
-  const falseCellContainer = document.getElementById("falseCellContainer");
 
   const cellLogicModal = document.getElementById("cellLogicModal");
   const cellName = document.getElementById("cellName");
   const cellColorContainer = document.getElementById("cellColorContainer");
   const submitButton = document.getElementById("submitButton");
+
+  const skipCondition = document.getElementById("skipCondition");
+  const dieCondition = document.getElementById("dieCondition");
+  const stayCondition = document.getElementById("stayCondition");
+  const wanderCondition = document.getElementById("wanderCondition");
+  const reproduceCondition = document.getElementById("reproduceCondition");
+
+  const neighborTypeOne = document.getElementById("neighborTypeOne");
+  const neighborTypeTwo = document.getElementById("neighborTypeTwo");
+  const neighborTypeThree = document.getElementById("neighborTypeThree");
+
+  const neighborTypeOneBox = document.getElementById("neighborTypeOneBox");
+  const neighborTypeTwoBox = document.getElementById("neighborTypeTwoBox");
+  const neighborTypeThreeBox = document.getElementById("neighborTypeThreeBox");
+  const neighborTypeFalseBox = document.getElementById("neighborTypeFalseBox");
 
   const playPauseButton = document.getElementById("playPauseButton");
   const nextFrameButton = document.getElementById("nextFrameButton");
@@ -56,14 +69,19 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'Type One',
       'color': 'green',
       'conditions': {
-        'skipCon': `validNeighbors.length === 0`,
+        'skipCon': `false`,
         'dieCon': `false`,
-        'stayCon': `false`,
+        'stayCon': `validNeighbors.length === 0`,
         'wanderCon': `false`,
-        // 'reproduceCon': `true`
-        'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
+        'reproduceCon': `true`
+        // 'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
       },
-      'neighborArray': [false]
+      'neighborHash': {
+        'typeOne': false,
+        'typeTwo': false,
+        'typeThree': false,
+        'false': true
+      }
     },
 
     'typeTwo': {
@@ -76,7 +94,12 @@ document.addEventListener("DOMContentLoaded", () => {
         'wanderCon': `true`,
         'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
       },
-      'neighborArray': [false, 'typeOne']
+      'neighborHash': {
+        'typeOne': true,
+        'typeTwo': false,
+        'typeThree': false,
+        'false': true
+      }
     },
 
     'typeThree': {
@@ -89,12 +112,17 @@ document.addEventListener("DOMContentLoaded", () => {
         'wanderCon': `true`,
         'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
       },
-      'neighborArray': [false, 'typeOne']
+      'neighborHash': {
+        'typeOne': true,
+        'typeTwo': false,
+        'typeThree': false,
+        'false': true
+      }
     },
 
     'false': {
-      'name': 'False Cell',
-      'color': '',
+      'name': '',
+      'color': 'rgba(255, 255, 255, 0)',
       'conditions': {
         'skipCon': `true`,
         'dieCon': `false`,
@@ -102,7 +130,12 @@ document.addEventListener("DOMContentLoaded", () => {
         'wanderCon': `false`,
         'reproduceCon': `false`
       },
-      'neighborArray': [false]
+      'neighborHash': {
+        'typeOne': false,
+        'typeTwo': false,
+        'typeThree': false,
+        'false': true
+      }
     }
   };
 
@@ -115,12 +148,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Color shift
   document.body.addEventListener('keydown', e => {
-      container.toggleColor(e);
+
+    if (cellLogicModal.style.display) return;
+
+    if (e.keyCode === 32) {
+      e.preventDefault();
+      playPauseButton.classList.toggle("fa-pause");
+      container.handlePauseEvent();
+    } else if (e.keyCode === 78) {
+      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
+      container.handleNextFrameEvent();
+    } else if (e.keyCode === 82)  {
+      container.handleResetEvent();
+    } else {
+      container.handleKeystrokeEvent(e);
+    }
   });
 
-  // Modal Backdrop
+  // Modals
+
+  neighborTypeOne.innerText = conditionalHash['typeOne'].name;
+  neighborTypeTwo.innerText = conditionalHash['typeTwo'].name;
+  neighborTypeThree.innerText = conditionalHash['typeThree'].name;
+
   modalBackdrop.addEventListener('click', e => {
     if (e.target.id !== 'modal-backdrop') return;
+    if (container.pauseEvent) container.handlePauseEvent(e);
     speedDropdown.innerHTML = "";
     cellSizeDropdown.innerHTML = "";
     widthDropdown.innerHTML = "";
@@ -131,6 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
     heightDropdownContainer.style.display = null;
     gridDropdownContainer.style.display = null;
     cellLogicModal.style.display = null;
+    neighborTypeOneBox.checked = false;
+    neighborTypeTwoBox.checked = false;
+    neighborTypeThreeBox.checked = false;
+    neighborTypeFalseBox.checked = false;
     modalBackdrop.style.display = null;
   });
 
@@ -138,26 +195,83 @@ document.addEventListener("DOMContentLoaded", () => {
   typeOne.innerText = conditionalHash['typeOne'].name;
   typeTwo.innerText = conditionalHash['typeTwo'].name;
   typeThree.innerText = conditionalHash['typeThree'].name;
-  falseCell.innerText = conditionalHash['false'].name;
   typeOneColor.style.background = conditionalHash['typeOne'].color;
   typeTwoColor.style.background = conditionalHash['typeTwo'].color;
   typeThreeColor.style.background = conditionalHash['typeThree'].color;
 
-  let currentType;
-
   typeOneContainer.addEventListener('click', e => {
-    currentType = 'typeOne';
-    const currentColor = conditionalHash['typeOne'].color;
+    if (!container.pauseEvent) container.handlePauseEvent(e);
 
-    cellName.value = typeOne.innerText;
     cellColorContainer.style.display = 'block';
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
 
+    cellName.value = conditionalHash['typeOne'].name;
+    skipCondition.value = conditionalHash['typeOne']['conditions']['skipCon'];
+    dieCondition.value = conditionalHash['typeOne']['conditions']['dieCon'];
+    stayCondition.value = conditionalHash['typeOne']['conditions']['stayCon'];
+    wanderCondition.value = conditionalHash['typeOne']['conditions']['wanderCon'];
+    reproduceCondition.value = conditionalHash['typeOne']['conditions']['reproduceCon'];
+
+    if (conditionalHash['typeOne']['neighborHash']['typeOne']) neighborTypeOneBox.checked = true;
+    if (conditionalHash['typeOne']['neighborHash']['typeTwo']) neighborTypeTwoBox.checked = true;
+    if (conditionalHash['typeOne']['neighborHash']['typeThree']) neighborTypeThreeBox.checked = true;
+    if (conditionalHash['typeOne']['neighborHash']['false']) neighborTypeFalseBox.checked = true;
+
+    cellName.addEventListener('blur', () => {
+      conditionalHash['typeOne'].name = cellName.value;
+      neighborTypeOne.innerText = conditionalHash['typeOne'].name;
+      typeOne.innerText = cellName.value;
+    });
+
+    skipCondition.addEventListener('blur', () => {
+      conditionalHash['typeOne']['conditions']['skipCon'] = cellName.value;
+      container.conditionalHash = conditionalHash;
+    });
+
+    dieCondition.addEventListener('blur', () => {
+      conditionalHash['typeOne']['conditions']['dieCon'] = dieCondition.value;
+      container.conditionalHash = conditionalHash;
+    });
+
+    stayCondition.addEventListener('blur', () => {
+      conditionalHash['typeOne']['conditions']['stayCon'] = stayCondition.value;
+      container.conditionalHash = conditionalHash;
+    });
+
+    wanderCondition.addEventListener('blur', () => {
+      conditionalHash['typeOne']['conditions']['wanderCon'] = wanderCondition.value;
+      container.conditionalHash = conditionalHash;
+    });
+
+    reproduceCondition.addEventListener('blur', () => {
+      conditionalHash['typeOne']['conditions']['reproduceCon'] = reproduceCondition.value;
+      container.conditionalHash = conditionalHash;
+    });
+
+    neighborTypeOneBox.addEventListener('click', event => {
+      conditionalHash['typeOne']['neighborHash']['typeOne'] = neighborTypeOneBox.checked;
+    });
+
+    neighborTypeTwoBox.addEventListener('click', event => {
+      conditionalHash['typeOne']['neighborHash']['typeTwo'] = neighborTypeTwoBox.checked;
+    });
+
+    neighborTypeThreeBox.addEventListener('click', event => {
+      conditionalHash['typeOne']['neighborHash']['typeThree'] = neighborTypeThreeBox.checked;
+    });
+
+    neighborTypeFalseBox.addEventListener('click', event => {
+      conditionalHash['typeOne']['neighborHash']['false'] = neighborTypeFalseBox.checked;
+    });
+
     $(".basic").spectrum({
-      color: currentColor,
+      color: conditionalHash['typeOne'].color,
+      flat: true,
+      showInitial: true,
+      showButtons: false,
       change: function(color) {
-        conditionalHash[currentType].color = color.toHexString();
+        conditionalHash['typeOne'].color = color.toHexString();
         typeOneColor.style.background = color.toHexString();
       }
     });
@@ -165,18 +279,31 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   typeTwoContainer.addEventListener('click', e => {
-    currentType = 'typeTwo';
-    const currentColor = conditionalHash['typeTwo'].color;
 
-    cellName.value = typeTwo.innerText;
     cellColorContainer.style.display = 'block';
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
 
+    cellName.value = conditionalHash['typeTwo'].name;
+
+    if (conditionalHash['typeTwo']['neighborHash']['typeOne']) neighborTypeOneBox.checked = true;
+    if (conditionalHash['typeTwo']['neighborHash']['typeTwo']) neighborTypeTwoBox.checked = true;
+    if (conditionalHash['typeTwo']['neighborHash']['typeThree']) neighborTypeThreeBox.checked = true;
+    if (conditionalHash['typeTwo']['neighborHash']['false']) neighborTypeFalseBox.checked = true;
+
+    cellName.addEventListener('blur', () => {
+      conditionalHash['typeTwo'].name = cellName.value;
+      neighborTypeOne.innerText = conditionalHash['typeTwo'].name;
+      typeTwo.innerText = cellName.value;
+    });
+
     $(".basic").spectrum({
-      color: currentColor,
+      color: conditionalHash['typeTwo'].color,
+      flat: true,
+      showInitial: true,
+      showButtons: false,
       change: function(color) {
-        conditionalHash[currentType].color = color.toHexString();
+        conditionalHash['typeTwo'].color = color.toHexString();
         typeTwoColor.style.background = color.toHexString();
       }
     });
@@ -184,56 +311,38 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   typeThreeContainer.addEventListener('click', e => {
-    currentType = 'typeThree';
-    const currentColor = conditionalHash['typeThree'].color;
 
-    cellName.value = typeThree.innerText;
     cellColorContainer.style.display = 'block';
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
 
+    cellName.value = conditionalHash['typeThree'].name;
+
+    if (conditionalHash['typeThree']['neighborHash']['typeOne']) neighborTypeOneBox.checked = true;
+    if (conditionalHash['typeThree']['neighborHash']['typeTwo']) neighborTypeTwoBox.checked = true;
+    if (conditionalHash['typeThree']['neighborHash']['typeThree']) neighborTypeThreeBox.checked = true;
+    if (conditionalHash['typeThree']['neighborHash']['false']) neighborTypeFalseBox.checked = true;
+
+    cellName.addEventListener('blur', () => {
+      conditionalHash['typeThree'].name = cellName.value;
+      neighborTypeOne.innerText = conditionalHash['typeThree'].name;
+      typeThree.innerText = cellName.value;
+    });
+
     $(".basic").spectrum({
-      color: currentColor,
+      color: conditionalHash['typeThree'].color,
+      flat: true,
+      showInitial: true,
+      showButtons: false,
       change: function(color) {
-        conditionalHash[currentType].color = color.toHexString();
+        conditionalHash['typeThree'].color = color.toHexString();
         typeThreeColor.style.background = color.toHexString();
       }
     });
 
   });
 
-  falseCellContainer.addEventListener('click', e => {
-    currentType = 'false';
-    cellName.value = falseCell.innerText;
-    cellLogicModal.style.display = 'flex';
-    modalBackdrop.style.display = "flex";
-
-    cellColorContainer.style.display = 'none';
-  });
-
-  // Cell Logic Modal
-  submitButton.addEventListener('click', e => {
-    conditionalHash[currentType].name = cellName.value;
-    typeOne.innerText = conditionalHash['typeOne'].name;
-    typeTwo.innerText = conditionalHash['typeTwo'].name;
-    typeThree.innerText = conditionalHash['typeThree'].name;
-    falseCell.innerText = conditionalHash['false'].name;
-  });
-
   // Play Buttons
-  document.body.addEventListener('keydown', e => {
-    if (e.keyCode === 32) {
-      e.preventDefault();
-      playPauseButton.classList.toggle("fa-pause");
-      container.handlePauseEvent(e);
-    } else if (e.keyCode === 78) {
-      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
-      container.handleNextFrameEvent(e);
-    } else if (e.keyCode === 82)  {
-      container.handleResetEvent();
-    }
-  });
-
   playPauseButton.addEventListener('click', e => {
     playPauseButton.classList.toggle("fa-pause");
     container.handlePauseEvent(e);
@@ -248,67 +357,67 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Speed
-    faster.addEventListener('click', e => {
-      container.handleSpeedChangeEvent(container.drawspeed - 1);
-      currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
+  faster.addEventListener('click', e => {
+    container.handleSpeedChangeEvent(container.drawspeed - 1);
+    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
+  });
+
+  slower.addEventListener('click', e => {
+    container.handleSpeedChangeEvent(container.drawspeed + 1);
+    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
+  });
+
+  currentSpeed.addEventListener('click', e => {
+    container.validDrawspeeds.forEach(function(num) {
+      speedDropdown.innerHTML += `<li>${num}</li>`;
     });
 
-    slower.addEventListener('click', e => {
-      container.handleSpeedChangeEvent(container.drawspeed + 1);
-      currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
-    });
+    speedDropdownContainer.style.display = "flex";
+    gridDropdownContainer.style.display = "flex";
+    modalBackdrop.style.display = "flex";
+  });
 
-    currentSpeed.addEventListener('click', e => {
-      container.validDrawspeeds.forEach(function(num) {
-        speedDropdown.innerHTML += `<li>${num}</li>`;
-      });
-
-      speedDropdownContainer.style.display = "flex";
-      gridDropdownContainer.style.display = "flex";
-      modalBackdrop.style.display = "flex";
-    });
-
-    speedDropdown.addEventListener('click', e => {
-      container.handleSpeedChangeEvent(1000 / e.target.innerHTML);
-      currentSpeed.innerHTML = e.target.innerHTML;
-      speedDropdown.innerHTML = "";
-      speedDropdown.style.display = null;
-      modalBackdrop.style.display = null;
-    });
+  speedDropdown.addEventListener('click', e => {
+    container.handleSpeedChangeEvent(1000 / e.target.innerHTML);
+    currentSpeed.innerHTML = e.target.innerHTML;
+    speedDropdown.innerHTML = "";
+    speedDropdown.style.display = null;
+    modalBackdrop.style.display = null;
+  });
 
   // Grid Size
-    currentWidth.innerHTML = container.width;
-    currentHeight.innerHTML = container.height;
+  currentWidth.innerHTML = container.width;
+  currentHeight.innerHTML = container.height;
 
-    gridSizeContainer.addEventListener('click', e => {
-      const gridDimensions = container.gridDimensions.sort((a, b) => a - b);
+  gridSizeContainer.addEventListener('click', e => {
+    const gridDimensions = container.gridDimensions.sort((a, b) => a - b);
 
-      gridDimensions.forEach(function(num) {
-        widthDropdown.innerHTML += `<li>${num}</li>`;
-        heightDropdown.innerHTML += `<li>${num}</li>`;
-      });
-
-      widthDropdownContainer.style.display = "flex";
-      heightDropdownContainer.style.display = "flex";
-      gridDropdownContainer.style.display = "flex";
-      modalBackdrop.style.display = "flex";
+    gridDimensions.forEach(function(num) {
+      widthDropdown.innerHTML += `<li>${num}</li>`;
+      heightDropdown.innerHTML += `<li>${num}</li>`;
     });
 
-    widthDropdown.addEventListener('click', e => {
-      container.handleResizeEvent('width', e.target.innerHTML);
-      currentWidth.innerHTML = e.target.innerHTML;
-      widthDropdown.innerHTML = "";
-      widthDropdown.style.display = null;
-      modalBackdrop.style.display = null;
-    });
+    widthDropdownContainer.style.display = "flex";
+    heightDropdownContainer.style.display = "flex";
+    gridDropdownContainer.style.display = "flex";
+    modalBackdrop.style.display = "flex";
+  });
 
-    heightDropdown.addEventListener('click', e => {
-      container.handleResizeEvent('height', e.target.innerHTML);
-      currentHeight.innerHTML = e.target.innerHTML;
-      heightDropdown.innerHTML = "";
-      heightDropdown.style.display = null;
-      modalBackdrop.style.display = null;
-    });
+  widthDropdown.addEventListener('click', e => {
+    container.handleResizeEvent('width', e.target.innerHTML);
+    currentWidth.innerHTML = e.target.innerHTML;
+    widthDropdown.innerHTML = "";
+    widthDropdown.style.display = null;
+    modalBackdrop.style.display = null;
+  });
+
+  heightDropdown.addEventListener('click', e => {
+    container.handleResizeEvent('height', e.target.innerHTML);
+    currentHeight.innerHTML = e.target.innerHTML;
+    heightDropdown.innerHTML = "";
+    heightDropdown.style.display = null;
+    modalBackdrop.style.display = null;
+  });
 
   // Cell Size
   cellSize.addEventListener('click', e => {
@@ -329,14 +438,4 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBackdrop.style.display = null;
   });
 
-  // Rules Modal
-  // rulesButton.addEventListener('click', function() {
-  //   rulesModal.style.display = "flex";
-  // });
-  // window.onclick = function(event) {
-  //   if (event.target === rulesModal || event.target === openerModal) {
-  //       rulesModal.style.display = "none";
-  //       openerModal.style.display = "none";
-  //   }
-  // };
 });
