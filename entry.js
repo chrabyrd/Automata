@@ -29,7 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const reproduceCondition = document.getElementById("reproduceCondition");
 
   const neighborTypes = document.getElementsByClassName("neighborTypes");
+  const comparators = document.getElementsByClassName("comparators");
   const comparisonValues = document.getElementsByClassName("comparisonValues");
+  const conditionalStatements = document.getElementsByClassName("conditionalStatements");
+  const conditionalSubmitButtons = document.getElementsByClassName("conditionalSubmitButtons");
 
   const neighborTypeOne = document.getElementById("neighborTypeOne");
   const neighborTypeTwo = document.getElementById("neighborTypeTwo");
@@ -203,11 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBackdrop.style.display = "flex";
 
     cellName.value = conditionalHash['typeOne'].name;
-    // skipCondition.value = conditionalHash['typeOne']['conditions']['skipCon'];
-    dieCondition.value = conditionalHash['typeOne']['conditions']['dieCon'];
-    stayCondition.value = conditionalHash['typeOne']['conditions']['stayCon'];
-    wanderCondition.value = conditionalHash['typeOne']['conditions']['wanderCon'];
-    reproduceCondition.value = conditionalHash['typeOne']['conditions']['reproduceCon'];
 
     const populateNeighborTypes = () => {
       for (let i = 0; i < neighborTypes.length; i++) {
@@ -235,8 +233,47 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    populateValidNeighborBoxes();
+    const populateConditionalStatements = () => {
+      for (let i = 0; i < conditionalStatements.length; i++) {
+        const currentStatement = conditionalStatements[i];
+        currentStatement.innerText = conditionalHash['typeOne']['conditions'][currentStatement.name];
+      }
+    };
+
+    const addConditionalSubmitButtons = () => {
+      for (let i = 0; i < conditionalSubmitButtons.length; i++) {
+        const currentButton = conditionalSubmitButtons[i];
+
+        currentButton.addEventListener('click', () => {
+
+          const subStrings = {
+            'skipCon': "",
+            'dieCon': "",
+            'stayCon': "",
+            'wanderCon': "",
+            'reproduceCon': "",
+          };
+
+          for (let j = 0; j < neighborTypes.length; j++) {
+            const currentNeighborType = neighborTypes[j];
+            const currentComparator = comparators[j];
+            const currentComparisonValue = comparisonValues[j];
+            subStrings[currentNeighborType.name] += `typeHash['${currentNeighborType.value}']`;
+            subStrings[currentComparator.name] += ` ${currentComparator.value}`;
+            subStrings[currentComparisonValue.name] += ` ${currentComparisonValue.value}`;
+
+            conditionalHash['typeOne']['conditions'][currentButton.name] = subStrings[currentButton.name];
+          }
+
+          populateConditionalStatements();
+        });
+      }
+    };
+
     populateNeighborTypes();
+    populateConditionalStatements();
+    addConditionalSubmitButtons();
+    populateValidNeighborBoxes();
 
     cellName.addEventListener('input', () => {
       conditionalHash['typeOne'].name = cellName.value;
@@ -245,33 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       populateNeighborTypes();
     });
-
-    // skipCondition.addEventListener('blur', () => {
-    //   conditionalHash['typeOne']['conditions']['skipCon'] = cellName.value;
-    //   container.conditionalHash = conditionalHash;
-    // });
-
-    dieCondition.addEventListener('blur', () => {
-      conditionalHash['typeOne']['conditions']['dieCon'] = dieCondition.value;
-      container.conditionalHash = conditionalHash;
-    });
-
-    stayCondition.addEventListener('blur', () => {
-      conditionalHash['typeOne']['conditions']['stayCon'] = stayCondition.value;
-      container.conditionalHash = conditionalHash;
-    });
-
-    wanderCondition.addEventListener('blur', () => {
-      conditionalHash['typeOne']['conditions']['wanderCon'] = wanderCondition.value;
-      container.conditionalHash = conditionalHash;
-    });
-
-    reproduceCondition.addEventListener('blur', () => {
-      conditionalHash['typeOne']['conditions']['reproduceCon'] = reproduceCondition.value;
-      container.conditionalHash = conditionalHash;
-    });
-
-    populateValidNeighborBoxes();
 
     $(".basic").spectrum({
       color: conditionalHash['typeOne'].color,

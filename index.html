@@ -84,22 +84,22 @@
               <div>
                 <span>Skip Condition:&nbsp;</span>
 
-                <select class="neighborTypes">
+                <select name="skipCon" class="neighborTypes">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
-                  <option value="validNeighbors">Total Neighbors</option>
+                  <option value="validNeighbors.length">Total Neighbors</option>
                 </select>
 
-                <select class="comparators">
-                  <option value="greaterThan">></option>
-                  <option value="greaterThanEqual">>=</option>
-                  <option value="lessThan"><</option>
-                  <option value="lessThanEqual"><=</option>
-                  <option value="equalTo">==</option>
+                <select name="skipCon" class="comparators">
+                  <option value=">">></option>
+                  <option value=">=">>=</option>
+                  <option value="<"><</option>
+                  <option value="<="><=</option>
+                  <option value="===">==</option>
                 </select>
 
-                <select class="comparisonValues">
+                <select name="skipCon" class="comparisonValues">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
@@ -113,140 +113,157 @@
                   <option value="8">8</option>
                 </select>
 
-                <textarea class="conditionalStatements" value="skipCondition" rows="8" cols="80">
+                <button name="skipCon" class="conditionalSubmitButtons">Add</button>
+                <textarea class="conditionalStatements" name="skipCon" rows="8" cols="80">
                 </textarea>
               </div>
 
               <div>
                 <span>Die Condition:&nbsp;</span>
-                <input id='dieCondition' type='text'>
-                <select class="neighborTypes">
+
+                <select name="dieCon" class="neighborTypes">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
-                  <option value="validNeighbors">Total Neighbors</option>
+                  <option value="validNeighbors.length">Total Neighbors</option>
                 </select>
 
-                <select class="comparators">
-                  <option value="greaterThan">></option>
-                  <option value="greaterThanEqual">>=</option>
-                  <option value="lessThan"><</option>
-                  <option value="lessThanEqual"><=</option>
-                  <option value="equalTo">==</option>
+                <select name="dieCon" class="comparators">
+                  <option value=">">></option>
+                  <option value=">=">>=</option>
+                  <option value="<"><</option>
+                  <option value="<="><=</option>
+                  <option value="===">==</option>
                 </select>
 
-                <select class="comparisonValues">
+                <select name="dieCon" class="comparisonValues">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
-                  <option value="1"></option>
-                  <option value="2"></option>
-                  <option value="3"></option>
-                  <option value="4"></option>
-                  <option value="5"></option>
-                  <option value="6"></option>
-                  <option value="7"></option>
-                  <option value="8"></option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
                 </select>
+
+                <button name="dieCon" class="conditionalSubmitButtons">Add</button>
+                <textarea class="conditionalStatements" name="dieCon" rows="8" cols="80">
+                </textarea>
               </div>
 
               <div>
                 <span>Stay Condition:&nbsp;</span>
-                <input id='stayCondition' type='text'>
-                <select class="neighborTypes">
+
+                <select name="stayCon" class="neighborTypes">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
-                  <option value="validNeighbors">Total Neighbors</option>
+                  <option value="validNeighbors.length">Total Neighbors</option>
                 </select>
 
-                <select class="comparators">
-                  <option value="greaterThan">></option>
-                  <option value="greaterThanEqual">>=</option>
-                  <option value="lessThan"><</option>
-                  <option value="lessThanEqual"><=</option>
-                  <option value="equalTo">==</option>
+                <select name="stayCon" class="comparators">
+                  <option value=">">></option>
+                  <option value=">=">>=</option>
+                  <option value="<"><</option>
+                  <option value="<="><=</option>
+                  <option value="===">==</option>
                 </select>
 
-                <select class="comparisonValues">
+                <select name="stayCon" class="comparisonValues">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
-                  <option value="1"></option>
-                  <option value="2"></option>
-                  <option value="3"></option>
-                  <option value="4"></option>
-                  <option value="5"></option>
-                  <option value="6"></option>
-                  <option value="7"></option>
-                  <option value="8"></option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
                 </select>
+
+                <button name="stayCon" class="conditionalSubmitButtons">Add</button>
+                <textarea class="conditionalStatements" name="stayCon" rows="8" cols="80">
+                </textarea>
               </div>
 
               <div>
                 <span>Wander Condition:&nbsp;</span>
-                <input id='wanderCondition' type='text'>
-                <select class="neighborTypes">
+
+                <select name="wanderCon" class="neighborTypes">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
-                  <option value="validNeighbors">Total Neighbors</option>
+                  <option value="validNeighbors.length">Total Neighbors</option>
                 </select>
 
-                <select class="comparators">
-                  <option value="greaterThan">></option>
-                  <option value="greaterThanEqual">>=</option>
-                  <option value="lessThan"><</option>
-                  <option value="lessThanEqual"><=</option>
-                  <option value="equalTo">==</option>
+                <select name="wanderCon" class="comparators">
+                  <option value=">">></option>
+                  <option value=">=">>=</option>
+                  <option value="<"><</option>
+                  <option value="<="><=</option>
+                  <option value="===">==</option>
                 </select>
 
-                <select class="comparisonValues">
+                <select name="wanderCon" class="comparisonValues">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
-                  <option value="1"></option>
-                  <option value="2"></option>
-                  <option value="3"></option>
-                  <option value="4"></option>
-                  <option value="5"></option>
-                  <option value="6"></option>
-                  <option value="7"></option>
-                  <option value="8"></option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
                 </select>
+
+                <button name="wanderCon" class="conditionalSubmitButtons">Add</button>
+                <textarea class="conditionalStatements" name="wanderCon" rows="8" cols="80">
+                </textarea>
               </div>
 
               <div>
                 <span>Reproduce Condition:&nbsp;</span>
-                <input id='reproduceCondition' type='text'>
-                <select class="neighborTypes">
+
+                <select name="reproduceCon" class="neighborTypes">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
-                  <option value="validNeighbors">Total Neighbors</option>
+                  <option value="validNeighbors.length">Total Neighbors</option>
                 </select>
 
-                <select class="comparators">
-                  <option value="greaterThan">></option>
-                  <option value="greaterThanEqual">>=</option>
-                  <option value="lessThan"><</option>
-                  <option value="lessThanEqual"><=</option>
-                  <option value="equalTo">==</option>
+                <select name="reproduceCon" class="comparators">
+                  <option value=">">></option>
+                  <option value=">=">>=</option>
+                  <option value="<"><</option>
+                  <option value="<="><=</option>
+                  <option value="===">==</option>
                 </select>
 
-                <select class="comparisonValues">
+                <select name="reproduceCon" class="comparisonValues">
                   <option value="typeOne"></option>
                   <option value="typeTwo"></option>
                   <option value="typeThree"></option>
-                  <option value="1"></option>
-                  <option value="2"></option>
-                  <option value="3"></option>
-                  <option value="4"></option>
-                  <option value="5"></option>
-                  <option value="6"></option>
-                  <option value="7"></option>
-                  <option value="8"></option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
                 </select>
+
+                <button name="reproduceCon" class="conditionalSubmitButtons">Add</button>
+                <textarea class="conditionalStatements" name="reproduceCon" rows="8" cols="80">
+                </textarea>
               </div>
             </div>
 

@@ -98,6 +98,7 @@ li:hover {
 #cellLogicModal {
   display: none;
   position: fixed;
+	overflow: scroll;
   left: 0;
   right: 0;
   top: 0;
@@ -135,7 +136,12 @@ li:hover {
 	flex-direction: column;
 }
 
+#cellConditionContainer {
+	overflow: scroll;
+}
+
 #cellInfoContainer {
+	overflow: scroll;
 	display: flex;
 }
 
