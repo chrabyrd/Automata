@@ -28,14 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const wanderCondition = document.getElementById("wanderCondition");
   const reproduceCondition = document.getElementById("reproduceCondition");
 
+  const neighborTypes = document.getElementsByClassName("neighborTypes");
+  const comparisonValues = document.getElementsByClassName("comparisonValues");
+
   const neighborTypeOne = document.getElementById("neighborTypeOne");
   const neighborTypeTwo = document.getElementById("neighborTypeTwo");
   const neighborTypeThree = document.getElementById("neighborTypeThree");
 
-  const neighborTypeOneBox = document.getElementById("neighborTypeOneBox");
-  const neighborTypeTwoBox = document.getElementById("neighborTypeTwoBox");
-  const neighborTypeThreeBox = document.getElementById("neighborTypeThreeBox");
-  const neighborTypeFalseBox = document.getElementById("neighborTypeFalseBox");
+  const validNeighborBoxes = document.getElementsByClassName("validNeighborBox");
 
   const playPauseButton = document.getElementById("playPauseButton");
   const nextFrameButton = document.getElementById("nextFrameButton");
@@ -184,10 +184,6 @@ document.addEventListener("DOMContentLoaded", () => {
     heightDropdownContainer.style.display = null;
     gridDropdownContainer.style.display = null;
     cellLogicModal.style.display = null;
-    neighborTypeOneBox.checked = false;
-    neighborTypeTwoBox.checked = false;
-    neighborTypeThreeBox.checked = false;
-    neighborTypeFalseBox.checked = false;
     modalBackdrop.style.display = null;
   });
 
@@ -207,27 +203,53 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBackdrop.style.display = "flex";
 
     cellName.value = conditionalHash['typeOne'].name;
-    skipCondition.value = conditionalHash['typeOne']['conditions']['skipCon'];
+    // skipCondition.value = conditionalHash['typeOne']['conditions']['skipCon'];
     dieCondition.value = conditionalHash['typeOne']['conditions']['dieCon'];
     stayCondition.value = conditionalHash['typeOne']['conditions']['stayCon'];
     wanderCondition.value = conditionalHash['typeOne']['conditions']['wanderCon'];
     reproduceCondition.value = conditionalHash['typeOne']['conditions']['reproduceCon'];
 
-    if (conditionalHash['typeOne']['neighborHash']['typeOne']) neighborTypeOneBox.checked = true;
-    if (conditionalHash['typeOne']['neighborHash']['typeTwo']) neighborTypeTwoBox.checked = true;
-    if (conditionalHash['typeOne']['neighborHash']['typeThree']) neighborTypeThreeBox.checked = true;
-    if (conditionalHash['typeOne']['neighborHash']['false']) neighborTypeFalseBox.checked = true;
+    const populateNeighborTypes = () => {
+      for (let i = 0; i < neighborTypes.length; i++) {
+        const currentNeighborType = neighborTypes[i];
+        const currentValue = comparisonValues[i];
 
-    cellName.addEventListener('blur', () => {
+        for (let j = 0; j < 3; j++) {
+          const currentNeighborOption = currentNeighborType.options[j];
+          const currentValueOption = currentValue.options[j];
+
+          currentNeighborOption.innerText = conditionalHash[currentNeighborOption.value].name;
+          currentValueOption.innerText = conditionalHash[currentValueOption.value].name;
+        }
+      }
+    };
+
+    const populateValidNeighborBoxes = () => {
+      for (let i = 0; i < validNeighborBoxes.length; i++) {
+        const currentBox = validNeighborBoxes[i];
+        if (conditionalHash['typeOne']['neighborHash'][currentBox.value]) currentBox.checked = true;
+
+        currentBox.addEventListener('click', () => {
+          conditionalHash['typeOne']['neighborHash'][currentBox.value] = currentBox.checked;
+        });
+      }
+    };
+
+    populateValidNeighborBoxes();
+    populateNeighborTypes();
+
+    cellName.addEventListener('input', () => {
       conditionalHash['typeOne'].name = cellName.value;
       neighborTypeOne.innerText = conditionalHash['typeOne'].name;
       typeOne.innerText = cellName.value;
+
+      populateNeighborTypes();
     });
 
-    skipCondition.addEventListener('blur', () => {
-      conditionalHash['typeOne']['conditions']['skipCon'] = cellName.value;
-      container.conditionalHash = conditionalHash;
-    });
+    // skipCondition.addEventListener('blur', () => {
+    //   conditionalHash['typeOne']['conditions']['skipCon'] = cellName.value;
+    //   container.conditionalHash = conditionalHash;
+    // });
 
     dieCondition.addEventListener('blur', () => {
       conditionalHash['typeOne']['conditions']['dieCon'] = dieCondition.value;
@@ -249,21 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
       container.conditionalHash = conditionalHash;
     });
 
-    neighborTypeOneBox.addEventListener('click', event => {
-      conditionalHash['typeOne']['neighborHash']['typeOne'] = neighborTypeOneBox.checked;
-    });
-
-    neighborTypeTwoBox.addEventListener('click', event => {
-      conditionalHash['typeOne']['neighborHash']['typeTwo'] = neighborTypeTwoBox.checked;
-    });
-
-    neighborTypeThreeBox.addEventListener('click', event => {
-      conditionalHash['typeOne']['neighborHash']['typeThree'] = neighborTypeThreeBox.checked;
-    });
-
-    neighborTypeFalseBox.addEventListener('click', event => {
-      conditionalHash['typeOne']['neighborHash']['false'] = neighborTypeFalseBox.checked;
-    });
+    populateValidNeighborBoxes();
 
     $(".basic").spectrum({
       color: conditionalHash['typeOne'].color,
@@ -293,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cellName.addEventListener('blur', () => {
       conditionalHash['typeTwo'].name = cellName.value;
-      neighborTypeOne.innerText = conditionalHash['typeTwo'].name;
+      neighborTypeTwo.innerText = conditionalHash['typeTwo'].name;
       typeTwo.innerText = cellName.value;
     });
 

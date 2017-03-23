@@ -83,42 +83,201 @@
             <div id="cellConditionContainer">
               <div>
                 <span>Skip Condition:&nbsp;</span>
-                <input id='skipCondition' type='text'>
+
+                <select class="neighborTypes">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="validNeighbors">Total Neighbors</option>
+                </select>
+
+                <select class="comparators">
+                  <option value="greaterThan">></option>
+                  <option value="greaterThanEqual">>=</option>
+                  <option value="lessThan"><</option>
+                  <option value="lessThanEqual"><=</option>
+                  <option value="equalTo">==</option>
+                </select>
+
+                <select class="comparisonValues">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                </select>
+
+                <textarea class="conditionalStatements" value="skipCondition" rows="8" cols="80">
+                </textarea>
               </div>
 
               <div>
                 <span>Die Condition:&nbsp;</span>
                 <input id='dieCondition' type='text'>
+                <select class="neighborTypes">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="validNeighbors">Total Neighbors</option>
+                </select>
+
+                <select class="comparators">
+                  <option value="greaterThan">></option>
+                  <option value="greaterThanEqual">>=</option>
+                  <option value="lessThan"><</option>
+                  <option value="lessThanEqual"><=</option>
+                  <option value="equalTo">==</option>
+                </select>
+
+                <select class="comparisonValues">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="1"></option>
+                  <option value="2"></option>
+                  <option value="3"></option>
+                  <option value="4"></option>
+                  <option value="5"></option>
+                  <option value="6"></option>
+                  <option value="7"></option>
+                  <option value="8"></option>
+                </select>
               </div>
 
               <div>
                 <span>Stay Condition:&nbsp;</span>
                 <input id='stayCondition' type='text'>
+                <select class="neighborTypes">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="validNeighbors">Total Neighbors</option>
+                </select>
+
+                <select class="comparators">
+                  <option value="greaterThan">></option>
+                  <option value="greaterThanEqual">>=</option>
+                  <option value="lessThan"><</option>
+                  <option value="lessThanEqual"><=</option>
+                  <option value="equalTo">==</option>
+                </select>
+
+                <select class="comparisonValues">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="1"></option>
+                  <option value="2"></option>
+                  <option value="3"></option>
+                  <option value="4"></option>
+                  <option value="5"></option>
+                  <option value="6"></option>
+                  <option value="7"></option>
+                  <option value="8"></option>
+                </select>
               </div>
 
               <div>
                 <span>Wander Condition:&nbsp;</span>
                 <input id='wanderCondition' type='text'>
+                <select class="neighborTypes">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="validNeighbors">Total Neighbors</option>
+                </select>
+
+                <select class="comparators">
+                  <option value="greaterThan">></option>
+                  <option value="greaterThanEqual">>=</option>
+                  <option value="lessThan"><</option>
+                  <option value="lessThanEqual"><=</option>
+                  <option value="equalTo">==</option>
+                </select>
+
+                <select class="comparisonValues">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="1"></option>
+                  <option value="2"></option>
+                  <option value="3"></option>
+                  <option value="4"></option>
+                  <option value="5"></option>
+                  <option value="6"></option>
+                  <option value="7"></option>
+                  <option value="8"></option>
+                </select>
               </div>
 
               <div>
                 <span>Reproduce Condition:&nbsp;</span>
                 <input id='reproduceCondition' type='text'>
+                <select class="neighborTypes">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="validNeighbors">Total Neighbors</option>
+                </select>
+
+                <select class="comparators">
+                  <option value="greaterThan">></option>
+                  <option value="greaterThanEqual">>=</option>
+                  <option value="lessThan"><</option>
+                  <option value="lessThanEqual"><=</option>
+                  <option value="equalTo">==</option>
+                </select>
+
+                <select class="comparisonValues">
+                  <option value="typeOne"></option>
+                  <option value="typeTwo"></option>
+                  <option value="typeThree"></option>
+                  <option value="1"></option>
+                  <option value="2"></option>
+                  <option value="3"></option>
+                  <option value="4"></option>
+                  <option value="5"></option>
+                  <option value="6"></option>
+                  <option value="7"></option>
+                  <option value="8"></option>
+                </select>
               </div>
             </div>
 
             <div id="validNeighborsContainer">
               <span id="neighborTypeOne"></span>
-              <input id="neighborTypeOneBox" type="checkbox" value="">
+              <input id="neighborTypeOneBox"
+                     class="validNeighborBox"
+                     type="checkbox"
+                     value="typeOne"
+                     >
 
               <span id="neighborTypeTwo"></span>
-              <input id="neighborTypeTwoBox" type="checkbox" value="">
+              <input id="neighborTypeTwoBox"
+                     class="validNeighborBox"
+                     type="checkbox"
+                     value="typeTwo"
+                     >
 
               <span id="neighborTypeThree"></span>
-              <input id="neighborTypeThreeBox" type="checkbox" value="">
+              <input id="neighborTypeThreeBox"
+                     class="validNeighborBox"
+                     type="checkbox"
+                     value="typeThree"
+                     >
 
               <span id="neighborTypeFalse">false</span>
-              <input id="neighborTypeFalseBox" type="checkbox" value="">
+              <input id="neighborTypeFalseBox"
+                     class="validNeighborBox"
+                     type="checkbox"
+                     value="false"
+                     >
             </div>
           </div>
 
