@@ -60,7 +60,10 @@
 
 	  var cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
 	  var cellLogicColors = document.getElementsByClassName("cellLogicColors");
-	  var cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
+	  // const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
+	  var typeOneContainer = document.getElementById("typeOneContainer");
+	  var typeTwoContainer = document.getElementById("typeTwoContainer");
+	  var typeThreeContainer = document.getElementById("typeThreeContainer");
 
 	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var cellName = document.getElementById("cellName");
@@ -229,19 +232,17 @@
 	    }
 	  };
 
-	  var changeCellName = function changeCellName(cellType) {
-	    cellName.addEventListener('input', function () {
-	      conditionalHash[cellType].name = cellName.value;
+	  var changeName = function changeName(cellType) {
+	    conditionalHash[cellType].name = cellName.value;
 
-	      for (var i = 0; i < cellLogicTypes.length; i++) {
-	        var currentType = cellLogicTypes[i];
+	    for (var i = 0; i < cellLogicTypes.length; i++) {
+	      var currentType = cellLogicTypes[i];
 
-	        currentType.innerText = conditionalHash[currentType.id].name;
-	      }
+	      currentType.innerText = conditionalHash[currentType.id].name;
+	    }
 
-	      populateNeighborTypes();
-	      populateValidNeighborBoxes(cellType);
-	    });
+	    populateNeighborTypes();
+	    populateValidNeighborBoxes(cellType);
 	  };
 
 	  var changeCellColor = function changeCellColor(cellType) {
@@ -320,11 +321,11 @@
 
 	      if (currentName) currentName.innerText = conditionalHash[currentBox.value].name;
 
-	      if (conditionalHash[cellType]['neighborHash'][currentBox.value]) currentBox.checked = true;
+	      currentBox.checked = conditionalHash[cellType]['neighborHash'][currentBox.value];
 
-	      currentBox.addEventListener('click', function () {
-	        conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
-	      });
+	      currentBox.onclick = function (type) {
+	        conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
+	      };
 	    };
 
 	    for (var i = 0; i < validNeighborBoxes.length; i++) {
@@ -333,35 +334,49 @@
 	  };
 
 	  var changeCellLogicModalType = function changeCellLogicModalType(cellType) {
+	    if (!container.pauseEvent) container.handlePauseEvent();
+
+	    cellLogicModal.style.display = 'flex';
+	    modalBackdrop.style.display = "flex";
+
+	    cellName.removeEventListener('input', changeTypeOneName);
+	    cellName.removeEventListener('input', changeTypeTwoName);
+	    cellName.removeEventListener('input', changeTypeThreeName);
+
 	    cellName.value = conditionalHash[cellType].name;
 
-	    changeCellName(cellType);
 	    changeCellColor(cellType);
 	    populateConditionalStatements(cellType);
 	    addConditionalSubmitButtons(cellType);
 	    populateValidNeighborBoxes(cellType);
+
+	    if (cellType === 'typeOne') {
+	      cellName.addEventListener('input', changeTypeOneName);
+	    } else if (cellType === 'typeTwo') {
+	      cellName.addEventListener('input', changeTypeTwoName);
+	    } else if (cellType === 'typeThree') {
+	      cellName.addEventListener('input', changeTypeThreeName);
+	    }
 	  };
 
 	  updateCellLogicColors();
 	  populateNeighborTypes();
 
-	  var _loop3 = function _loop3(i) {
-	    var currentContainer = cellTypeContainers[i];
-	    var currentType = cellLogicTypes[i];
+	  var changeTypeOneName = changeName.bind(null, 'typeOne');
+	  var changeTypeTwoName = changeName.bind(null, 'typeTwo');
+	  var changeTypeThreeName = changeName.bind(null, 'typeThree');
 
-	    currentContainer.addEventListener('click', function (e) {
-	      if (!container.pauseEvent) container.handlePauseEvent(e);
+	  typeOneContainer.addEventListener('click', function (e) {
+	    changeCellLogicModalType('typeOne');
+	  });
 
-	      cellLogicModal.style.display = 'flex';
-	      modalBackdrop.style.display = "flex";
+	  typeTwoContainer.addEventListener('click', function (e) {
+	    changeCellLogicModalType('typeTwo');
+	  });
 
-	      changeCellLogicModalType(currentType.id);
-	    });
-	  };
-
-	  for (var i = 0; i < cellTypeContainers.length; i++) {
-	    _loop3(i);
-	  }
+	  typeThreeContainer.addEventListener('click', function (e) {
+	    changeCellLogicModalType('typeThree');
+	  });
 
 	  // Play Buttons
 	  playPauseButton.addEventListener('click', function (e) {
