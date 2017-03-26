@@ -61,6 +61,10 @@ class CellLogic {
 
     const validNeighbors = this.getValidNeighbors(validNeighborTypes);
 
+    const totalNeighbors = this.cellNeighbors.filter((neighbor) => {
+      return this.cells[neighbor].type !== 'false';
+    });
+
     this.cellNeighbors.forEach(num => {typeHash[this.cells[num].type]++;});
 
     if (eval(conditionalHash[type]['conditions']['skipCon'])) {

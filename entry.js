@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const currentNeighborType = neighborTypes[i];
       const currentValue = comparisonValues[i];
 
-      for (let j = 0; j < 3; j++) {
+      for (let j = 3; j < 6; j++) {
         const currentNeighborOption = currentNeighborType.options[j];
         const currentValueOption = currentValue.options[j];
 
@@ -243,11 +243,21 @@ document.addEventListener("DOMContentLoaded", () => {
           'reproduceCon': "",
         };
 
+        const parseNeighbors = value => {
+          let parsedValue = `${value}`;
+
+          if (value === 'typeOne' || value === 'typeTwo' || value === 'typeThree') {
+            parsedValue = `typeHash['${value}']`;
+          }
+
+          return parsedValue;
+        };
+
         for (let j = 0; j < neighborTypes.length; j++) {
           const currentNeighborType = neighborTypes[j];
           const currentComparator = comparators[j];
           const currentComparisonValue = comparisonValues[j];
-          subStrings[currentNeighborType.name] += `typeHash['${currentNeighborType.value}']`;
+          subStrings[currentNeighborType.name] += parseNeighbors(currentNeighborType.value);
           subStrings[currentComparator.name] += ` ${currentComparator.value}`;
           subStrings[currentComparisonValue.name] += ` ${currentComparisonValue.value}`;
 
@@ -261,19 +271,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const populateValidNeighborBoxes = cellType => {
     for (let i = 0; i < validNeighborBoxes.length; i++) {
+      const currentBox = validNeighborBoxes[i];
+      const currentName = neighborTypeNames[i];
 
       const getType = function (type) {
         conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
       };
 
-      const currentBox = validNeighborBoxes[i];
-      const currentName = neighborTypeNames[i];
-
-
       if (currentName) currentName.innerText = conditionalHash[currentBox.value].name;
-
       currentBox.checked = conditionalHash[cellType]['neighborHash'][currentBox.value];
-
       currentBox.onclick = () => getType(cellType);
     }
   };

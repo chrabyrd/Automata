@@ -263,7 +263,7 @@
 	      var currentNeighborType = neighborTypes[i];
 	      var currentValue = comparisonValues[i];
 
-	      for (var j = 0; j < 3; j++) {
+	      for (var j = 3; j < 6; j++) {
 	        var currentNeighborOption = currentNeighborType.options[j];
 	        var currentValueOption = currentValue.options[j];
 
@@ -294,11 +294,21 @@
 	          'reproduceCon': ""
 	        };
 
+	        var parseNeighbors = function parseNeighbors(value) {
+	          var parsedValue = "" + value;
+
+	          if (value === 'typeOne' || value === 'typeTwo' || value === 'typeThree') {
+	            parsedValue = "typeHash['" + value + "']";
+	          }
+
+	          return parsedValue;
+	        };
+
 	        for (var j = 0; j < neighborTypes.length; j++) {
 	          var currentNeighborType = neighborTypes[j];
 	          var currentComparator = comparators[j];
 	          var currentComparisonValue = comparisonValues[j];
-	          subStrings[currentNeighborType.name] += "typeHash['" + currentNeighborType.value + "']";
+	          subStrings[currentNeighborType.name] += parseNeighbors(currentNeighborType.value);
 	          subStrings[currentComparator.name] += " " + currentComparator.value;
 	          subStrings[currentComparisonValue.name] += " " + currentComparisonValue.value;
 
@@ -316,18 +326,15 @@
 
 	  var populateValidNeighborBoxes = function populateValidNeighborBoxes(cellType) {
 	    var _loop2 = function _loop2(i) {
+	      var currentBox = validNeighborBoxes[i];
+	      var currentName = neighborTypeNames[i];
 
 	      var getType = function getType(type) {
 	        conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
 	      };
 
-	      var currentBox = validNeighborBoxes[i];
-	      var currentName = neighborTypeNames[i];
-
 	      if (currentName) currentName.innerText = conditionalHash[currentBox.value].name;
-
 	      currentBox.checked = conditionalHash[cellType]['neighborHash'][currentBox.value];
-
 	      currentBox.onclick = function () {
 	        return getType(cellType);
 	      };
@@ -967,6 +974,10 @@
 	      });
 
 	      var validNeighbors = this.getValidNeighbors(validNeighborTypes);
+
+	      var totalNeighbors = this.cellNeighbors.filter(function (neighbor) {
+	        return _this.cells[neighbor].type !== 'false';
+	      });
 
 	      this.cellNeighbors.forEach(function (num) {
 	        typeHash[_this.cells[num].type]++;
