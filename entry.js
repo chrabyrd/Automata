@@ -261,16 +261,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const populateValidNeighborBoxes = cellType => {
     for (let i = 0; i < validNeighborBoxes.length; i++) {
+
+      const getType = function (type) {
+        conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
+      };
+
       const currentBox = validNeighborBoxes[i];
       const currentName = neighborTypeNames[i];
+
 
       if (currentName) currentName.innerText = conditionalHash[currentBox.value].name;
 
       currentBox.checked = conditionalHash[cellType]['neighborHash'][currentBox.value];
 
-      currentBox.onclick = function (type) {
-        conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
-      };
+      currentBox.onclick = () => getType(cellType);
     }
   };
 
@@ -279,6 +283,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
+
+    for (let i = 0; i < validNeighborBoxes.length; i++) {
+      const currentBox = validNeighborBoxes[i];
+      currentBox.checked = false;
+    }
 
     cellName.removeEventListener('input', changeTypeOneName);
     cellName.removeEventListener('input', changeTypeTwoName);

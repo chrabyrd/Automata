@@ -316,6 +316,11 @@
 
 	  var populateValidNeighborBoxes = function populateValidNeighborBoxes(cellType) {
 	    var _loop2 = function _loop2(i) {
+
+	      var getType = function getType(type) {
+	        conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
+	      };
+
 	      var currentBox = validNeighborBoxes[i];
 	      var currentName = neighborTypeNames[i];
 
@@ -323,8 +328,8 @@
 
 	      currentBox.checked = conditionalHash[cellType]['neighborHash'][currentBox.value];
 
-	      currentBox.onclick = function (type) {
-	        conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
+	      currentBox.onclick = function () {
+	        return getType(cellType);
 	      };
 	    };
 
@@ -338,6 +343,11 @@
 
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
+
+	    for (var i = 0; i < validNeighborBoxes.length; i++) {
+	      var _currentBox = validNeighborBoxes[i];
+	      _currentBox.checked = false;
+	    }
 
 	    cellName.removeEventListener('input', changeTypeOneName);
 	    cellName.removeEventListener('input', changeTypeTwoName);
