@@ -273,59 +273,123 @@
 	    }
 	  };
 
-	  var populateConditionalStatements = function populateConditionalStatements(cellType) {
-	    for (var i = 0; i < conditionalStatements.length; i++) {
-	      var currentStatement = conditionalStatements[i];
-	      currentStatement.innerText = conditionalHash[cellType]['conditions'][currentStatement.name];
-	    }
+	  var flatten = function flatten(arr) {
+	    return arr.reduce(function (acc, val) {
+	      return acc.concat(Array.isArray(val) ? flatten(val) : val);
+	    }, []);
 	  };
 
-	  var addConditionalSubmitButtons = function addConditionalSubmitButtons(cellType) {
+	  var populateConditionalStatements = function populateConditionalStatements(cellType) {
 	    var _loop = function _loop(i) {
-	      var currentButton = conditionalSubmitButtons[i];
+	      var currentStatement = conditionalStatements[i];
 
-	      currentButton.addEventListener('click', function () {
-
-	        var subStrings = {
-	          'skipCon': "",
-	          'dieCon': "",
-	          'stayCon': "",
-	          'wanderCon': "",
-	          'reproduceCon': ""
-	        };
-
-	        var parseNeighbors = function parseNeighbors(value) {
-	          var parsedValue = "" + value;
-
-	          if (value === 'typeOne' || value === 'typeTwo' || value === 'typeThree') {
-	            parsedValue = "typeHash['" + value + "']";
-	          }
-
-	          return parsedValue;
-	        };
-
-	        for (var j = 0; j < neighborTypes.length; j++) {
-	          var currentNeighborType = neighborTypes[j];
-	          var currentComparator = comparators[j];
-	          var currentComparisonValue = comparisonValues[j];
-	          subStrings[currentNeighborType.name] += parseNeighbors(currentNeighborType.value);
-	          subStrings[currentComparator.name] += " " + currentComparator.value;
-	          subStrings[currentComparisonValue.name] += " " + currentComparisonValue.value;
-
-	          conditionalHash[cellType]['conditions'][currentButton.name] = subStrings[currentButton.name];
+	      var parseConditionalValues = function parseConditionalValues(value, operator) {
+	        var valueArray = value.split(" " + operator + " ");
+	        var returnArray = [];
+	        for (var j = 0; j < valueArray.length - 1; j++) {
+	          returnArray.push(valueArray[j].concat(" " + operator));
 	        }
+	        returnArray.push(valueArray[valueArray.length - 1]);
+	        return returnArray;
+	      };
 
-	        populateConditionalStatements(cellType);
+	      var parseConditionalHashStatements = function parseConditionalHashStatements() {
+	        var conditionalHashValue = conditionalHash[cellType]['conditions'][currentStatement.id];
+	        var andOperator = parseConditionalValues(conditionalHashValue, '&&');
+	        var bothOperators = andOperator.map(function (value) {
+	          return parseConditionalValues(value, '||');
+	        });
+
+	        return flatten(bothOperators);
+	      };
+
+	      var conditionalStatementArray = parseConditionalHashStatements();
+
+	      conditionalStatementArray.forEach(function (statement) {
+	        var li = document.createElement("li");
+	        var andButton = document.createElement("button");
+	        var orButton = document.createElement("button");
+	        var deleteButton = document.createElement("button");
+
+	        andButton.innerText = '&&';
+	        andButton.addEventListener('click', function () {
+	          statement += ' && ';
+	          li.innerText = statement;
+	          li.appendChild(andButton);
+	          li.appendChild(orButton);
+	          li.appendChild(deleteButton);
+	          conditionalHash[cellType]['conditions'][currentStatement.id] += ' &&';
+	        });
+
+	        orButton.innerText = '||';
+	        orButton.addEventListener('click', function () {});
+
+	        deleteButton.innerText = 'Delete';
+	        deleteButton.addEventListener('click', function () {
+	          li.parentNode.removeChild(li);
+	          // ADD LI'S TOGETHER AND SET CONDITIONAL HASH TO THAT
+	        });
+
+	        li.appendChild(document.createTextNode(statement));
+	        li.appendChild(andButton);
+	        li.appendChild(orButton);
+	        li.appendChild(deleteButton);
+	        currentStatement.appendChild(li);
 	      });
 	    };
 
-	    for (var i = 0; i < conditionalSubmitButtons.length; i++) {
+	    for (var i = 0; i < conditionalStatements.length; i++) {
 	      _loop(i);
 	    }
 	  };
 
-	  var populateValidNeighborBoxes = function populateValidNeighborBoxes(cellType) {
+	  var addConditionalSubmitButtons = function addConditionalSubmitButtons(cellType) {
 	    var _loop2 = function _loop2(i) {
+	      var currentButton = conditionalSubmitButtons[i];
+
+	      var parseNeighbors = function parseNeighbors(value) {
+	        var parsedValue = "" + value;
+	        if (value === 'typeOne' || value === 'typeTwo' || value === 'typeThree') {
+	          parsedValue = "typeHash['" + value + "']";
+	        }
+	        return parsedValue;
+	      };
+
+	      var addStatementToConditionalHash = function addStatementToConditionalHash(button) {
+	        var returnString = "";
+
+	        var addValueToReturnString = function addValueToReturnString(nodeArr, buttonType) {
+	          for (var j = 0; j < nodeArr.length; j++) {
+	            var currentItem = nodeArr[j];
+
+	            if (currentItem.name === buttonType) {
+	              returnString += " " + parseNeighbors(currentItem.value);
+	            }
+	          }
+	        };
+
+	        addValueToReturnString(neighborTypes, button.name);
+	        addValueToReturnString(comparators, button.name);
+	        addValueToReturnString(comparisonValues, button.name);
+
+	        conditionalHash[cellType]['conditions'][button.name] += returnString;
+
+	        console.log(conditionalHash[cellType]['conditions'][currentButton.name]);
+	        populateConditionalStatements(cellType);
+	      };
+
+	      currentButton.addEventListener('click', function () {
+	        addStatementToConditionalHash(currentButton);
+	      });
+	    };
+
+	    for (var i = 0; i < conditionalSubmitButtons.length; i++) {
+	      _loop2(i);
+	    }
+	  };
+
+	  var populateValidNeighborBoxes = function populateValidNeighborBoxes(cellType) {
+	    var _loop3 = function _loop3(i) {
 	      var currentBox = validNeighborBoxes[i];
 	      var currentName = neighborTypeNames[i];
 
@@ -341,7 +405,7 @@
 	    };
 
 	    for (var i = 0; i < validNeighborBoxes.length; i++) {
-	      _loop2(i);
+	      _loop3(i);
 	    }
 	  };
 
@@ -354,6 +418,11 @@
 	    for (var i = 0; i < validNeighborBoxes.length; i++) {
 	      var _currentBox = validNeighborBoxes[i];
 	      _currentBox.checked = false;
+	    }
+
+	    for (var _i = 0; _i < conditionalStatements.length; _i++) {
+	      var _currentStatement = conditionalStatements[_i];
+	      _currentStatement.innerHTML = "";
 	    }
 
 	    cellName.removeEventListener('input', changeTypeOneName);
