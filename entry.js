@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
         'dieCon': `!typeHash['typeOne']`,
         'stayCon': `validNeighbors.length === 0`,
         'wanderCon': `true`,
-        'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
+        'reproduceCon': `typeHash[type] && typeHash[typeThree] === false && Math.floor(Math.random() * 2) === 0`
       },
       'neighborHash': {
         'typeOne': true,
@@ -261,25 +261,42 @@ document.addEventListener("DOMContentLoaded", () => {
         const orButton = document.createElement("button");
         const deleteButton = document.createElement("button");
 
-        andButton.innerText = '&&';
-        andButton.addEventListener('click', () => {
-          statement += ' && ';
-          li.innerText = statement;
-          li.appendChild(andButton);
-          li.appendChild(orButton);
-          li.appendChild(deleteButton);
-          conditionalHash[cellType]['conditions'][currentStatement.id] += ' &&';
-        });
+        const mapButtonBehavior = (button, symbol) => {
+          button.innerText = `${symbol}`;
+          button.addEventListener('click', () => {
+            const conditionalArray = conditionalHash[cellType]['conditions'][currentStatement.id].split(' ');
+            const statementArray = statement.split(' ');
 
-        orButton.innerText = '||';
-        orButton.addEventListener('click', () => {
-        });
 
-        deleteButton.innerText = 'Delete';
-        deleteButton.addEventListener('click', () => {
-          li.parentNode.removeChild(li);
-          // ADD LI'S TOGETHER AND SET CONDITIONAL HASH TO THAT
-        });
+            for (let j = 0; j < conditionalArray.length; j++) {
+              const conditionalSlice = conditionalArray.slice(j, j + statementArray.length);
+
+              if (conditionalSlice.join(' ') === statement) {
+                const operatorIndex = j + conditionalSlice.length - 1;
+
+                if (symbol === 'Delete') {
+                  conditionalArray.splice(j, j + statementArray.length - 2);
+                  li.parentNode.removeChild(li);
+                } else {
+                  conditionalArray[operatorIndex] = `${symbol}`;
+                  statementArray.pop();
+                  statementArray.push(symbol);
+                  statement = statementArray.join(' ');
+                }
+
+                conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
+                li.innerText = statement;
+                li.appendChild(andButton);
+                li.appendChild(orButton);
+                li.appendChild(deleteButton);
+              }
+            }
+          });
+        };
+
+        mapButtonBehavior(andButton, '&&');
+        mapButtonBehavior(orButton, '||');
+        mapButtonBehavior(deleteButton, 'Delete');
 
         li.appendChild(document.createTextNode(statement));
         li.appendChild(andButton);
@@ -320,9 +337,8 @@ document.addEventListener("DOMContentLoaded", () => {
         addValueToReturnString(comparators, button.name);
         addValueToReturnString(comparisonValues, button.name);
 
-        conditionalHash[cellType]['conditions'][button.name] += returnString;
-
-        console.log(conditionalHash[cellType]['conditions'][currentButton.name]);
+        conditionalHash[cellType]['conditions'][button.name] += ` &&${returnString}`;
+        console.log(conditionalHash[cellType]['conditions'][button.name]);
         populateConditionalStatements(cellType);
       };
 
