@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
       'color': 'blue',
       'conditions': {
         'skipCon': `false`,
-        'dieCon': `!typeHash['typeOne']`,
+        'dieCon': `!typeHash['typeOne'] || !typeHash['typeTwo']`,
         'stayCon': `validNeighbors.length === 0`,
         'wanderCon': `true`,
         'reproduceCon': `typeHash[type] && typeHash[typeThree] === false && Math.floor(Math.random() * 2) === 0`
@@ -229,33 +229,43 @@ document.addEventListener("DOMContentLoaded", () => {
     []
   );
 
+  const parseConditionalValues = (value, operator) => {
+    const valueArray = value.split(` ${operator} `);
+    const returnArray = [];
+    for (let j = 0; j < valueArray.length - 1; j++) {
+      returnArray.push(valueArray[j].concat(` ${operator}`));
+    }
+    returnArray.push(valueArray[valueArray.length - 1]);
+    return returnArray;
+  };
+
+  const parseConditionalHashStatements = (cellType, statement) => {
+    const conditionalHashValue = conditionalHash[cellType]['conditions'][statement.id];
+    const andOperator = parseConditionalValues(conditionalHashValue, '&&');
+    const bothOperators = andOperator.map(function(value) {
+      return parseConditionalValues(value, '||');
+    });
+
+    return flatten(bothOperators);
+  };
+
+  const refreshConditionalStatements = cellType => {
+    for (let i = 0; i < conditionalStatements.length; i++) {
+      conditionalStatements[i].innerHTML = "";
+    }
+
+    populateConditionalStatements(cellType);
+  };
+
   const populateConditionalStatements = cellType => {
     for (let i = 0; i < conditionalStatements.length; i++) {
       const currentStatement = conditionalStatements[i];
-
-      const parseConditionalValues = (value, operator) => {
-        const valueArray = value.split(` ${operator} `);
-        const returnArray = [];
-        for (let j = 0; j < valueArray.length - 1; j++) {
-         returnArray.push(valueArray[j].concat(` ${operator}`));
-        }
-        returnArray.push(valueArray[valueArray.length - 1]);
-        return returnArray;
-      };
-
-      const parseConditionalHashStatements = () => {
-        const conditionalHashValue = conditionalHash[cellType]['conditions'][currentStatement.id];
-        const andOperator = parseConditionalValues(conditionalHashValue, '&&');
-        const bothOperators = andOperator.map(function(value) {
-          return parseConditionalValues(value, '||');
-        });
-
-        return flatten(bothOperators);
-      };
-
-      const conditionalStatementArray = parseConditionalHashStatements();
+      const conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
+      const conditionalStatementArray = parseConditionalHashStatements(cellType, currentStatement);
 
       conditionalStatementArray.forEach(statement => {
+        if (statement === "") return;
+
         const li = document.createElement("li");
         const andButton = document.createElement("button");
         const orButton = document.createElement("button");
@@ -264,31 +274,38 @@ document.addEventListener("DOMContentLoaded", () => {
         const mapButtonBehavior = (button, symbol) => {
           button.innerText = `${symbol}`;
           button.addEventListener('click', () => {
-            const conditionalArray = conditionalHash[cellType]['conditions'][currentStatement.id].split(' ');
             const statementArray = statement.split(' ');
+            let conditionalArray = conditionalHash[cellType]['conditions'][currentStatement.id].split(' ');
 
+            const removeStatementFromConditionalHash = conditionalHashStatement => {
+              conditionalArray = conditionalStatement.replace(`${conditionalHashStatement}`, "").split(' ');
+
+              conditionalArray = conditionalArray.filter(str => {
+                return str !== "";
+              });
+
+              if (conditionalArray[0] === '&&' || conditionalArray[0] === '||') {
+                conditionalArray.shift();
+              }
+
+              conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
+            };
 
             for (let j = 0; j < conditionalArray.length; j++) {
               const conditionalSlice = conditionalArray.slice(j, j + statementArray.length);
+              const conditionalSliceStatement = conditionalSlice.join(' ');
+              const operatorIndex = j + conditionalSlice.length - 1;
 
               if (conditionalSlice.join(' ') === statement) {
-                const operatorIndex = j + conditionalSlice.length - 1;
 
                 if (symbol === 'Delete') {
-                  conditionalArray.splice(j, j + statementArray.length - 2);
-                  li.parentNode.removeChild(li);
+                  removeStatementFromConditionalHash(conditionalSliceStatement);
                 } else {
                   conditionalArray[operatorIndex] = `${symbol}`;
-                  statementArray.pop();
-                  statementArray.push(symbol);
-                  statement = statementArray.join(' ');
+                  conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
                 }
 
-                conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
-                li.innerText = statement;
-                li.appendChild(andButton);
-                li.appendChild(orButton);
-                li.appendChild(deleteButton);
+                refreshConditionalStatements(cellType);
               }
             }
           });
@@ -319,7 +336,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return parsedValue;
       };
 
-
       const addStatementToConditionalHash = button => {
         let returnString = "";
 
@@ -336,12 +352,17 @@ document.addEventListener("DOMContentLoaded", () => {
         addValueToReturnString(neighborTypes, button.name);
         addValueToReturnString(comparators, button.name);
         addValueToReturnString(comparisonValues, button.name);
+        returnString = returnString.trim();
 
-        conditionalHash[cellType]['conditions'][button.name] += ` &&${returnString}`;
+        if (conditionalHash[cellType]['conditions'][button.name]) {
+          conditionalHash[cellType]['conditions'][button.name] += ` && ${returnString}`;
+        } else {
+          conditionalHash[cellType]['conditions'][button.name] += returnString;
+        }
+
         console.log(conditionalHash[cellType]['conditions'][button.name]);
         populateConditionalStatements(cellType);
       };
-
 
       currentButton.addEventListener('click', () => {
         addStatementToConditionalHash(currentButton);
