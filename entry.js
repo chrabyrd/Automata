@@ -272,25 +272,26 @@ document.addEventListener("DOMContentLoaded", () => {
         const deleteButton = document.createElement("button");
 
         const mapButtonBehavior = (button, symbol) => {
+          const statementArray = statement.split(' ');
+          let conditionalArray = conditionalHash[cellType]['conditions'][currentStatement.id].split(' ');
+
+          const removeStatementFromConditionalHash = conditionalHashStatement => {
+            conditionalArray = conditionalStatement.replace(`${conditionalHashStatement}`, "").split(' ');
+
+            conditionalArray = conditionalArray.filter(str => {
+              return str !== "";
+            });
+
+            if (conditionalArray[0] === '&&' || conditionalArray[0] === '||') {
+              conditionalArray.shift();
+            }
+
+            conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
+          };
+
           button.innerText = `${symbol}`;
+
           button.addEventListener('click', () => {
-            const statementArray = statement.split(' ');
-            let conditionalArray = conditionalHash[cellType]['conditions'][currentStatement.id].split(' ');
-
-            const removeStatementFromConditionalHash = conditionalHashStatement => {
-              conditionalArray = conditionalStatement.replace(`${conditionalHashStatement}`, "").split(' ');
-
-              conditionalArray = conditionalArray.filter(str => {
-                return str !== "";
-              });
-
-              if (conditionalArray[0] === '&&' || conditionalArray[0] === '||') {
-                conditionalArray.shift();
-              }
-
-              conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
-            };
-
             for (let j = 0; j < conditionalArray.length; j++) {
               const conditionalSlice = conditionalArray.slice(j, j + statementArray.length);
               const conditionalSliceStatement = conditionalSlice.join(' ');
@@ -324,50 +325,96 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const addConditionalSubmitButtons = cellType => {
-    for (let i = 0; i < conditionalSubmitButtons.length; i++) {
-      const currentButton = conditionalSubmitButtons[i];
+  const addStatementToConditionalHash = (cellType, button) => {
+    let returnString = "";
 
-      const parseNeighbors = value => {
-        let parsedValue = `${value}`;
-        if (value === 'typeOne' || value === 'typeTwo' || value === 'typeThree') {
-          parsedValue = `typeHash['${value}']`;
+    const parseNeighbors = value => {
+      let parsedValue = `${value}`;
+      if (value === 'typeOne' || value === 'typeTwo' || value === 'typeThree') {
+        parsedValue = `typeHash['${value}']`;
+      }
+      return parsedValue;
+    };
+
+    const addValueToReturnString = (nodeArr, buttonType) => {
+      for (let j = 0; j < nodeArr.length; j++) {
+        const currentItem = nodeArr[j];
+
+        if (currentItem.name === buttonType) {
+          returnString += ` ${parseNeighbors(currentItem.value)}`;
         }
-        return parsedValue;
+      }
+    };
+
+    const addReturnStringToConditionalHash = () => {
+      addValueToReturnString(neighborTypes, button.name);
+      addValueToReturnString(comparators, button.name);
+      addValueToReturnString(comparisonValues, button.name);
+      returnString = returnString.trim();
+
+      if (conditionalHash[cellType]['conditions'][button.name]) {
+        conditionalHash[cellType]['conditions'][button.name] += ` && ${returnString}`;
+      } else {
+        conditionalHash[cellType]['conditions'][button.name] += returnString;
+      }
+    };
+
+    addReturnStringToConditionalHash();
+  };
+
+  const resetMenuValues = (button = null) => {
+
+    let resetMenuValue;
+
+    if (!button) {
+      resetMenuValue = menuName => {
+        for (let j = 0; j < menuName.length; j++) {
+          menuName[j].value = "";
+        }
       };
-
-      const addStatementToConditionalHash = button => {
-        let returnString = "";
-
-        const addValueToReturnString = (nodeArr, buttonType) => {
-          for (let j = 0; j < nodeArr.length; j++) {
-            const currentItem = nodeArr[j];
-
-            if (currentItem.name === buttonType) {
-              returnString += ` ${parseNeighbors(currentItem.value)}`;
-            }
+    } else {
+      resetMenuValue = menuName => {
+        for (let j = 0; j < menuName.length; j++) {
+          if (menuName[j].name === button.name) {
+            menuName[j].value = "";
           }
-        };
-
-        addValueToReturnString(neighborTypes, button.name);
-        addValueToReturnString(comparators, button.name);
-        addValueToReturnString(comparisonValues, button.name);
-        returnString = returnString.trim();
-
-        if (conditionalHash[cellType]['conditions'][button.name]) {
-          conditionalHash[cellType]['conditions'][button.name] += ` && ${returnString}`;
-        } else {
-          conditionalHash[cellType]['conditions'][button.name] += returnString;
         }
-
-        console.log(conditionalHash[cellType]['conditions'][button.name]);
-        populateConditionalStatements(cellType);
       };
-
-      currentButton.addEventListener('click', () => {
-        addStatementToConditionalHash(currentButton);
-      });
     }
+
+    resetMenuValue(neighborTypes);
+    resetMenuValue(comparators);
+    resetMenuValue(comparisonValues);
+  };
+
+  const handleSubmitEventListeners = cellType => {
+
+    const clearSubmitEventListeners = () => {
+      for (let i = 0; i < conditionalSubmitButtons.length; i++) {
+        const currentButton = conditionalSubmitButtons[i];
+        const clone = currentButton.cloneNode();
+
+        while (currentButton.firstChild) {
+          clone.appendChild(currentButton.lastChild);
+        }
+        currentButton.parentNode.replaceChild(clone, currentButton);
+      }
+    };
+
+    const populateSubmitEventListeners = () => {
+      for (let i = 0; i < conditionalSubmitButtons.length; i++) {
+        const currentButton = conditionalSubmitButtons[i];
+
+        currentButton.addEventListener('click', () => {
+          addStatementToConditionalHash(cellType, currentButton);
+          refreshConditionalStatements(cellType);
+          resetMenuValues(currentButton);
+        });
+      }
+    };
+
+    clearSubmitEventListeners();
+    populateSubmitEventListeners();
   };
 
   const populateValidNeighborBoxes = cellType => {
@@ -396,9 +443,9 @@ document.addEventListener("DOMContentLoaded", () => {
       currentBox.checked = false;
     }
 
-    for (let i = 0; i < conditionalStatements.length; i++) {
-      const currentStatement = conditionalStatements[i];
-      currentStatement.innerHTML = "";
+    for (let i = 0; i < validNeighborBoxes.length; i++) {
+      const currentBox = validNeighborBoxes[i];
+      currentBox.checked = false;
     }
 
     cellName.removeEventListener('input', changeTypeOneName);
@@ -408,8 +455,9 @@ document.addEventListener("DOMContentLoaded", () => {
     cellName.value = conditionalHash[cellType].name;
 
     changeCellColor(cellType);
-    populateConditionalStatements(cellType);
-    addConditionalSubmitButtons(cellType);
+    refreshConditionalStatements(cellType);
+    resetMenuValues();
+    handleSubmitEventListeners(cellType);
     populateValidNeighborBoxes(cellType);
 
     if (cellType === 'typeOne') {
