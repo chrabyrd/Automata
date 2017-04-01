@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
   const cellLogicColors = document.getElementsByClassName("cellLogicColors");
-  // const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
   const typeOneContainer = document.getElementById("typeOneContainer");
   const typeTwoContainer = document.getElementById("typeTwoContainer");
   const typeThreeContainer = document.getElementById("typeThreeContainer");
@@ -78,10 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
       'color': 'blue',
       'conditions': {
         'skipCon': `false`,
-        'dieCon': `!typeHash['typeOne'] || !typeHash['typeTwo']`,
+        'dieCon': `typeHash['typeOne'] === 0`,
         'stayCon': `validNeighbors.length === 0`,
         'wanderCon': `true`,
-        'reproduceCon': `typeHash[type] && typeHash[typeThree] === false && Math.floor(Math.random() * 2) === 0`
+        'reproduceCon': `typeHash[type] > 0 && Math.floor(Math.random() * 2) === 0`
       },
       'neighborHash': {
         'typeOne': true,
@@ -96,10 +95,10 @@ document.addEventListener("DOMContentLoaded", () => {
       'color': 'purple',
       'conditions': {
         'skipCon': `false`,
-        'dieCon': `!typeHash['typeOne']`,
+        'dieCon': `typeHash['typeOne'] === 0`,
         'stayCon': `validNeighbors.length === 0`,
         'wanderCon': `true`,
-        'reproduceCon': `typeHash[type] && Math.floor(Math.random() * 2) === 0`
+        'reproduceCon': `typeHash[type] > 0 && Math.floor(Math.random() * 2) === 0`
       },
       'neighborHash': {
         'typeOne': true,
@@ -253,7 +252,6 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < conditionalStatements.length; i++) {
       conditionalStatements[i].innerHTML = "";
     }
-
     populateConditionalStatements(cellType);
   };
 
@@ -263,8 +261,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
       const conditionalStatementArray = parseConditionalHashStatements(cellType, currentStatement);
 
-      conditionalStatementArray.forEach(statement => {
-        if (statement === "") return;
+      for (let j = 0; j < conditionalStatementArray.length; j++) {
+        const statement = conditionalStatementArray[j];
+
+        if (statement === "") continue;
 
         const li = document.createElement("li");
         const andButton = document.createElement("button");
@@ -292,10 +292,10 @@ document.addEventListener("DOMContentLoaded", () => {
           button.innerText = `${symbol}`;
 
           button.addEventListener('click', () => {
-            for (let j = 0; j < conditionalArray.length; j++) {
-              const conditionalSlice = conditionalArray.slice(j, j + statementArray.length);
+            for (let k = 0; k < conditionalArray.length; k++) {
+              const conditionalSlice = conditionalArray.slice(k, k + statementArray.length);
               const conditionalSliceStatement = conditionalSlice.join(' ');
-              const operatorIndex = j + conditionalSlice.length - 1;
+              const operatorIndex = k + conditionalSlice.length - 1;
 
               if (conditionalSlice.join(' ') === statement) {
 
@@ -305,23 +305,38 @@ document.addEventListener("DOMContentLoaded", () => {
                   conditionalArray[operatorIndex] = `${symbol}`;
                   conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
                 }
-
+                console.log(conditionalHash[cellType]['conditions']);
                 refreshConditionalStatements(cellType);
               }
             }
           });
         };
 
+        const simplifiedStatement = string => {
+          const filteredString = string.split(' ').filter(str => {
+            return str !== '||' && str !== '&&';
+          });
+
+          return filteredString.join(' ');
+        };
+
         mapButtonBehavior(andButton, '&&');
         mapButtonBehavior(orButton, '||');
         mapButtonBehavior(deleteButton, 'Delete');
 
-        li.appendChild(document.createTextNode(statement));
-        li.appendChild(andButton);
-        li.appendChild(orButton);
-        li.appendChild(deleteButton);
+
+        if (j === conditionalStatementArray.length - 1) {
+          li.appendChild(document.createTextNode(simplifiedStatement(statement)));
+          li.appendChild(deleteButton);
+        } else {
+          li.appendChild(document.createTextNode(statement));
+          li.appendChild(andButton);
+          li.appendChild(orButton);
+          li.appendChild(deleteButton);
+        }
+
         currentStatement.appendChild(li);
-      });
+      }
     }
   };
 
@@ -363,7 +378,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const resetMenuValues = (button = null) => {
-
     let resetMenuValue;
 
     if (!button) {
@@ -437,11 +451,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
-
-    for (let i = 0; i < validNeighborBoxes.length; i++) {
-      const currentBox = validNeighborBoxes[i];
-      currentBox.checked = false;
-    }
 
     for (let i = 0; i < validNeighborBoxes.length; i++) {
       const currentBox = validNeighborBoxes[i];

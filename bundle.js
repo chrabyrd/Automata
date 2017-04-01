@@ -60,7 +60,6 @@
 
 	  var cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
 	  var cellLogicColors = document.getElementsByClassName("cellLogicColors");
-	  // const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
 	  var typeOneContainer = document.getElementById("typeOneContainer");
 	  var typeTwoContainer = document.getElementById("typeTwoContainer");
 	  var typeThreeContainer = document.getElementById("typeThreeContainer");
@@ -130,10 +129,10 @@
 	      'color': 'blue',
 	      'conditions': {
 	        'skipCon': "false",
-	        'dieCon': "!typeHash['typeOne'] || !typeHash['typeTwo']",
+	        'dieCon': "typeHash['typeOne'] === 0",
 	        'stayCon': "validNeighbors.length === 0",
 	        'wanderCon': "true",
-	        'reproduceCon': "typeHash[type] && typeHash[typeThree] === false && Math.floor(Math.random() * 2) === 0"
+	        'reproduceCon': "typeHash[type] > 0 && Math.floor(Math.random() * 2) === 0"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -148,10 +147,10 @@
 	      'color': 'purple',
 	      'conditions': {
 	        'skipCon': "false",
-	        'dieCon': "!typeHash['typeOne']",
+	        'dieCon': "typeHash['typeOne'] === 0",
 	        'stayCon': "validNeighbors.length === 0",
 	        'wanderCon': "true",
-	        'reproduceCon': "typeHash[type] && Math.floor(Math.random() * 2) === 0"
+	        'reproduceCon': "typeHash[type] > 0 && Math.floor(Math.random() * 2) === 0"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -303,7 +302,6 @@
 	    for (var i = 0; i < conditionalStatements.length; i++) {
 	      conditionalStatements[i].innerHTML = "";
 	    }
-
 	    populateConditionalStatements(cellType);
 	  };
 
@@ -313,8 +311,10 @@
 	      var conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
 	      var conditionalStatementArray = parseConditionalHashStatements(cellType, currentStatement);
 
-	      conditionalStatementArray.forEach(function (statement) {
-	        if (statement === "") return;
+	      var _loop2 = function _loop2(j) {
+	        var statement = conditionalStatementArray[j];
+
+	        if (statement === "") return "continue";
 
 	        var li = document.createElement("li");
 	        var andButton = document.createElement("button");
@@ -342,10 +342,10 @@
 	          button.innerText = "" + symbol;
 
 	          button.addEventListener('click', function () {
-	            for (var j = 0; j < conditionalArray.length; j++) {
-	              var conditionalSlice = conditionalArray.slice(j, j + statementArray.length);
+	            for (var k = 0; k < conditionalArray.length; k++) {
+	              var conditionalSlice = conditionalArray.slice(k, k + statementArray.length);
 	              var conditionalSliceStatement = conditionalSlice.join(' ');
-	              var operatorIndex = j + conditionalSlice.length - 1;
+	              var operatorIndex = k + conditionalSlice.length - 1;
 
 	              if (conditionalSlice.join(' ') === statement) {
 
@@ -355,23 +355,43 @@
 	                  conditionalArray[operatorIndex] = "" + symbol;
 	                  conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
 	                }
-
+	                console.log(conditionalHash[cellType]['conditions']);
 	                refreshConditionalStatements(cellType);
 	              }
 	            }
 	          });
 	        };
 
+	        var simplifiedStatement = function simplifiedStatement(string) {
+	          var filteredString = string.split(' ').filter(function (str) {
+	            return str !== '||' && str !== '&&';
+	          });
+
+	          return filteredString.join(' ');
+	        };
+
 	        mapButtonBehavior(andButton, '&&');
 	        mapButtonBehavior(orButton, '||');
 	        mapButtonBehavior(deleteButton, 'Delete');
 
-	        li.appendChild(document.createTextNode(statement));
-	        li.appendChild(andButton);
-	        li.appendChild(orButton);
-	        li.appendChild(deleteButton);
+	        if (j === conditionalStatementArray.length - 1) {
+	          li.appendChild(document.createTextNode(simplifiedStatement(statement)));
+	          li.appendChild(deleteButton);
+	        } else {
+	          li.appendChild(document.createTextNode(statement));
+	          li.appendChild(andButton);
+	          li.appendChild(orButton);
+	          li.appendChild(deleteButton);
+	        }
+
 	        currentStatement.appendChild(li);
-	      });
+	      };
+
+	      for (var j = 0; j < conditionalStatementArray.length; j++) {
+	        var _ret2 = _loop2(j);
+
+	        if (_ret2 === "continue") continue;
+	      }
 	    };
 
 	    for (var i = 0; i < conditionalStatements.length; i++) {
@@ -419,7 +439,6 @@
 	  var resetMenuValues = function resetMenuValues() {
 	    var button = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-
 	    var resetMenuValue = void 0;
 
 	    if (!button) {
@@ -458,7 +477,7 @@
 	    };
 
 	    var populateSubmitEventListeners = function populateSubmitEventListeners() {
-	      var _loop2 = function _loop2(i) {
+	      var _loop3 = function _loop3(i) {
 	        var currentButton = conditionalSubmitButtons[i];
 
 	        currentButton.addEventListener('click', function () {
@@ -469,7 +488,7 @@
 	      };
 
 	      for (var i = 0; i < conditionalSubmitButtons.length; i++) {
-	        _loop2(i);
+	        _loop3(i);
 	      }
 	    };
 
@@ -478,7 +497,7 @@
 	  };
 
 	  var populateValidNeighborBoxes = function populateValidNeighborBoxes(cellType) {
-	    var _loop3 = function _loop3(i) {
+	    var _loop4 = function _loop4(i) {
 	      var currentBox = validNeighborBoxes[i];
 	      var currentName = neighborTypeNames[i];
 
@@ -494,7 +513,7 @@
 	    };
 
 	    for (var i = 0; i < validNeighborBoxes.length; i++) {
-	      _loop3(i);
+	      _loop4(i);
 	    }
 	  };
 
@@ -507,11 +526,6 @@
 	    for (var i = 0; i < validNeighborBoxes.length; i++) {
 	      var _currentBox = validNeighborBoxes[i];
 	      _currentBox.checked = false;
-	    }
-
-	    for (var _i = 0; _i < validNeighborBoxes.length; _i++) {
-	      var _currentBox2 = validNeighborBoxes[_i];
-	      _currentBox2.checked = false;
 	    }
 
 	    cellName.removeEventListener('input', changeTypeOneName);
