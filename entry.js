@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const comparators = document.getElementsByClassName("comparators");
   const comparisonValues = document.getElementsByClassName("comparisonValues");
   const conditionalStatements = document.getElementsByClassName("conditionalStatements");
+  const chanceSliders = document.getElementsByClassName("chanceSliders");
+  const chanceOutputs = document.getElementsByClassName("chanceOutputs");
   const conditionalSubmitButtons = document.getElementsByClassName("conditionalSubmitButtons");
 
   const neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
@@ -54,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const conditionalHash = {
     'typeOne': {
-      'name': 'Type One',
+      'name': 'Grass',
       'color': 'green',
       'conditions': {
         'skipCon': `false`,
@@ -62,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         'stayCon': `validNeighbors.length === 0`,
         'wanderCon': `false`,
         'reproduceCon': `true`
-        // 'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
       },
       'neighborHash': {
         'typeOne': false,
@@ -73,14 +74,14 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'typeTwo': {
-      'name': 'Type Two',
+      'name': 'Cow',
       'color': 'blue',
       'conditions': {
         'skipCon': `false`,
         'dieCon': `typeHash['typeOne'] === 0`,
         'stayCon': `validNeighbors.length === 0`,
         'wanderCon': `true`,
-        'reproduceCon': `typeHash[type] > 0 && Math.floor(Math.random() * 2) === 0`
+        'reproduceCon': `typeHash['typeTwo'] > 0 && Math.random() * 100 < 50`
       },
       'neighborHash': {
         'typeOne': true,
@@ -91,14 +92,14 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'typeThree': {
-      'name': 'Type Three',
+      'name': 'Sheep',
       'color': 'purple',
       'conditions': {
         'skipCon': `false`,
         'dieCon': `typeHash['typeOne'] === 0`,
         'stayCon': `validNeighbors.length === 0`,
         'wanderCon': `true`,
-        'reproduceCon': `typeHash[type] > 0 && Math.floor(Math.random() * 2) === 0`
+        'reproduceCon': `typeHash['typeThree'] > 0 && Math.random() * 100 < 50`
       },
       'neighborHash': {
         'typeOne': true,
@@ -180,16 +181,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const changeName = cellType => {
-    conditionalHash[cellType].name = cellName.value;
-
+  const updateCellLogicNames = cellType => {
     for (let i = 0; i < cellLogicTypes.length; i++) {
       const currentType = cellLogicTypes[i];
 
       currentType.innerText = conditionalHash[currentType.id].name;
     }
+  };
 
-    populateNeighborTypes();
+  const changeName = cellType => {
+    conditionalHash[cellType].name = cellName.value;
+    updateCellLogicNames(cellType);
+    refreshConditionalStatements(cellType);
+    populateConditionalDropdowns();
     populateValidNeighborBoxes(cellType);
   };
 
@@ -206,19 +210,64 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  const populateNeighborTypes = () => {
-    for (let i = 0; i < neighborTypes.length; i++) {
-      const currentNeighborType = neighborTypes[i];
-      const currentValue = comparisonValues[i];
+  const translateStatement = string => {
+    const translationHash = {
+      // "&&": `AND`,
+      // "||": `OR`,
+      "typeHash['typeOne']": `${conditionalHash['typeOne'].name}`,
+      "typeHash['typeTwo']": `${conditionalHash['typeTwo'].name}`,
+      "typeHash['typeThree']": `${conditionalHash['typeThree'].name}`,
+      "validNeighbors.length": `Valid Cells`,
+      "totalNeighbors.length": `Total Cells`,
+      // ">": `is greater than`,
+      // ">=": `is greater than or equal to`,
+      // "<": `is less than`,
+      // "<=": `is less than or equal to`,
+      // "===": `is equal to`,
+      // "!==": `is not equal to`,
+      // "0": `zero`,
+      // "1": `one`,
+      // "2": `two`,
+      // "3": `three`,
+      // "4": `four`,
+      // "5": `five`,
+      // "6": `six`,
+      // "7": `seven`,
+      // "8": `eight`,
+    };
 
-      for (let j = 3; j < 6; j++) {
-        const currentNeighborOption = currentNeighborType.options[j];
-        const currentValueOption = currentValue.options[j];
-
-        currentNeighborOption.innerText = conditionalHash[currentNeighborOption.value].name;
-        currentValueOption.innerText = conditionalHash[currentValueOption.value].name;
+    const filteredString = string.split(' ').map(str => {
+      if (Object.keys(translationHash).includes(str)) {
+        str = translationHash[str];
       }
-    }
+      return str;
+    });
+
+    const valueArray = parseConditionalHashStatements(filteredString.join(' '));
+
+    const filteredArray = valueArray.filter(statement => {
+      if (statement.charAt() !== 'M') return statement;
+    });
+
+    return filteredArray.join(' ');
+  };
+
+  const populateConditionalDropdowns = () => {
+
+    const populateDropdown = arr => {
+      for (let i = 0; i < arr.length; i++) {
+        const currentType = arr[i];
+
+        for (let j = 0; j < currentType.options.length; j++) {
+          const currentOption = currentType.options[j];
+          currentOption.innerText = translateStatement(currentOption.value);
+        }
+      }
+    };
+
+    populateDropdown(neighborTypes);
+    populateDropdown(comparators);
+    populateDropdown(comparisonValues);
   };
 
   const flatten = arr => arr.reduce(
@@ -238,9 +287,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return returnArray;
   };
 
-  const parseConditionalHashStatements = (cellType, statement) => {
-    const conditionalHashValue = conditionalHash[cellType]['conditions'][statement.id];
-    const andOperator = parseConditionalValues(conditionalHashValue, '&&');
+  const parseConditionalHashStatements = condition => {
+    const andOperator = parseConditionalValues(condition, '&&');
     const bothOperators = andOperator.map(function(value) {
       return parseConditionalValues(value, '||');
     });
@@ -259,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < conditionalStatements.length; i++) {
       const currentStatement = conditionalStatements[i];
       const conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
-      const conditionalStatementArray = parseConditionalHashStatements(cellType, currentStatement);
+      const conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
 
       for (let j = 0; j < conditionalStatementArray.length; j++) {
         const statement = conditionalStatementArray[j];
@@ -305,14 +353,14 @@ document.addEventListener("DOMContentLoaded", () => {
                   conditionalArray[operatorIndex] = `${symbol}`;
                   conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
                 }
-                console.log(conditionalHash[cellType]['conditions']);
+
                 refreshConditionalStatements(cellType);
               }
             }
           });
         };
 
-        const simplifiedStatement = string => {
+        const simplifyStatement = string => {
           const filteredString = string.split(' ').filter(str => {
             return str !== '||' && str !== '&&';
           });
@@ -324,18 +372,17 @@ document.addEventListener("DOMContentLoaded", () => {
         mapButtonBehavior(orButton, '||');
         mapButtonBehavior(deleteButton, 'Delete');
 
-
         if (j === conditionalStatementArray.length - 1) {
-          li.appendChild(document.createTextNode(simplifiedStatement(statement)));
+          li.appendChild(document.createTextNode(simplifyStatement(translateStatement(statement))));
           li.appendChild(deleteButton);
         } else {
-          li.appendChild(document.createTextNode(statement));
+          li.appendChild(document.createTextNode(translateStatement(statement)));
           li.appendChild(andButton);
           li.appendChild(orButton);
           li.appendChild(deleteButton);
         }
 
-        currentStatement.appendChild(li);
+        if (li.innerText !== 'Delete') currentStatement.appendChild(li);
       }
     }
   };
@@ -399,6 +446,60 @@ document.addEventListener("DOMContentLoaded", () => {
     resetMenuValue(neighborTypes);
     resetMenuValue(comparators);
     resetMenuValue(comparisonValues);
+  };
+
+  const removeChanceEventListeners = () => {
+    for (let i = 0; i < chanceSliders.length; i++) {
+      const currentSlider = chanceSliders[i];
+      const clone = currentSlider.cloneNode();
+
+      while (currentSlider.firstChild) {
+        clone.appendChild(currentSlider.lastChild);
+      }
+      currentSlider.parentNode.replaceChild(clone, currentSlider);
+    }
+  };
+
+  const handleChanceSliders = cellType => {
+
+    removeChanceEventListeners();
+
+    for (let i = 0; i < chanceSliders.length; i++) {
+      const currentSlider = chanceSliders[i];
+      const currentOutput = chanceOutputs[i];
+      const currentHashCondition = conditionalHash[cellType]['conditions'][currentSlider.name];
+      const currentHashConditionArray = parseConditionalHashStatements(currentHashCondition);
+      const conditionalArray = parseConditionalHashStatements(currentHashCondition);
+
+      const updateOutput = () => {
+        const filteredArray = conditionalArray.filter(statement => {
+          if (statement.charAt() !== 'M') return statement;
+        });
+        const lastElementArray = filteredArray[filteredArray.length - 1].split(' ');
+        const lastValue = lastElementArray[lastElementArray.length - 1];
+
+        if (lastValue !== '&&') filteredArray.push(`&&`);
+        filteredArray.push(`Math.random() * 100 < ${currentSlider.value}`);
+        conditionalHash[cellType]['conditions'][currentOutput.name] = filteredArray.join(' ');
+        currentOutput.value = currentSlider.value;
+      };
+
+      const setSliderValues = () => {
+        currentSlider.value = 100;
+        currentOutput.value = 100;
+
+        currentHashConditionArray.forEach(statement => {
+          if (statement.charAt() === 'M') {
+            const percentage = statement.match(/\d+/g)[1];
+            currentSlider.value = percentage;
+            updateOutput(percentage);
+          }
+        });
+      };
+
+      setSliderValues();
+      currentSlider.addEventListener('input', updateOutput);
+    }
   };
 
   const handleSubmitEventListeners = cellType => {
@@ -466,6 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
     changeCellColor(cellType);
     refreshConditionalStatements(cellType);
     resetMenuValues();
+    handleChanceSliders(cellType);
     handleSubmitEventListeners(cellType);
     populateValidNeighborBoxes(cellType);
 
@@ -478,8 +580,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  updateCellLogicNames();
   updateCellLogicColors();
-  populateNeighborTypes();
+  populateConditionalDropdowns();
 
   const changeTypeOneName = changeName.bind(null, 'typeOne');
   const changeTypeTwoName = changeName.bind(null, 'typeTwo');

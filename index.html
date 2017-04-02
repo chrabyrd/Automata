@@ -24,17 +24,17 @@
 
         <div id="cellLogicControls">
           <div id="typeOneContainer" class="cellTypeContainers">
-            <div id='typeOne' class="cellLogicTypes">Type One</div>
+            <div id='typeOne' class="cellLogicTypes">typeOne</div>
             <div id="typeOneColor" class="cellLogicColors"></div>
           </div>
 
           <div id="typeTwoContainer" class="cellTypeContainers">
-            <div id='typeTwo' class="cellLogicTypes">Type Two</div>
+            <div id='typeTwo' class="cellLogicTypes">typeTwo</div>
             <div id="typeTwoColor" class="cellLogicColors"></div>
           </div>
 
           <div id="typeThreeContainer" class="cellTypeContainers">
-            <div id='typeThree' class="cellLogicTypes">Type Three</div>
+            <div id='typeThree' class="cellLogicTypes">typeThree</div>
             <div id="typeThreeColor" class="cellLogicColors"></div>
           </div>
         </div>
@@ -88,9 +88,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="validNeighbors.length">Valid Neighbors</option>
                   <option value="totalNeighbors.length">Total Neighbors</option>
                 </select>
@@ -109,9 +109,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -122,6 +122,19 @@
                   <option value="7">7</option>
                   <option value="8">8</option>
                 </select>
+
+                <input
+                  id="skipConSlider"
+                  name="skipCon"
+                  class="chanceSliders"
+                  type="range"
+                  min="1"
+                  max="100"
+                  value="100"
+                  step="1"
+                />
+
+                <output class="chanceOutputs" for="skipConSlider" name="skipCon">100</output>
 
                 <button name="skipCon" class="conditionalSubmitButtons">Enter</button>
                 <ul class="conditionalStatements" id="skipCon">
@@ -135,9 +148,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="validNeighbors.length">Valid Neighbors</option>
                   <option value="totalNeighbors.length">Total Neighbors</option>
                 </select>
@@ -156,9 +169,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -170,7 +183,20 @@
                   <option value="8">8</option>
                 </select>
 
-                <button name="dieCon" class="conditionalSubmitButtons">Add</button>
+                <input
+                  id="dieConSlider"
+                  name="dieCon"
+                  class="chanceSliders"
+                  type="range"
+                  min="1"
+                  max="100"
+                  value="100"
+                  step="1"
+                />
+
+                <output class="chanceOutputs" for="dieConSlider" name="dieCon">100</output>
+
+                <button name="dieCon" class="conditionalSubmitButtons">Enter</button>
                 <ul class="conditionalStatements" id="dieCon">
                 </ul>
               </div>
@@ -182,9 +208,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="validNeighbors.length">Valid Neighbors</option>
                   <option value="totalNeighbors.length">Total Neighbors</option>
                 </select>
@@ -203,9 +229,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -217,7 +243,20 @@
                   <option value="8">8</option>
                 </select>
 
-                <button name="stayCon" class="conditionalSubmitButtons">Add</button>
+                <input
+                  id="stayConSlider"
+                  name="stayCon"
+                  class="chanceSliders"
+                  type="range"
+                  min="1"
+                  max="100"
+                  value="100"
+                  step="1"
+                />
+
+                <output class="chanceOutputs" for="stayConSlider" name="stayCon">100</output>
+
+                <button name="stayCon" class="conditionalSubmitButtons">Enter</button>
                 <ul class="conditionalStatements" id="stayCon">
                 </ul>
               </div>
@@ -229,9 +268,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="validNeighbors.length">Valid Neighbors</option>
                   <option value="totalNeighbors.length">Total Neighbors</option>
                 </select>
@@ -250,9 +289,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -264,7 +303,20 @@
                   <option value="8">8</option>
                 </select>
 
-                <button name="wanderCon" class="conditionalSubmitButtons">Add</button>
+                <input
+                  id="wanderConSlider"
+                  name="wanderCon"
+                  class="chanceSliders"
+                  type="range"
+                  min="1"
+                  max="100"
+                  value="100"
+                  step="1"
+                />
+
+                <output class="chanceOutputs" for="wanderConSlider" name="wanderCon">100</output>
+
+                <button name="wanderCon" class="conditionalSubmitButtons">Enter</button>
                 <ul class="conditionalStatements" id="wanderCon">
                 </ul>
               </div>
@@ -276,9 +328,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="validNeighbors.length">Valid Neighbors</option>
                   <option value="totalNeighbors.length">Total Neighbors</option>
                 </select>
@@ -297,9 +349,9 @@
                   <option value=""></option>
                   <option value="true">true</option>
                   <option value="false">false</option>
-                  <option value="typeOne"></option>
-                  <option value="typeTwo"></option>
-                  <option value="typeThree"></option>
+                  <option value="typeHash['typeOne']"></option>
+                  <option value="typeHash['typeTwo']"></option>
+                  <option value="typeHash['typeThree']"></option>
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -311,7 +363,20 @@
                   <option value="8">8</option>
                 </select>
 
-                <button name="reproduceCon" class="conditionalSubmitButtons">Add</button>
+                <input
+                  id="reproduceConSlider"
+                  name="reproduceCon"
+                  class="chanceSliders"
+                  type="range"
+                  min="1"
+                  max="100"
+                  value="100"
+                  step="1"
+                />
+
+                <output class="chanceOutputs" for="reproduceConSlider" name="reproduceCon">100</output>
+
+                <button name="reproduceCon" class="conditionalSubmitButtons">Enter</button>
                 <ul class="conditionalStatements" id="reproduceCon">
                 </ul>
               </div>

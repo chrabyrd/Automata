@@ -72,6 +72,8 @@
 	  var comparators = document.getElementsByClassName("comparators");
 	  var comparisonValues = document.getElementsByClassName("comparisonValues");
 	  var conditionalStatements = document.getElementsByClassName("conditionalStatements");
+	  var chanceSliders = document.getElementsByClassName("chanceSliders");
+	  var chanceOutputs = document.getElementsByClassName("chanceOutputs");
 	  var conditionalSubmitButtons = document.getElementsByClassName("conditionalSubmitButtons");
 
 	  var neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
@@ -106,7 +108,7 @@
 
 	  var conditionalHash = {
 	    'typeOne': {
-	      'name': 'Type One',
+	      'name': 'Grass',
 	      'color': 'green',
 	      'conditions': {
 	        'skipCon': "false",
@@ -114,7 +116,6 @@
 	        'stayCon': "validNeighbors.length === 0",
 	        'wanderCon': "false",
 	        'reproduceCon': "true"
-	        // 'reproduceCon': `!typeHash['typeTwo'] && !typeHash['typeThree']`
 	      },
 	      'neighborHash': {
 	        'typeOne': false,
@@ -125,14 +126,14 @@
 	    },
 
 	    'typeTwo': {
-	      'name': 'Type Two',
+	      'name': 'Cow',
 	      'color': 'blue',
 	      'conditions': {
 	        'skipCon': "false",
 	        'dieCon': "typeHash['typeOne'] === 0",
 	        'stayCon': "validNeighbors.length === 0",
 	        'wanderCon': "true",
-	        'reproduceCon': "typeHash[type] > 0 && Math.floor(Math.random() * 2) === 0"
+	        'reproduceCon': "typeHash['typeTwo'] > 0 && Math.random() * 100 < 50"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -143,14 +144,14 @@
 	    },
 
 	    'typeThree': {
-	      'name': 'Type Three',
+	      'name': 'Sheep',
 	      'color': 'purple',
 	      'conditions': {
 	        'skipCon': "false",
 	        'dieCon': "typeHash['typeOne'] === 0",
 	        'stayCon': "validNeighbors.length === 0",
 	        'wanderCon': "true",
-	        'reproduceCon': "typeHash[type] > 0 && Math.floor(Math.random() * 2) === 0"
+	        'reproduceCon': "typeHash['typeThree'] > 0 && Math.random() * 100 < 50"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -231,16 +232,19 @@
 	    }
 	  };
 
-	  var changeName = function changeName(cellType) {
-	    conditionalHash[cellType].name = cellName.value;
-
+	  var updateCellLogicNames = function updateCellLogicNames(cellType) {
 	    for (var i = 0; i < cellLogicTypes.length; i++) {
 	      var currentType = cellLogicTypes[i];
 
 	      currentType.innerText = conditionalHash[currentType.id].name;
 	    }
+	  };
 
-	    populateNeighborTypes();
+	  var changeName = function changeName(cellType) {
+	    conditionalHash[cellType].name = cellName.value;
+	    updateCellLogicNames(cellType);
+	    refreshConditionalStatements(cellType);
+	    populateConditionalDropdowns();
 	    populateValidNeighborBoxes(cellType);
 	  };
 
@@ -257,19 +261,49 @@
 	    });
 	  };
 
-	  var populateNeighborTypes = function populateNeighborTypes() {
-	    for (var i = 0; i < neighborTypes.length; i++) {
-	      var currentNeighborType = neighborTypes[i];
-	      var currentValue = comparisonValues[i];
+	  var translateStatement = function translateStatement(string) {
+	    var translationHash = {
+	      // "&&": `AND`,
+	      // "||": `OR`,
+	      "typeHash['typeOne']": "" + conditionalHash['typeOne'].name,
+	      "typeHash['typeTwo']": "" + conditionalHash['typeTwo'].name,
+	      "typeHash['typeThree']": "" + conditionalHash['typeThree'].name,
+	      "validNeighbors.length": "Valid Cells",
+	      "totalNeighbors.length": "Total Cells"
+	    };
 
-	      for (var j = 3; j < 6; j++) {
-	        var currentNeighborOption = currentNeighborType.options[j];
-	        var currentValueOption = currentValue.options[j];
-
-	        currentNeighborOption.innerText = conditionalHash[currentNeighborOption.value].name;
-	        currentValueOption.innerText = conditionalHash[currentValueOption.value].name;
+	    var filteredString = string.split(' ').map(function (str) {
+	      if (Object.keys(translationHash).includes(str)) {
+	        str = translationHash[str];
 	      }
-	    }
+	      return str;
+	    });
+
+	    var valueArray = parseConditionalHashStatements(filteredString.join(' '));
+
+	    var filteredArray = valueArray.filter(function (statement) {
+	      if (statement.charAt() !== 'M') return statement;
+	    });
+
+	    return filteredArray.join(' ');
+	  };
+
+	  var populateConditionalDropdowns = function populateConditionalDropdowns() {
+
+	    var populateDropdown = function populateDropdown(arr) {
+	      for (var i = 0; i < arr.length; i++) {
+	        var currentType = arr[i];
+
+	        for (var j = 0; j < currentType.options.length; j++) {
+	          var currentOption = currentType.options[j];
+	          currentOption.innerText = translateStatement(currentOption.value);
+	        }
+	      }
+	    };
+
+	    populateDropdown(neighborTypes);
+	    populateDropdown(comparators);
+	    populateDropdown(comparisonValues);
 	  };
 
 	  var flatten = function flatten(arr) {
@@ -288,9 +322,8 @@
 	    return returnArray;
 	  };
 
-	  var parseConditionalHashStatements = function parseConditionalHashStatements(cellType, statement) {
-	    var conditionalHashValue = conditionalHash[cellType]['conditions'][statement.id];
-	    var andOperator = parseConditionalValues(conditionalHashValue, '&&');
+	  var parseConditionalHashStatements = function parseConditionalHashStatements(condition) {
+	    var andOperator = parseConditionalValues(condition, '&&');
 	    var bothOperators = andOperator.map(function (value) {
 	      return parseConditionalValues(value, '||');
 	    });
@@ -309,7 +342,7 @@
 	    var _loop = function _loop(i) {
 	      var currentStatement = conditionalStatements[i];
 	      var conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
-	      var conditionalStatementArray = parseConditionalHashStatements(cellType, currentStatement);
+	      var conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
 
 	      var _loop2 = function _loop2(j) {
 	        var statement = conditionalStatementArray[j];
@@ -355,14 +388,14 @@
 	                  conditionalArray[operatorIndex] = "" + symbol;
 	                  conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
 	                }
-	                console.log(conditionalHash[cellType]['conditions']);
+
 	                refreshConditionalStatements(cellType);
 	              }
 	            }
 	          });
 	        };
 
-	        var simplifiedStatement = function simplifiedStatement(string) {
+	        var simplifyStatement = function simplifyStatement(string) {
 	          var filteredString = string.split(' ').filter(function (str) {
 	            return str !== '||' && str !== '&&';
 	          });
@@ -375,16 +408,16 @@
 	        mapButtonBehavior(deleteButton, 'Delete');
 
 	        if (j === conditionalStatementArray.length - 1) {
-	          li.appendChild(document.createTextNode(simplifiedStatement(statement)));
+	          li.appendChild(document.createTextNode(simplifyStatement(translateStatement(statement))));
 	          li.appendChild(deleteButton);
 	        } else {
-	          li.appendChild(document.createTextNode(statement));
+	          li.appendChild(document.createTextNode(translateStatement(statement)));
 	          li.appendChild(andButton);
 	          li.appendChild(orButton);
 	          li.appendChild(deleteButton);
 	        }
 
-	        currentStatement.appendChild(li);
+	        if (li.innerText !== 'Delete') currentStatement.appendChild(li);
 	      };
 
 	      for (var j = 0; j < conditionalStatementArray.length; j++) {
@@ -462,6 +495,64 @@
 	    resetMenuValue(comparisonValues);
 	  };
 
+	  var removeChanceEventListeners = function removeChanceEventListeners() {
+	    for (var i = 0; i < chanceSliders.length; i++) {
+	      var currentSlider = chanceSliders[i];
+	      var clone = currentSlider.cloneNode();
+
+	      while (currentSlider.firstChild) {
+	        clone.appendChild(currentSlider.lastChild);
+	      }
+	      currentSlider.parentNode.replaceChild(clone, currentSlider);
+	    }
+	  };
+
+	  var handleChanceSliders = function handleChanceSliders(cellType) {
+
+	    removeChanceEventListeners();
+
+	    var _loop3 = function _loop3(i) {
+	      var currentSlider = chanceSliders[i];
+	      var currentOutput = chanceOutputs[i];
+	      var currentHashCondition = conditionalHash[cellType]['conditions'][currentSlider.name];
+	      var currentHashConditionArray = parseConditionalHashStatements(currentHashCondition);
+	      var conditionalArray = parseConditionalHashStatements(currentHashCondition);
+
+	      var updateOutput = function updateOutput() {
+	        var filteredArray = conditionalArray.filter(function (statement) {
+	          if (statement.charAt() !== 'M') return statement;
+	        });
+	        var lastElementArray = filteredArray[filteredArray.length - 1].split(' ');
+	        var lastValue = lastElementArray[lastElementArray.length - 1];
+
+	        if (lastValue !== '&&') filteredArray.push("&&");
+	        filteredArray.push("Math.random() * 100 < " + currentSlider.value);
+	        conditionalHash[cellType]['conditions'][currentOutput.name] = filteredArray.join(' ');
+	        currentOutput.value = currentSlider.value;
+	      };
+
+	      var setSliderValues = function setSliderValues() {
+	        currentSlider.value = 100;
+	        currentOutput.value = 100;
+
+	        currentHashConditionArray.forEach(function (statement) {
+	          if (statement.charAt() === 'M') {
+	            var percentage = statement.match(/\d+/g)[1];
+	            currentSlider.value = percentage;
+	            updateOutput(percentage);
+	          }
+	        });
+	      };
+
+	      setSliderValues();
+	      currentSlider.addEventListener('input', updateOutput);
+	    };
+
+	    for (var i = 0; i < chanceSliders.length; i++) {
+	      _loop3(i);
+	    }
+	  };
+
 	  var handleSubmitEventListeners = function handleSubmitEventListeners(cellType) {
 
 	    var clearSubmitEventListeners = function clearSubmitEventListeners() {
@@ -477,7 +568,7 @@
 	    };
 
 	    var populateSubmitEventListeners = function populateSubmitEventListeners() {
-	      var _loop3 = function _loop3(i) {
+	      var _loop4 = function _loop4(i) {
 	        var currentButton = conditionalSubmitButtons[i];
 
 	        currentButton.addEventListener('click', function () {
@@ -488,7 +579,7 @@
 	      };
 
 	      for (var i = 0; i < conditionalSubmitButtons.length; i++) {
-	        _loop3(i);
+	        _loop4(i);
 	      }
 	    };
 
@@ -497,7 +588,7 @@
 	  };
 
 	  var populateValidNeighborBoxes = function populateValidNeighborBoxes(cellType) {
-	    var _loop4 = function _loop4(i) {
+	    var _loop5 = function _loop5(i) {
 	      var currentBox = validNeighborBoxes[i];
 	      var currentName = neighborTypeNames[i];
 
@@ -513,7 +604,7 @@
 	    };
 
 	    for (var i = 0; i < validNeighborBoxes.length; i++) {
-	      _loop4(i);
+	      _loop5(i);
 	    }
 	  };
 
@@ -537,6 +628,7 @@
 	    changeCellColor(cellType);
 	    refreshConditionalStatements(cellType);
 	    resetMenuValues();
+	    handleChanceSliders(cellType);
 	    handleSubmitEventListeners(cellType);
 	    populateValidNeighborBoxes(cellType);
 
@@ -549,8 +641,9 @@
 	    }
 	  };
 
+	  updateCellLogicNames();
 	  updateCellLogicColors();
-	  populateNeighborTypes();
+	  populateConditionalDropdowns();
 
 	  var changeTypeOneName = changeName.bind(null, 'typeOne');
 	  var changeTypeTwoName = changeName.bind(null, 'typeTwo');
