@@ -56,15 +56,13 @@
 	  var mainCanvas = document.getElementById("mainCanvas");
 	  var mainCtx = mainCanvas.getContext("2d");
 
+	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var modalBackdrop = document.getElementById("modal-backdrop");
 
 	  var cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
 	  var cellLogicColors = document.getElementsByClassName("cellLogicColors");
-	  var typeOneContainer = document.getElementById("typeOneContainer");
-	  var typeTwoContainer = document.getElementById("typeTwoContainer");
-	  var typeThreeContainer = document.getElementById("typeThreeContainer");
+	  var cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
 
-	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var cellName = document.getElementById("cellName");
 	  var cellColorContainer = document.getElementById("cellColorContainer");
 
@@ -101,10 +99,6 @@
 	  var cellSize = document.getElementById("cellSize");
 	  var cellSizeDropdown = document.getElementById("cellSizeDropdown");
 	  var cellSizeDropdownContainer = document.getElementById("cellSizeDropdownContainer");
-
-	  var rulesButton = document.getElementById("rulesButton");
-	  var rulesModal = document.getElementById("rulesModal");
-	  var openerModal = document.getElementById("openerModal");
 
 	  var conditionalHash = {
 	    'typeOne': {
@@ -240,14 +234,6 @@
 	    }
 	  };
 
-	  var changeName = function changeName(cellType) {
-	    conditionalHash[cellType].name = cellName.value;
-	    updateCellLogicNames(cellType);
-	    refreshConditionalStatements(cellType);
-	    populateConditionalDropdowns();
-	    populateValidNeighborBoxes(cellType);
-	  };
-
 	  var changeCellColor = function changeCellColor(cellType) {
 	    $(".basic").spectrum({
 	      color: conditionalHash[cellType].color,
@@ -259,6 +245,34 @@
 	        updateCellLogicColors();
 	      }
 	    });
+	  };
+
+	  var removeNameEventListeners = function removeNameEventListeners() {
+	    var clone = cellName.cloneNode();
+
+	    while (cellName.firstChild) {
+	      clone.appendChild(cellName.lastChild);
+	    }
+
+	    cellName.parentNode.replaceChild(clone, cellName);
+	    cellName = clone;
+	  };
+
+	  var handleNameChange = function handleNameChange(cellType) {
+
+	    removeNameEventListeners();
+
+	    cellName.value = conditionalHash[cellType].name;
+
+	    var updateName = function updateName() {
+	      conditionalHash[cellType].name = cellName.value;
+	      updateCellLogicNames(cellType);
+	      refreshConditionalStatements(cellType);
+	      populateConditionalDropdowns();
+	      populateValidNeighborBoxes(cellType);
+	    };
+
+	    cellName.addEventListener('input', updateName);
 	  };
 
 	  var translateStatement = function translateStatement(string) {
@@ -587,7 +601,17 @@
 	    populateSubmitEventListeners();
 	  };
 
+	  var resetNeighborBoxes = function resetNeighborBoxes() {
+	    for (var i = 0; i < validNeighborBoxes.length; i++) {
+	      var currentBox = validNeighborBoxes[i];
+	      currentBox.checked = false;
+	    }
+	  };
+
 	  var populateValidNeighborBoxes = function populateValidNeighborBoxes(cellType) {
+
+	    resetNeighborBoxes();
+
 	    var _loop5 = function _loop5(i) {
 	      var currentBox = validNeighborBoxes[i];
 	      var currentName = neighborTypeNames[i];
@@ -614,52 +638,35 @@
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
 
-	    for (var i = 0; i < validNeighborBoxes.length; i++) {
-	      var _currentBox = validNeighborBoxes[i];
-	      _currentBox.checked = false;
-	    }
-
-	    cellName.removeEventListener('input', changeTypeOneName);
-	    cellName.removeEventListener('input', changeTypeTwoName);
-	    cellName.removeEventListener('input', changeTypeThreeName);
-
-	    cellName.value = conditionalHash[cellType].name;
-
+	    handleNameChange(cellType);
 	    changeCellColor(cellType);
+	    populateConditionalDropdowns();
 	    refreshConditionalStatements(cellType);
 	    resetMenuValues();
 	    handleChanceSliders(cellType);
 	    handleSubmitEventListeners(cellType);
 	    populateValidNeighborBoxes(cellType);
+	  };
 
-	    if (cellType === 'typeOne') {
-	      cellName.addEventListener('input', changeTypeOneName);
-	    } else if (cellType === 'typeTwo') {
-	      cellName.addEventListener('input', changeTypeTwoName);
-	    } else if (cellType === 'typeThree') {
-	      cellName.addEventListener('input', changeTypeThreeName);
+	  var populateTypeContainers = function populateTypeContainers() {
+	    updateCellLogicNames();
+	    updateCellLogicColors();
+
+	    var _loop6 = function _loop6(i) {
+	      var currentContainer = cellTypeContainers[i];
+	      console.log(currentContainer.innerHTML);
+
+	      currentContainer.addEventListener('click', function () {
+	        changeCellLogicModalType(currentContainer.name);
+	      });
+	    };
+
+	    for (var i = 0; i < cellTypeContainers.length; i++) {
+	      _loop6(i);
 	    }
 	  };
 
-	  updateCellLogicNames();
-	  updateCellLogicColors();
-	  populateConditionalDropdowns();
-
-	  var changeTypeOneName = changeName.bind(null, 'typeOne');
-	  var changeTypeTwoName = changeName.bind(null, 'typeTwo');
-	  var changeTypeThreeName = changeName.bind(null, 'typeThree');
-
-	  typeOneContainer.addEventListener('click', function (e) {
-	    changeCellLogicModalType('typeOne');
-	  });
-
-	  typeTwoContainer.addEventListener('click', function (e) {
-	    changeCellLogicModalType('typeTwo');
-	  });
-
-	  typeThreeContainer.addEventListener('click', function (e) {
-	    changeCellLogicModalType('typeThree');
-	  });
+	  populateTypeContainers();
 
 	  // Play Buttons
 	  playPauseButton.addEventListener('click', function (e) {

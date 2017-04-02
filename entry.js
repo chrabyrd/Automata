@@ -4,16 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainCanvas = document.getElementById("mainCanvas");
   const mainCtx = mainCanvas.getContext("2d");
 
+  const cellLogicModal = document.getElementById("cellLogicModal");
   const modalBackdrop = document.getElementById("modal-backdrop");
 
   const cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
   const cellLogicColors = document.getElementsByClassName("cellLogicColors");
-  const typeOneContainer = document.getElementById("typeOneContainer");
-  const typeTwoContainer = document.getElementById("typeTwoContainer");
-  const typeThreeContainer = document.getElementById("typeThreeContainer");
+  const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
 
-  const cellLogicModal = document.getElementById("cellLogicModal");
-  const cellName = document.getElementById("cellName");
+  let cellName = document.getElementById("cellName");
   const cellColorContainer = document.getElementById("cellColorContainer");
 
   const neighborTypes = document.getElementsByClassName("neighborTypes");
@@ -49,10 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellSize = document.getElementById("cellSize");
   const cellSizeDropdown = document.getElementById("cellSizeDropdown");
   const cellSizeDropdownContainer = document.getElementById("cellSizeDropdownContainer");
-
-  const rulesButton = document.getElementById("rulesButton");
-  const rulesModal = document.getElementById("rulesModal");
-  const openerModal = document.getElementById("openerModal");
 
   const conditionalHash = {
     'typeOne': {
@@ -189,14 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const changeName = cellType => {
-    conditionalHash[cellType].name = cellName.value;
-    updateCellLogicNames(cellType);
-    refreshConditionalStatements(cellType);
-    populateConditionalDropdowns();
-    populateValidNeighborBoxes(cellType);
-  };
-
   const changeCellColor = cellType => {
     $(".basic").spectrum({
       color: conditionalHash[cellType].color,
@@ -208,6 +194,34 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCellLogicColors();
       }
     });
+  };
+
+  const removeNameEventListeners = () => {
+    const clone = cellName.cloneNode();
+
+    while (cellName.firstChild) {
+      clone.appendChild(cellName.lastChild);
+    }
+
+    cellName.parentNode.replaceChild(clone, cellName);
+    cellName = clone;
+  };
+
+  const handleNameChange = cellType => {
+
+    removeNameEventListeners();
+
+    cellName.value = conditionalHash[cellType].name;
+
+    const updateName = () => {
+      conditionalHash[cellType].name = cellName.value;
+      updateCellLogicNames(cellType);
+      refreshConditionalStatements(cellType);
+      populateConditionalDropdowns();
+      populateValidNeighborBoxes(cellType);
+    };
+
+    cellName.addEventListener('input', updateName);
   };
 
   const translateStatement = string => {
@@ -532,7 +546,17 @@ document.addEventListener("DOMContentLoaded", () => {
     populateSubmitEventListeners();
   };
 
+  const resetNeighborBoxes = () => {
+    for (let i = 0; i < validNeighborBoxes.length; i++) {
+      const currentBox = validNeighborBoxes[i];
+      currentBox.checked = false;
+    }
+  };
+
   const populateValidNeighborBoxes = cellType => {
+
+    resetNeighborBoxes();
+
     for (let i = 0; i < validNeighborBoxes.length; i++) {
       const currentBox = validNeighborBoxes[i];
       const currentName = neighborTypeNames[i];
@@ -553,52 +577,32 @@ document.addEventListener("DOMContentLoaded", () => {
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
 
-    for (let i = 0; i < validNeighborBoxes.length; i++) {
-      const currentBox = validNeighborBoxes[i];
-      currentBox.checked = false;
-    }
-
-    cellName.removeEventListener('input', changeTypeOneName);
-    cellName.removeEventListener('input', changeTypeTwoName);
-    cellName.removeEventListener('input', changeTypeThreeName);
-
-    cellName.value = conditionalHash[cellType].name;
-
+    handleNameChange(cellType);
     changeCellColor(cellType);
+    populateConditionalDropdowns();
     refreshConditionalStatements(cellType);
     resetMenuValues();
     handleChanceSliders(cellType);
     handleSubmitEventListeners(cellType);
     populateValidNeighborBoxes(cellType);
+  };
 
-    if (cellType === 'typeOne') {
-      cellName.addEventListener('input', changeTypeOneName);
-    } else if (cellType === 'typeTwo') {
-      cellName.addEventListener('input', changeTypeTwoName);
-    } else if (cellType === 'typeThree') {
-      cellName.addEventListener('input', changeTypeThreeName);
+  const populateTypeContainers = () => {
+    updateCellLogicNames();
+    updateCellLogicColors();
+
+
+    for (let i = 0; i < cellTypeContainers.length; i++) {
+      const currentContainer = cellTypeContainers[i];
+      console.log(currentContainer.innerHTML);
+
+      currentContainer.addEventListener('click', () => {
+        changeCellLogicModalType(currentContainer.name);
+      });
     }
   };
 
-  updateCellLogicNames();
-  updateCellLogicColors();
-  populateConditionalDropdowns();
-
-  const changeTypeOneName = changeName.bind(null, 'typeOne');
-  const changeTypeTwoName = changeName.bind(null, 'typeTwo');
-  const changeTypeThreeName = changeName.bind(null, 'typeThree');
-
-  typeOneContainer.addEventListener('click', e => {
-    changeCellLogicModalType('typeOne');
-  });
-
-  typeTwoContainer.addEventListener('click', e => {
-    changeCellLogicModalType('typeTwo');
-  });
-
-  typeThreeContainer.addEventListener('click', e => {
-    changeCellLogicModalType('typeThree');
-  });
+  populateTypeContainers();
 
   // Play Buttons
   playPauseButton.addEventListener('click', e => {
