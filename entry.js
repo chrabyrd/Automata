@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'typeFour': {
-      'name': 'Goats',
+      'name': 'Goat',
       'color': '#8b0000',
       'conditions': {
         'skipCon': `false && Math.random() * 100 < 100`,
