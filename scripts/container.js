@@ -30,6 +30,8 @@ class Container {
       this.cellType = 'typeTwo';
     } else if (e.keyCode === 51) {
       this.cellType = 'typeThree';
+    } else if (e.keyCode === 52) {
+      this.cellType = 'typeFour';
     }
   }
 

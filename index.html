@@ -23,18 +23,27 @@
 
         <div id="cellLogicControls">
           <div id="typeOneContainer" class="cellTypeContainers">
-            <div id='typeOne' class="cellLogicTypes">typeOne</div>
-            <div id="typeOneColor" class="cellLogicColors"></div>
+            <div id="typeOneColor" class="cellLogicColors">
+              <div id='typeOne' class="cellLogicTypes">typeOne</div>
+            </div>
           </div>
 
           <div id="typeTwoContainer" class="cellTypeContainers">
-            <div id='typeTwo' class="cellLogicTypes">typeTwo</div>
-            <div id="typeTwoColor" class="cellLogicColors"></div>
+            <div id="typeTwoColor" class="cellLogicColors">
+              <div id='typeTwo' class="cellLogicTypes">typeTwo</div>
+            </div>
           </div>
 
           <div id="typeThreeContainer" class="cellTypeContainers">
-            <div id='typeThree' class="cellLogicTypes">typeThree</div>
-            <div id="typeThreeColor" class="cellLogicColors"></div>
+            <div id="typeThreeColor" class="cellLogicColors">
+              <div id='typeThree' class="cellLogicTypes">typeThree</div>
+            </div>
+          </div>
+
+          <div id="typeFourContainer" class="cellTypeContainers">
+            <div id="typeFourColor" class="cellLogicColors">
+              <div id='typeFour' class="cellLogicTypes">typeFour</div>
+            </div>
           </div>
         </div>
 
@@ -75,7 +84,7 @@
               </div>
 
               <div id="cellColorContainer">
-                <input id="colorPicker" class="jscolor">
+                <input id="colorPicker" class="jscolor" val="000">
               </div>
             </div>
 
@@ -89,6 +98,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                     <option value="validNeighbors.length">Valid Neighbors</option>
                     <option value="totalNeighbors.length">Total Neighbors</option>
                     <option value="true">true</option>
@@ -118,6 +128,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                   </select>
 
                   <div class="sliderContainers">
@@ -154,6 +165,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                     <option value="validNeighbors.length">Valid Neighbors</option>
                     <option value="totalNeighbors.length">Total Neighbors</option>
                     <option value="true">true</option>
@@ -183,6 +195,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                   </select>
 
                   <div class="sliderContainers">
@@ -219,6 +232,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                     <option value="validNeighbors.length">Valid Neighbors</option>
                     <option value="totalNeighbors.length">Total Neighbors</option>
                     <option value="true">true</option>
@@ -248,6 +262,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                   </select>
 
                   <div class="sliderContainers">
@@ -284,6 +299,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                     <option value="validNeighbors.length">Valid Neighbors</option>
                     <option value="totalNeighbors.length">Total Neighbors</option>
                     <option value="true">true</option>
@@ -313,6 +329,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                   </select>
 
                   <div class="sliderContainers">
@@ -349,6 +366,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                     <option value="validNeighbors.length">Valid Neighbors</option>
                     <option value="totalNeighbors.length">Total Neighbors</option>
                     <option value="true">true</option>
@@ -378,6 +396,7 @@
                     <option value="typeHash['typeOne']"></option>
                     <option value="typeHash['typeTwo']"></option>
                     <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
                   </select>
 
                   <div class="sliderContainers">
@@ -425,6 +444,13 @@
                      class="validNeighborBox"
                      type="checkbox"
                      value="typeThree"
+                     >
+
+              <span class="neighborTypeNames" value="typeFour"></span>
+              <input id="neighborTypeFourBox"
+                     class="validNeighborBox"
+                     type="checkbox"
+                     value="typeFour"
                      >
 
               <span value="false">false</span>

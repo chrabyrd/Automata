@@ -117,6 +117,7 @@
 	        'typeOne': false,
 	        'typeTwo': false,
 	        'typeThree': false,
+	        'typeFour': false,
 	        'false': true
 	      }
 	    },
@@ -135,6 +136,7 @@
 	        'typeOne': true,
 	        'typeTwo': false,
 	        'typeThree': false,
+	        'typeFour': false,
 	        'false': true
 	      }
 	    },
@@ -153,6 +155,26 @@
 	        'typeOne': true,
 	        'typeTwo': false,
 	        'typeThree': false,
+	        'typeFour': false,
+	        'false': true
+	      }
+	    },
+
+	    'typeFour': {
+	      'name': 'Goats',
+	      'color': '#8b0000',
+	      'conditions': {
+	        'skipCon': "false && Math.random() * 100 < 100",
+	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
+	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'wanderCon': "true && Math.random() * 100 < 100",
+	        'reproduceCon': "typeHash['typeFour'] > 0 && Math.random() * 100 < 50"
+	      },
+	      'neighborHash': {
+	        'typeOne': true,
+	        'typeTwo': false,
+	        'typeThree': false,
+	        'typeFour': false,
 	        'false': true
 	      }
 	    },
@@ -171,6 +193,7 @@
 	        'typeOne': false,
 	        'typeTwo': false,
 	        'typeThree': false,
+	        'typeFour': false,
 	        'false': true
 	      }
 	    }
@@ -237,7 +260,6 @@
 	  };
 
 	  var handleCellColorChange = function handleCellColorChange(cellType) {
-
 	    var updateCellColor = function updateCellColor() {
 	      conditionalHash[cellType].color = "#" + colorPicker.value;
 	      refreshCellLogicColors(cellType);
@@ -249,7 +271,6 @@
 	  };
 
 	  var handleNameChange = function handleNameChange(cellType) {
-
 	    cellName.value = conditionalHash[cellType].name;
 
 	    var updateName = function updateName() {
@@ -270,6 +291,7 @@
 	      "typeHash['typeOne']": "" + conditionalHash['typeOne'].name,
 	      "typeHash['typeTwo']": "" + conditionalHash['typeTwo'].name,
 	      "typeHash['typeThree']": "" + conditionalHash['typeThree'].name,
+	      "typeHash['typeFour']": "" + conditionalHash['typeFour'].name,
 	      "validNeighbors.length": "Valid Cells",
 	      "totalNeighbors.length": "Total Cells"
 	    };
@@ -420,15 +442,16 @@
 
 	        if (j === conditionalStatementArray.length - 2) {
 	          li.appendChild(document.createTextNode(simplifyStatement(translateStatement(statement))));
-	          if (li.innerText !== 'false') li.appendChild(deleteButton);
 	        } else {
 	          li.appendChild(document.createTextNode(translateStatement(statement)));
 
 	          var lastChar = statement.charAt(statement.length - 1);
 	          lastChar === '&' ? li.appendChild(orButton) : li.appendChild(andButton);
-	          li.appendChild(deleteButton);
 	        }
 
+	        if (li.innerText === 'false') return "continue";
+
+	        li.appendChild(deleteButton);
 	        if (j !== conditionalStatementArray.length - 1) currentStatement.appendChild(li);
 	      };
 
@@ -832,6 +855,8 @@
 	        this.cellType = 'typeTwo';
 	      } else if (e.keyCode === 51) {
 	        this.cellType = 'typeThree';
+	      } else if (e.keyCode === 52) {
+	        this.cellType = 'typeFour';
 	      }
 	    }
 	  }, {
