@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const comparators = document.getElementsByClassName("comparators");
   const comparisonValues = document.getElementsByClassName("comparisonValues");
   const conditionalStatements = document.getElementsByClassName("conditionalStatements");
+  const sliderContainers = document.getElementsByClassName("sliderContainers");
   const chanceSliders = document.getElementsByClassName("chanceSliders");
   const chanceOutputs = document.getElementsByClassName("chanceOutputs");
   const conditionalSubmitButtons = document.getElementsByClassName("conditionalSubmitButtons");
@@ -53,11 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'Grass',
       'color': 'green',
       'conditions': {
-        'skipCon': `false`,
-        'dieCon': `false`,
-        'stayCon': `validNeighbors.length === 0`,
-        'wanderCon': `false`,
-        'reproduceCon': `true`
+        'skipCon': `false && Math.random() * 100 < 100 && Math.random() * 100 < 100`,
+        'dieCon': `false && Math.random() * 100 < 100 && Math.random() * 100 < 100`,
+        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100 && Math.random() * 100 < 100`,
+        'wanderCon': `false && Math.random() * 100 < 100 && Math.random() * 100 < 100`,
+        'reproduceCon': `true && Math.random() * 100 < 100 && Math.random() * 100 < 100`
       },
       'neighborHash': {
         'typeOne': false,
@@ -71,10 +72,10 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'Cow',
       'color': 'blue',
       'conditions': {
-        'skipCon': `false`,
-        'dieCon': `typeHash['typeOne'] === 0`,
-        'stayCon': `validNeighbors.length === 0`,
-        'wanderCon': `true`,
+        'skipCon': `false && Math.random() * 100 < 100`,
+        'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
+        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'wanderCon': `true && Math.random() * 100 < 100`,
         'reproduceCon': `typeHash['typeTwo'] > 0 && Math.random() * 100 < 50`
       },
       'neighborHash': {
@@ -89,10 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'Sheep',
       'color': 'purple',
       'conditions': {
-        'skipCon': `false`,
-        'dieCon': `typeHash['typeOne'] === 0`,
-        'stayCon': `validNeighbors.length === 0`,
-        'wanderCon': `true`,
+        'skipCon': `false && Math.random() * 100 < 100`,
+        'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
+        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'wanderCon': `true && Math.random() * 100 < 100`,
         'reproduceCon': `typeHash['typeThree'] > 0 && Math.random() * 100 < 50`
       },
       'neighborHash': {
@@ -260,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const valueArray = parseConditionalHashStatements(filteredString.join(' '));
 
     const filteredArray = valueArray.filter(statement => {
-      if (statement.charAt() !== 'M') return statement;
+      if (statement.substring(0, 4) !== 'Math') return statement;
     });
 
     return filteredArray.join(' ');
@@ -320,6 +321,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const populateConditionalStatements = cellType => {
     for (let i = 0; i < conditionalStatements.length; i++) {
       const currentStatement = conditionalStatements[i];
+      const currentOutput = chanceOutputs[i];
+      const currentSliderContainer = sliderContainers[i];
       const conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
       const conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
 
@@ -346,6 +349,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (conditionalArray[0] === '&&' || conditionalArray[0] === '||') {
               conditionalArray.shift();
+            }
+
+            if (conditionalArray[0] === 'Math.random()') {
+              conditionalArray[conditionalArray.length - 1] = "100";
+              conditionalArray.unshift('false &&');
+              currentOutput.value = 100;
+              currentSliderContainer.style.display = "none";
             }
 
             conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
@@ -386,38 +396,32 @@ document.addEventListener("DOMContentLoaded", () => {
         mapButtonBehavior(orButton, '||');
         mapButtonBehavior(deleteButton, 'Delete');
 
-        if (j === conditionalStatementArray.length - 1) {
+        if (j === conditionalStatementArray.length - 2) {
           li.appendChild(document.createTextNode(simplifyStatement(translateStatement(statement))));
-          li.appendChild(deleteButton);
+          if (li.innerText !== 'false') li.appendChild(deleteButton);
         } else {
           li.appendChild(document.createTextNode(translateStatement(statement)));
-          li.appendChild(andButton);
-          li.appendChild(orButton);
+
+          const lastChar = statement.charAt(statement.length - 1);
+          lastChar === '&' ? li.appendChild(orButton) : li.appendChild(andButton);
           li.appendChild(deleteButton);
         }
 
-        if (li.innerText !== 'Delete') currentStatement.appendChild(li);
+        if (j !== conditionalStatementArray.length - 1) currentStatement.appendChild(li);
       }
     }
   };
 
   const addStatementToConditionalHash = (cellType, button) => {
+    const currentCondition = conditionalHash[cellType]['conditions'][button.name];
     let returnString = "";
-
-    const parseNeighbors = value => {
-      let parsedValue = `${value}`;
-      if (value === 'typeOne' || value === 'typeTwo' || value === 'typeThree') {
-        parsedValue = `typeHash['${value}']`;
-      }
-      return parsedValue;
-    };
 
     const addValueToReturnString = (nodeArr, buttonType) => {
       for (let j = 0; j < nodeArr.length; j++) {
         const currentItem = nodeArr[j];
 
         if (currentItem.name === buttonType) {
-          returnString += ` ${parseNeighbors(currentItem.value)}`;
+          returnString += ` ${currentItem.value}`;
         }
       }
     };
@@ -428,14 +432,16 @@ document.addEventListener("DOMContentLoaded", () => {
       addValueToReturnString(comparisonValues, button.name);
       returnString = returnString.trim();
 
-      if (conditionalHash[cellType]['conditions'][button.name]) {
-        conditionalHash[cellType]['conditions'][button.name] += ` && ${returnString}`;
-      } else {
-        conditionalHash[cellType]['conditions'][button.name] += returnString;
+      if (currentCondition.substring(0, 5) === 'false') {
+        conditionalHash[cellType]['conditions'][button.name] = currentCondition.substring(9, currentCondition.length);
       }
+
+      conditionalHash[cellType]['conditions'][button.name] += ` && ${returnString}`;
+
     };
 
     addReturnStringToConditionalHash();
+    handleChanceSliders(cellType);
   };
 
   const resetMenuValues = (button = null) => {
@@ -480,6 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     for (let i = 0; i < chanceSliders.length; i++) {
       const currentSlider = chanceSliders[i];
+      const currentSliderContainer = sliderContainers[i];
       const currentOutput = chanceOutputs[i];
       const currentHashCondition = conditionalHash[cellType]['conditions'][currentSlider.name];
       const currentHashConditionArray = parseConditionalHashStatements(currentHashCondition);
@@ -487,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const updateOutput = () => {
         const filteredArray = conditionalArray.filter(statement => {
-          if (statement.charAt() !== 'M') return statement;
+          if (statement.substring(0, 4) !== 'Math') return statement;
         });
         const lastElementArray = filteredArray[filteredArray.length - 1].split(' ');
         const lastValue = lastElementArray[lastElementArray.length - 1];
@@ -503,13 +510,17 @@ document.addEventListener("DOMContentLoaded", () => {
         currentOutput.value = 100;
 
         currentHashConditionArray.forEach(statement => {
-          if (statement.charAt() === 'M') {
+          if (statement.substring(0, 4) === 'Math') {
             const percentage = statement.match(/\d+/g)[1];
             currentSlider.value = percentage;
             updateOutput(percentage);
           }
         });
       };
+
+      if (currentHashConditionArray[0] === 'false &&') {
+        currentSliderContainer.style.display = "none";
+      }
 
       setSliderValues();
       currentSlider.addEventListener('input', updateOutput);
@@ -533,11 +544,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const populateSubmitEventListeners = () => {
       for (let i = 0; i < conditionalSubmitButtons.length; i++) {
         const currentButton = conditionalSubmitButtons[i];
+        const currentSliderContainer = sliderContainers[i];
+
+        const toggleSliderDisplay = () => {
+          const currentHashCondition = conditionalHash[cellType]['conditions'][currentButton.name];
+          const currentHashConditionArray = parseConditionalHashStatements(currentHashCondition);
+
+          if (currentHashConditionArray[0] !== 'false &&') {
+            currentSliderContainer.style.display = "flex";
+          }
+        };
 
         currentButton.addEventListener('click', () => {
           addStatementToConditionalHash(cellType, currentButton);
           refreshConditionalStatements(cellType);
           resetMenuValues(currentButton);
+          toggleSliderDisplay();
         });
       }
     };
@@ -591,13 +613,12 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCellLogicNames();
     updateCellLogicColors();
 
-
     for (let i = 0; i < cellTypeContainers.length; i++) {
       const currentContainer = cellTypeContainers[i];
-      console.log(currentContainer.innerHTML);
+      const currentType = Object.keys(conditionalHash)[i];
 
       currentContainer.addEventListener('click', () => {
-        changeCellLogicModalType(currentContainer.name);
+        changeCellLogicModalType(currentType);
       });
     }
   };

@@ -157,3 +157,12 @@ li:hover {
   display: flex;
   background-color: silver;
 }
+
+.conditionContainers {
+	display: flex;
+	flex-direction: column;
+}
+
+.conditionOptions {
+	display: flex;
+}

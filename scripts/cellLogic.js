@@ -52,7 +52,7 @@ class CellLogic {
     if (this.changingCells[this.id]) return;
 
     const type = this.type;
-    const typeHash = { "typeOne": 0, "typeTwo": 0, "typeThree": 0, "false": 0};
+    const typeHash = {};
 
     const neighborTypes = Object.keys(conditionalHash[type]['neighborHash']);
     const validNeighborTypes = neighborTypes.filter(function(neighborType) {
@@ -63,6 +63,10 @@ class CellLogic {
 
     const totalNeighbors = this.cellNeighbors.filter((neighbor) => {
       return this.cells[neighbor].type !== 'false';
+    });
+
+    neighborTypes.forEach(function(neighborType) {
+      typeHash[neighborType] = 0;
     });
 
     this.cellNeighbors.forEach(num => {typeHash[this.cells[num].type]++;});
