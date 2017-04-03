@@ -10,9 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
   const cellLogicColors = document.getElementsByClassName("cellLogicColors");
   const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
-
-  let cellName = document.getElementById("cellName");
   const cellColorContainer = document.getElementById("cellColorContainer");
+
+  const cellName = document.getElementById("cellName");
+  const colorPicker = document.getElementById("colorPicker");
 
   const neighborTypes = document.getElementsByClassName("neighborTypes");
   const comparators = document.getElementsByClassName("comparators");
@@ -52,13 +53,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const conditionalHash = {
     'typeOne': {
       'name': 'Grass',
-      'color': 'green',
+      'color': '#165b13',
       'conditions': {
-        'skipCon': `false && Math.random() * 100 < 100 && Math.random() * 100 < 100`,
-        'dieCon': `false && Math.random() * 100 < 100 && Math.random() * 100 < 100`,
-        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100 && Math.random() * 100 < 100`,
-        'wanderCon': `false && Math.random() * 100 < 100 && Math.random() * 100 < 100`,
-        'reproduceCon': `true && Math.random() * 100 < 100 && Math.random() * 100 < 100`
+        'skipCon': `false && Math.random() * 100 < 100`,
+        'dieCon': `false && Math.random() * 100 < 100`,
+        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'wanderCon': `false && Math.random() * 100 < 100`,
+        'reproduceCon': `true && Math.random() * 100 < 100`
       },
       'neighborHash': {
         'typeOne': false,
@@ -70,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     'typeTwo': {
       'name': 'Cow',
-      'color': 'blue',
+      'color': '#0000ff',
       'conditions': {
         'skipCon': `false && Math.random() * 100 < 100`,
         'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
@@ -88,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     'typeThree': {
       'name': 'Sheep',
-      'color': 'purple',
+      'color': '#800080',
       'conditions': {
         'skipCon': `false && Math.random() * 100 < 100`,
         'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
@@ -167,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Cell Logic Bar
-  const updateCellLogicColors = () => {
+  const refreshCellLogicColors = () => {
     for (let i = 0; i < cellLogicColors.length; i++) {
       const currentColor = cellLogicColors[i];
       const currentType = cellLogicTypes[i];
@@ -184,33 +185,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const changeCellColor = cellType => {
-    $(".basic").spectrum({
-      color: conditionalHash[cellType].color,
-      flat: true,
-      showInitial: true,
-      showButtons: false,
-      change: function(color) {
-        conditionalHash[cellType].color = color.toHexString();
-        updateCellLogicColors();
-      }
-    });
-  };
+  const handleCellColorChange = cellType => {
 
-  const removeNameEventListeners = () => {
-    const clone = cellName.cloneNode();
+    const updateCellColor = () => {
+      conditionalHash[cellType].color = `#${colorPicker.value}`;
+      refreshCellLogicColors(cellType);
+    };
 
-    while (cellName.firstChild) {
-      clone.appendChild(cellName.lastChild);
-    }
-
-    cellName.parentNode.replaceChild(clone, cellName);
-    cellName = clone;
+    colorPicker.value = conditionalHash[cellType].color;
+    colorPicker.style.background = colorPicker.value;
+    colorPicker.onchange = updateCellColor;
   };
 
   const handleNameChange = cellType => {
-
-    removeNameEventListeners();
 
     cellName.value = conditionalHash[cellType].name;
 
@@ -222,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
       populateValidNeighborBoxes(cellType);
     };
 
-    cellName.addEventListener('input', updateName);
+    cellName.oninput = updateName;
   };
 
   const translateStatement = string => {
@@ -600,7 +587,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBackdrop.style.display = "flex";
 
     handleNameChange(cellType);
-    changeCellColor(cellType);
+    handleCellColorChange(cellType);
     populateConditionalDropdowns();
     refreshConditionalStatements(cellType);
     resetMenuValues();
@@ -611,7 +598,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const populateTypeContainers = () => {
     updateCellLogicNames();
-    updateCellLogicColors();
+    refreshCellLogicColors();
 
     for (let i = 0; i < cellTypeContainers.length; i++) {
       const currentContainer = cellTypeContainers[i];
