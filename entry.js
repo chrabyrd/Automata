@@ -628,7 +628,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const currentContainer = cellTypeContainers[i];
       const currentType = Object.keys(conditionalHash)[i];
 
-      currentContainer.addEventListener('click', () => {
+      currentContainer.addEventListener('click', e => {
+        e.preventDefault();
         changeCellLogicModalType(currentType);
       });
     }

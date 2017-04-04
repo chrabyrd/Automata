@@ -97,6 +97,7 @@ li:hover {
 
 #cellLogicModal {
   display: none;
+	flex-direction: column;
   position: fixed;
 	overflow: scroll;
   left: 0;
@@ -104,7 +105,7 @@ li:hover {
   top: 0;
   bottom: 0;
   margin: auto;
-  width: 700px;
+  width: 900px;
   height: 500px;
   background-color: chartreuse;
 }
@@ -129,11 +130,9 @@ li:hover {
   display: none;
 }
 
-/* Modals */
-
-#cellLogicModal {
+/* Cell Logic */
+#cellInfoAndConditions {
 	display: flex;
-	flex-direction: column;
 }
 
 #cellConditionContainer {
@@ -141,20 +140,32 @@ li:hover {
 }
 
 #cellInfoContainer {
-	overflow: scroll;
 	display: flex;
+	flex: auto;
+	flex-direction: column;
+	justify-content: space-around;
+	overflow: scroll;
+	background-color: teal;
 }
 
-/* Cell Logic */
-
-.cellLogicColors {
-  width: 50px;
-  height: 50px;
-  display: inline;
+#validNeighborsContainer {
+	display: flex;
+	background-color: beige;
 }
 
 .cellTypeContainers {
-  display: flex;
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+}
+
+.cellLogicColors {
+	display: flex;
+	flex: auto;
+  height: 50px;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
 }
 
 .conditionContainers {

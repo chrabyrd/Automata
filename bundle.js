@@ -687,7 +687,8 @@
 	      var currentContainer = cellTypeContainers[i];
 	      var currentType = Object.keys(conditionalHash)[i];
 
-	      currentContainer.addEventListener('click', function () {
+	      currentContainer.addEventListener('click', function (e) {
+	        e.preventDefault();
 	        changeCellLogicModalType(currentType);
 	      });
 	    };

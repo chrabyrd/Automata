@@ -85,352 +85,352 @@
         </div>
 
         <div id="modal-backdrop">
+
           <div id="cellLogicModal">
+            <div id="cellInfoAndConditions">
+              <div id="cellInfoContainer">
+                <div id="cellNameContainer">
+                  <input id="cellName" type="text" value="">
+                </div>
 
-            <div id="cellInfoContainer">
-              <div id="cellNameContainer">
-                <span>Cell Name:&nbsp;</span>
-                <input id="cellName" type="text" value="">
+                <div id="cellColorContainer">
+                  <input id="colorPicker" class="jscolor" val="000">
+                </div>
               </div>
+              <div id="cellConditionContainer">
+                <div class="conditionContainers">
+                  <div class="conditionOptions">
+                    <span>Skip Condition:&nbsp;</span>
 
-              <div id="cellColorContainer">
-                <input id="colorPicker" class="jscolor" val="000">
-              </div>
-            </div>
+                    <select name="skipCon" class="neighborTypes">
+                      <option value=""></option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                      <option value="validNeighbors.length">Valid Neighbors</option>
+                      <option value="totalNeighbors.length">Total Neighbors</option>
+                      <option value="true">true</option>
+                    </select>
 
-            <div id="cellConditionContainer">
-              <div class="conditionContainers">
-                <div class="conditionOptions">
-                  <span>Skip Condition:&nbsp;</span>
+                    <select name="skipCon" class="comparators">
+                      <option value=""></option>
+                      <option value=">">></option>
+                      <option value=">=">>=</option>
+                      <option value="<"><</option>
+                      <option value="<="><=</option>
+                      <option value="===">==</option>
+                      <option value="!==">!=</option>
+                    </select>
 
-                  <select name="skipCon" class="neighborTypes">
-                    <option value=""></option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                    <option value="validNeighbors.length">Valid Neighbors</option>
-                    <option value="totalNeighbors.length">Total Neighbors</option>
-                    <option value="true">true</option>
-                  </select>
+                    <select name="skipCon" class="comparisonValues">
+                      <option value=""></option>
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                    </select>
 
-                  <select name="skipCon" class="comparators">
-                    <option value=""></option>
-                    <option value=">">></option>
-                    <option value=">=">>=</option>
-                    <option value="<"><</option>
-                    <option value="<="><=</option>
-                    <option value="===">==</option>
-                    <option value="!==">!=</option>
-                  </select>
+                    <div class="sliderContainers">
 
-                  <select name="skipCon" class="comparisonValues">
-                    <option value=""></option>
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                  </select>
+                      <input
+                      id="skipConSlider"
+                      name="skipCon"
+                      class="chanceSliders"
+                      type="range"
+                      min="1"
+                      max="100"
+                      value="100"
+                      step="1"
+                      />
 
-                  <div class="sliderContainers">
+                      <output class="chanceOutputs" for="skipConSlider" name="skipCon">100</output>
+                    </div>
 
-                    <input
-                    id="skipConSlider"
-                    name="skipCon"
-                    class="chanceSliders"
-                    type="range"
-                    min="1"
-                    max="100"
-                    value="100"
-                    step="1"
-                    />
+                    <button name="skipCon" class="conditionalSubmitButtons">Enter</button>
+                  </div>
+                  <div class="conditionalStatementsContainer">
 
-                    <output class="chanceOutputs" for="skipConSlider" name="skipCon">100</output>
+                  </div>
+                  <ul class="conditionalStatements" id="skipCon">
+                  </ul>
+                </div>
+
+                <div class="conditionContainers">
+                  <div class="conditionOptions">
+                    <span>Die Condition:&nbsp;</span>
+
+                    <select name="dieCon" class="neighborTypes">
+                      <option value=""></option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                      <option value="validNeighbors.length">Valid Neighbors</option>
+                      <option value="totalNeighbors.length">Total Neighbors</option>
+                      <option value="true">true</option>
+                    </select>
+
+                    <select name="dieCon" class="comparators">
+                      <option value=""></option>
+                      <option value=">">></option>
+                      <option value=">=">>=</option>
+                      <option value="<"><</option>
+                      <option value="<="><=</option>
+                      <option value="===">==</option>
+                      <option value="!==">!=</option>
+                    </select>
+
+                    <select name="dieCon" class="comparisonValues">
+                      <option value=""></option>
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                    </select>
+
+                    <div class="sliderContainers">
+
+                      <input
+                      id="dieConSlider"
+                      name="dieCon"
+                      class="chanceSliders"
+                      type="range"
+                      min="1"
+                      max="100"
+                      value="100"
+                      step="1"
+                      />
+
+                      <output class="chanceOutputs" for="dieConSlider" name="dieCon">100</output>
+                    </div>
+
+                    <button name="dieCon" class="conditionalSubmitButtons">Enter</button>
+                  </div>
+                  <div class="conditionalStatementsContainer">
+
+                  </div>
+                  <ul class="conditionalStatements" id="dieCon">
+                  </ul>
+                </div>
+
+                <div class="conditionContainers">
+                  <div class="conditionOptions">
+                    <span>Stay Condition:&nbsp;</span>
+
+                    <select name="stayCon" class="neighborTypes">
+                      <option value=""></option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                      <option value="validNeighbors.length">Valid Neighbors</option>
+                      <option value="totalNeighbors.length">Total Neighbors</option>
+                      <option value="true">true</option>
+                    </select>
+
+                    <select name="stayCon" class="comparators">
+                      <option value=""></option>
+                      <option value=">">></option>
+                      <option value=">=">>=</option>
+                      <option value="<"><</option>
+                      <option value="<="><=</option>
+                      <option value="===">==</option>
+                      <option value="!==">!=</option>
+                    </select>
+
+                    <select name="stayCon" class="comparisonValues">
+                      <option value=""></option>
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                    </select>
+
+                    <div class="sliderContainers">
+
+                      <input
+                      id="stayConSlider"
+                      name="stayCon"
+                      class="chanceSliders"
+                      type="range"
+                      min="1"
+                      max="100"
+                      value="100"
+                      step="1"
+                      />
+
+                      <output class="chanceOutputs" for="stayConSlider" name="stayCon">100</output>
+                    </div>
+
+                    <button name="stayCon" class="conditionalSubmitButtons">Enter</button>
+                  </div>
+                  <div class="conditionalStatementsContainer">
+
+                  </div>
+                  <ul class="conditionalStatements" id="stayCon">
+                  </ul>
+                </div>
+
+                <div class="conditionContainers">
+                  <div class="conditionOptions">
+                    <span>Reproduce Condition:&nbsp;</span>
+
+                    <select name="reproduceCon" class="neighborTypes">
+                      <option value=""></option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                      <option value="validNeighbors.length">Valid Neighbors</option>
+                      <option value="totalNeighbors.length">Total Neighbors</option>
+                      <option value="true">true</option>
+                    </select>
+
+                    <select name="reproduceCon" class="comparators">
+                      <option value=""></option>
+                      <option value=">">></option>
+                      <option value=">=">>=</option>
+                      <option value="<"><</option>
+                      <option value="<="><=</option>
+                      <option value="===">==</option>
+                      <option value="!==">!=</option>
+                    </select>
+
+                    <select name="reproduceCon" class="comparisonValues">
+                      <option value=""></option>
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                    </select>
+
+                    <div class="sliderContainers">
+
+                      <input
+                      id="reproduceConSlider"
+                      name="reproduceCon"
+                      class="chanceSliders"
+                      type="range"
+                      min="1"
+                      max="100"
+                      value="100"
+                      step="1"
+                      />
+
+                      <output class="chanceOutputs" for="reproduceConSlider" name="reproduceCon">100</output>
+                    </div>
+
+                    <button name="reproduceCon" class="conditionalSubmitButtons">Enter</button>
                   </div>
 
-                  <button name="skipCon" class="conditionalSubmitButtons">Enter</button>
-                </div>
-                <div class="conditionalStatementsContainer">
+                  <ul class="conditionalStatements" id="reproduceCon">
+                  </ul>
 
                 </div>
-                <ul class="conditionalStatements" id="skipCon">
-                </ul>
-              </div>
 
-              <div class="conditionContainers">
-                <div class="conditionOptions">
-                  <span>Die Condition:&nbsp;</span>
+                <div class="conditionContainers">
+                  <div class="conditionOptions">
+                    <span>Wander Condition:&nbsp;</span>
 
-                  <select name="dieCon" class="neighborTypes">
-                    <option value=""></option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                    <option value="validNeighbors.length">Valid Neighbors</option>
-                    <option value="totalNeighbors.length">Total Neighbors</option>
-                    <option value="true">true</option>
-                  </select>
+                    <select name="wanderCon" class="neighborTypes">
+                      <option value=""></option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                      <option value="validNeighbors.length">Valid Neighbors</option>
+                      <option value="totalNeighbors.length">Total Neighbors</option>
+                      <option value="true">true</option>
+                    </select>
 
-                  <select name="dieCon" class="comparators">
-                    <option value=""></option>
-                    <option value=">">></option>
-                    <option value=">=">>=</option>
-                    <option value="<"><</option>
-                    <option value="<="><=</option>
-                    <option value="===">==</option>
-                    <option value="!==">!=</option>
-                  </select>
+                    <select name="wanderCon" class="comparators">
+                      <option value=""></option>
+                      <option value=">">></option>
+                      <option value=">=">>=</option>
+                      <option value="<"><</option>
+                      <option value="<="><=</option>
+                      <option value="===">==</option>
+                      <option value="!==">!=</option>
+                    </select>
 
-                  <select name="dieCon" class="comparisonValues">
-                    <option value=""></option>
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                  </select>
+                    <select name="wanderCon" class="comparisonValues">
+                      <option value=""></option>
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="typeHash['typeOne']"></option>
+                      <option value="typeHash['typeTwo']"></option>
+                      <option value="typeHash['typeThree']"></option>
+                      <option value="typeHash['typeFour']"></option>
+                    </select>
 
-                  <div class="sliderContainers">
+                    <div class="sliderContainers">
 
-                    <input
-                    id="dieConSlider"
-                    name="dieCon"
-                    class="chanceSliders"
-                    type="range"
-                    min="1"
-                    max="100"
-                    value="100"
-                    step="1"
-                    />
+                      <input
+                      id="wanderConSlider"
+                      name="wanderCon"
+                      class="chanceSliders"
+                      type="range"
+                      min="1"
+                      max="100"
+                      value="100"
+                      step="1"
+                      />
 
-                    <output class="chanceOutputs" for="dieConSlider" name="dieCon">100</output>
+                      <output class="chanceOutputs" for="wanderConSlider" name="wanderCon">100</output>
+                    </div>
+
+                    <button name="wanderCon" class="conditionalSubmitButtons">Enter</button>
                   </div>
+                  <div class="conditionalStatementsContainer">
 
-                  <button name="dieCon" class="conditionalSubmitButtons">Enter</button>
-                </div>
-                <div class="conditionalStatementsContainer">
-
-                </div>
-                <ul class="conditionalStatements" id="dieCon">
-                </ul>
-              </div>
-
-              <div class="conditionContainers">
-                <div class="conditionOptions">
-                  <span>Stay Condition:&nbsp;</span>
-
-                  <select name="stayCon" class="neighborTypes">
-                    <option value=""></option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                    <option value="validNeighbors.length">Valid Neighbors</option>
-                    <option value="totalNeighbors.length">Total Neighbors</option>
-                    <option value="true">true</option>
-                  </select>
-
-                  <select name="stayCon" class="comparators">
-                    <option value=""></option>
-                    <option value=">">></option>
-                    <option value=">=">>=</option>
-                    <option value="<"><</option>
-                    <option value="<="><=</option>
-                    <option value="===">==</option>
-                    <option value="!==">!=</option>
-                  </select>
-
-                  <select name="stayCon" class="comparisonValues">
-                    <option value=""></option>
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                  </select>
-
-                  <div class="sliderContainers">
-
-                    <input
-                    id="stayConSlider"
-                    name="stayCon"
-                    class="chanceSliders"
-                    type="range"
-                    min="1"
-                    max="100"
-                    value="100"
-                    step="1"
-                    />
-
-                    <output class="chanceOutputs" for="stayConSlider" name="stayCon">100</output>
                   </div>
-
-                  <button name="stayCon" class="conditionalSubmitButtons">Enter</button>
+                  <ul class="conditionalStatements" id="wanderCon">
+                  </ul>
                 </div>
-                <div class="conditionalStatementsContainer">
-
-                </div>
-                <ul class="conditionalStatements" id="stayCon">
-                </ul>
-              </div>
-
-              <div class="conditionContainers">
-                <div class="conditionOptions">
-                  <span>Wander Condition:&nbsp;</span>
-
-                  <select name="wanderCon" class="neighborTypes">
-                    <option value=""></option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                    <option value="validNeighbors.length">Valid Neighbors</option>
-                    <option value="totalNeighbors.length">Total Neighbors</option>
-                    <option value="true">true</option>
-                  </select>
-
-                  <select name="wanderCon" class="comparators">
-                    <option value=""></option>
-                    <option value=">">></option>
-                    <option value=">=">>=</option>
-                    <option value="<"><</option>
-                    <option value="<="><=</option>
-                    <option value="===">==</option>
-                    <option value="!==">!=</option>
-                  </select>
-
-                  <select name="wanderCon" class="comparisonValues">
-                    <option value=""></option>
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                  </select>
-
-                  <div class="sliderContainers">
-
-                    <input
-                    id="wanderConSlider"
-                    name="wanderCon"
-                    class="chanceSliders"
-                    type="range"
-                    min="1"
-                    max="100"
-                    value="100"
-                    step="1"
-                    />
-
-                    <output class="chanceOutputs" for="wanderConSlider" name="wanderCon">100</output>
-                  </div>
-
-                  <button name="wanderCon" class="conditionalSubmitButtons">Enter</button>
-                </div>
-                <div class="conditionalStatementsContainer">
-
-                </div>
-                <ul class="conditionalStatements" id="wanderCon">
-                </ul>
-              </div>
-
-              <div class="conditionContainers">
-                <div class="conditionOptions">
-                  <span>Reproduce Condition:&nbsp;</span>
-
-                  <select name="reproduceCon" class="neighborTypes">
-                    <option value=""></option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                    <option value="validNeighbors.length">Valid Neighbors</option>
-                    <option value="totalNeighbors.length">Total Neighbors</option>
-                    <option value="true">true</option>
-                  </select>
-
-                  <select name="reproduceCon" class="comparators">
-                    <option value=""></option>
-                    <option value=">">></option>
-                    <option value=">=">>=</option>
-                    <option value="<"><</option>
-                    <option value="<="><=</option>
-                    <option value="===">==</option>
-                    <option value="!==">!=</option>
-                  </select>
-
-                  <select name="reproduceCon" class="comparisonValues">
-                    <option value=""></option>
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="typeHash['typeOne']"></option>
-                    <option value="typeHash['typeTwo']"></option>
-                    <option value="typeHash['typeThree']"></option>
-                    <option value="typeHash['typeFour']"></option>
-                  </select>
-
-                  <div class="sliderContainers">
-
-                    <input
-                    id="reproduceConSlider"
-                    name="reproduceCon"
-                    class="chanceSliders"
-                    type="range"
-                    min="1"
-                    max="100"
-                    value="100"
-                    step="1"
-                    />
-
-                    <output class="chanceOutputs" for="reproduceConSlider" name="reproduceCon">100</output>
-                  </div>
-
-                  <button name="reproduceCon" class="conditionalSubmitButtons">Enter</button>
-                </div>
-
-                <ul class="conditionalStatements" id="reproduceCon">
-                </ul>
-
               </div>
             </div>
 
