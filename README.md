@@ -31,7 +31,7 @@ Automata is a cellular automation engine. It's built entirely out of HTML/CSS/Ja
 ##### Cells
 
 - Can change cell name / color
-- Name / color changes happen dynamically
+- Name / color changes dynamically affect all instances of self
 
 ##### Cell Logic
 
