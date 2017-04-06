@@ -62,7 +62,8 @@
 	  var cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
 	  var cellLogicColors = document.getElementsByClassName("cellLogicColors");
 	  var cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
-	  var cellColorContainer = document.getElementById("cellColorContainer");
+	  var logicModalButtons = document.getElementsByClassName("logicModalButtons");
+	  var currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
 
 	  var cellName = document.getElementById("cellName");
 	  var colorPicker = document.getElementById("colorPicker");
@@ -105,7 +106,7 @@
 	  var conditionalHash = {
 	    'typeOne': {
 	      'name': 'Grass',
-	      'color': '#165b13',
+	      'color': '#507F2C',
 	      'conditions': {
 	        'skipCon': "false && Math.random() * 100 < 100",
 	        'dieCon': "false && Math.random() * 100 < 100",
@@ -124,7 +125,7 @@
 
 	    'typeTwo': {
 	      'name': 'Cow',
-	      'color': '#0000ff',
+	      'color': '#2552B2',
 	      'conditions': {
 	        'skipCon': "false && Math.random() * 100 < 100",
 	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
@@ -143,7 +144,7 @@
 
 	    'typeThree': {
 	      'name': 'Sheep',
-	      'color': '#800080',
+	      'color': '#FF851B',
 	      'conditions': {
 	        'skipCon': "false && Math.random() * 100 < 100",
 	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
@@ -205,22 +206,53 @@
 	    return container.handleClickEvent(e);
 	  }, false);
 
-	  // Color shift
+	  // Keyboard Shortcuts
+	  var changeCurrentCellType = function changeCurrentCellType(type) {
+	    for (var i = 0; i < cellLogicTypes.length; i++) {
+	      var currentLogicType = cellLogicTypes[i];
+	      var currentTypeContainer = cellTypeContainers[i];
+	      var currentTypeCheckbox = currentTypeCheckboxes[i];
+
+	      currentTypeContainer.style.opacity = 0;
+	      currentTypeCheckbox.classList.add('fa-square-o');
+	      currentTypeCheckbox.classList.remove('fa-check-square-o');
+
+	      if (currentLogicType.id === type) {
+	        currentTypeContainer.style.opacity = 1;
+	        currentTypeCheckbox.classList.remove('fa-square-o');
+	        currentTypeCheckbox.classList.add('fa-check-square-o');
+	      }
+	    }
+
+	    container.cellType = type;
+	  };
+
 	  document.body.addEventListener('keydown', function (e) {
 
 	    if (cellLogicModal.style.display) return;
 
-	    if (e.keyCode === 32) {
-	      e.preventDefault();
-	      playPauseButton.classList.toggle("fa-pause");
-	      container.handlePauseEvent();
-	    } else if (e.keyCode === 78) {
-	      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
-	      container.handleNextFrameEvent();
-	    } else if (e.keyCode === 82) {
-	      container.handleResetEvent();
-	    } else {
-	      container.handleKeystrokeEvent(e);
+	    switch (e.keyCode) {
+	      case 32:
+	        container.handlePauseEvent();
+	        break;
+	      case 49:
+	        changeCurrentCellType('typeOne');
+	        break;
+	      case 50:
+	        changeCurrentCellType('typeTwo');
+	        break;
+	      case 51:
+	        changeCurrentCellType('typeThree');
+	        break;
+	      case 52:
+	        changeCurrentCellType('typeFour');
+	        break;
+	      case 78:
+	        container.handleNextFrameEvent();
+	        break;
+	      case 82:
+	        container.handleResetEvent();
+	        break;
 	    }
 	  });
 
@@ -683,13 +715,30 @@
 	    updateCellLogicNames();
 	    refreshCellLogicColors();
 
+	    cellTypeContainers[0].style.opacity = '1';
+
 	    var _loop6 = function _loop6(i) {
-	      var currentContainer = cellTypeContainers[i];
+	      var currentTypeContainer = cellTypeContainers[i];
+	      var currentTypeCheckbox = currentTypeCheckboxes[i];
+	      var currentLogicModalButton = logicModalButtons[i];
 	      var currentType = Object.keys(conditionalHash)[i];
 
-	      currentContainer.addEventListener('click', function (e) {
-	        e.preventDefault();
+	      currentLogicModalButton.addEventListener('click', function () {
 	        changeCellLogicModalType(currentType);
+	      });
+
+	      currentTypeContainer.addEventListener('click', function () {
+	        changeCurrentCellType(currentType);
+	      });
+
+	      currentTypeContainer.addEventListener('mouseover', function () {
+	        currentTypeContainer.style.opacity = '1';
+	      });
+
+	      currentTypeContainer.addEventListener('mouseleave', function () {
+	        if (currentTypeCheckbox.classList.contains('fa-square-o')) {
+	          currentTypeContainer.style.opacity = '0';
+	        }
 	      });
 	    };
 
@@ -848,19 +897,6 @@
 	  }
 
 	  _createClass(Container, [{
-	    key: "handleKeystrokeEvent",
-	    value: function handleKeystrokeEvent(e) {
-	      if (e.keyCode === 49) {
-	        this.cellType = 'typeOne';
-	      } else if (e.keyCode === 50) {
-	        this.cellType = 'typeTwo';
-	      } else if (e.keyCode === 51) {
-	        this.cellType = 'typeThree';
-	      } else if (e.keyCode === 52) {
-	        this.cellType = 'typeFour';
-	      }
-	    }
-	  }, {
 	    key: "closestValue",
 	    value: function closestValue(num, array) {
 	      var sortedArray = array.sort(function (a, b) {

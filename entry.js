@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
   const cellLogicColors = document.getElementsByClassName("cellLogicColors");
   const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
-  const cellColorContainer = document.getElementById("cellColorContainer");
+  const logicModalButtons = document.getElementsByClassName("logicModalButtons");
+  const currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
 
   const cellName = document.getElementById("cellName");
   const colorPicker = document.getElementById("colorPicker");
@@ -53,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const conditionalHash = {
     'typeOne': {
       'name': 'Grass',
-      'color': '#165b13',
+      'color': '#507F2C',
       'conditions': {
         'skipCon': `false && Math.random() * 100 < 100`,
         'dieCon': `false && Math.random() * 100 < 100`,
@@ -72,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     'typeTwo': {
       'name': 'Cow',
-      'color': '#0000ff',
+      'color': '#2552B2',
       'conditions': {
         'skipCon': `false && Math.random() * 100 < 100`,
         'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
@@ -91,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     'typeThree': {
       'name': 'Sheep',
-      'color': '#800080',
+      'color': '#FF851B',
       'conditions': {
         'skipCon': `false && Math.random() * 100 < 100`,
         'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
@@ -154,22 +155,53 @@ document.addEventListener("DOMContentLoaded", () => {
     container.handleClickEvent(e)
   ), false);
 
-  // Color shift
+  // Keyboard Shortcuts
+  const changeCurrentCellType = type => {
+    for (let i = 0; i < cellLogicTypes.length; i++) {
+      const currentLogicType = cellLogicTypes[i];
+      const currentTypeContainer = cellTypeContainers[i];
+      const currentTypeCheckbox = currentTypeCheckboxes[i];
+
+      currentTypeContainer.style.opacity = 0;
+      currentTypeCheckbox.classList.add('fa-square-o');
+      currentTypeCheckbox.classList.remove('fa-check-square-o');
+
+      if (currentLogicType.id === type) {
+        currentTypeContainer.style.opacity = 1;
+        currentTypeCheckbox.classList.remove('fa-square-o');
+        currentTypeCheckbox.classList.add('fa-check-square-o');
+      }
+    }
+
+    container.cellType = type;
+  };
+
   document.body.addEventListener('keydown', e => {
 
     if (cellLogicModal.style.display) return;
 
-    if (e.keyCode === 32) {
-      e.preventDefault();
-      playPauseButton.classList.toggle("fa-pause");
-      container.handlePauseEvent();
-    } else if (e.keyCode === 78) {
-      if (!container.pauseEvent) playPauseButton.classList.toggle("fa-pause");
-      container.handleNextFrameEvent();
-    } else if (e.keyCode === 82)  {
-      container.handleResetEvent();
-    } else {
-      container.handleKeystrokeEvent(e);
+    switch (e.keyCode) {
+      case 32:
+        container.handlePauseEvent();
+        break;
+      case 49:
+        changeCurrentCellType('typeOne');
+        break;
+      case 50:
+        changeCurrentCellType('typeTwo');
+        break;
+      case 51:
+        changeCurrentCellType('typeThree');
+        break;
+      case 52:
+        changeCurrentCellType('typeFour');
+        break;
+      case 78:
+        container.handleNextFrameEvent();
+        break;
+      case 82:
+        container.handleResetEvent();
+        break;
     }
   });
 
@@ -624,13 +656,30 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCellLogicNames();
     refreshCellLogicColors();
 
+    cellTypeContainers[0].style.opacity = '1';
+
     for (let i = 0; i < cellTypeContainers.length; i++) {
-      const currentContainer = cellTypeContainers[i];
+      const currentTypeContainer = cellTypeContainers[i];
+      const currentTypeCheckbox = currentTypeCheckboxes[i];
+      const currentLogicModalButton = logicModalButtons[i];
       const currentType = Object.keys(conditionalHash)[i];
 
-      currentContainer.addEventListener('click', e => {
-        e.preventDefault();
+      currentLogicModalButton.addEventListener('click', () => {
         changeCellLogicModalType(currentType);
+      });
+
+      currentTypeContainer.addEventListener('click', () => {
+        changeCurrentCellType(currentType);
+      });
+
+      currentTypeContainer.addEventListener('mouseover', () => {
+        currentTypeContainer.style.opacity = '1';
+      });
+
+      currentTypeContainer.addEventListener('mouseleave', () => {
+        if (currentTypeCheckbox.classList.contains('fa-square-o')) {
+          currentTypeContainer.style.opacity = '0';
+        }
       });
     }
   };

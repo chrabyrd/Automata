@@ -23,18 +23,6 @@ class Container {
     this.handlePlayEvent();
   }
 
-  handleKeystrokeEvent (e) {
-    if (e.keyCode === 49) {
-      this.cellType = 'typeOne';
-    } else if (e.keyCode === 50) {
-      this.cellType = 'typeTwo';
-    } else if (e.keyCode === 51) {
-      this.cellType = 'typeThree';
-    } else if (e.keyCode === 52) {
-      this.cellType = 'typeFour';
-    }
-  }
-
   closestValue (num, array) {
     const sortedArray = array.sort((a, b) => (
       Math.abs(num - a) - Math.abs(num - b)
