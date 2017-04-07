@@ -16,7 +16,7 @@
 
 #### Overview
 
-Automata is a cellular automation engine. It's built entirely out of HTML/CSS/Javascript, with no additional libraries assisting in program function or DOM manipulation (such as jQuery or EaselJS). A single external library is used, [JSColor](https://github.com/jo/JSColor), because why hand-code a perfectly functional, non-essential part of the project?
+Automata is a cellular automation engine. It's built entirely out of HTML/CSS/Javascript, with no additional libraries assisting in program function or DOM manipulation (such as jQuery or EaselJS).
 
 #### Basic Controls
 

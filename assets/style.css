@@ -135,10 +135,6 @@ li:hover {
 	display: flex;
 }
 
-#cellConditionContainer {
-	overflow: scroll;
-}
-
 #cellInfoContainer {
 	display: flex;
 	flex: auto;
@@ -165,31 +161,23 @@ li:hover {
 	width: 100%;
 }
 
-.cellLogicTypes {
+.cellNames {
 	background-color: lightgrey;
 	flex: auto;
+	font-family: Economica;
+	font-size: 28px;
+	border: none;
 }
 
 .cellTypeOptions {
 	display: flex;
+	align-items: center;
 	border: 1px black solid;
 }
 
-.cellLogicColors {
-	flex: auto;
-}
-
-.logicModalButtons {
-	/*display: flex;*/
-	/*flex: auto;*/
-	justify-content: center;
-	color: #333;
-	cursor: pointer;
-}
-
-.currentTypeButtons {
-	/*display: flex;*/
-	/*flex: auto;*/
+.logicModalButtons,
+.currentTypeButtons,
+.colorPickers {
 	justify-content: center;
 	color: #333;
 	cursor: pointer;

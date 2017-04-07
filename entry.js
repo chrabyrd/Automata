@@ -238,16 +238,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const populateColorPickers = () => {
     for (let i = 0; i < cellTypeOptions.length; i++) {
       const currentOption = cellTypeOptions[i];
+      const currentColorPicker = colorPickers[i];
       const currentType = Object.keys(conditionalHash)[i];
-      const colorPicker = document.createElement('input');
 
-      colorPicker.type = 'color';
-      colorPicker.value = conditionalHash[currentType].color;
-      colorPicker.addEventListener('change', e => {
+      currentColorPicker.value = conditionalHash[currentType].color;
+      currentColorPicker.addEventListener('change', e => {
         conditionalHash[currentType].color = e.target.value;
       });
-
-      currentOption.append(colorPicker);
     }
   };
 

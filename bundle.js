@@ -293,16 +293,13 @@
 	  var populateColorPickers = function populateColorPickers() {
 	    var _loop2 = function _loop2(i) {
 	      var currentOption = cellTypeOptions[i];
+	      var currentColorPicker = colorPickers[i];
 	      var currentType = Object.keys(conditionalHash)[i];
-	      var colorPicker = document.createElement('input');
 
-	      colorPicker.type = 'color';
-	      colorPicker.value = conditionalHash[currentType].color;
-	      colorPicker.addEventListener('change', function (e) {
+	      currentColorPicker.value = conditionalHash[currentType].color;
+	      currentColorPicker.addEventListener('change', function (e) {
 	        conditionalHash[currentType].color = e.target.value;
 	      });
-
-	      currentOption.append(colorPicker);
 	    };
 
 	    for (var i = 0; i < cellTypeOptions.length; i++) {
