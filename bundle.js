@@ -662,7 +662,7 @@
 
 	    modalBackdrop.addEventListener('click', function (e) {
 	      if (e.target.id !== 'modal-backdrop') return;
-	      if (!container.pauseEvent) container.handlePauseEvent(e);
+	      if (container.pauseEvent) container.handlePauseEvent(e);
 
 	      // playPauseButton.classList.toggle("fa-pause");
 	      // playPauseButton.classList.toggle("fa-play");
