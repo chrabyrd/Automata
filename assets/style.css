@@ -78,7 +78,7 @@ li:hover {
   display: flex;
   position: fixed;
   top: 0px;
-  justify-content: space-around;
+	align-items: center;
   width: 100%;
 }
 
@@ -159,14 +159,20 @@ li:hover {
 	padding: 5px;
 	background-color: #FFF;
 	color: #333;
-	font-size: 32px;
+	font-size: 26px;
 	justify-content: space-around;
+	cursor: default;
 	width: 100%;
+}
+
+.cellLogicTypes {
+	background-color: lightgrey;
+	flex: auto;
 }
 
 .cellTypeOptions {
 	display: flex;
-	flex: auto;
+	border: 1px black solid;
 }
 
 .cellLogicColors {
@@ -174,13 +180,19 @@ li:hover {
 }
 
 .logicModalButtons {
-	cursor: pointer;
+	/*display: flex;*/
+	/*flex: auto;*/
+	justify-content: center;
 	color: #333;
+	cursor: pointer;
 }
 
 .currentTypeButtons {
-	cursor: pointer;
+	/*display: flex;*/
+	/*flex: auto;*/
+	justify-content: center;
 	color: #333;
+	cursor: pointer;
 }
 
 .conditionContainers {

@@ -4,10 +4,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="./assets/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto"> -->
     <link href="https://fonts.googleapis.com/css?family=Catamaran|Economica" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.js"></script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -34,54 +31,50 @@
 
         <div id="cellLogicControls">
           <div id="typeOneContainer" class="cellTypeContainers">
-            <div id='typeOne' class="cellLogicTypes">typeOne</div>
+            <input id='typeOne' class="cellNames" type="text" value="">
+
             <div class="cellTypeOptions">
-              <div id="typeOneColor" class="cellLogicColors"></div>
-              <button type="button" class="logicModalButtons">
-                <i class="fa fa-cog fa-2x"></i>
-              </button>
-              <button type="button" class="currentTypeButtons">
-                <i class="currentTypeCheckboxes fa fa-check-square-o fa-2x"></i>
-              </button>
+              <div class="logicModalButtons"><i class="fa fa-cog"></i></div>
+
+              <div class="currentTypeButtons">
+                <i class="currentTypeCheckboxes fa fa-check-square-o"></i>
+              </div>
             </div>
           </div>
 
           <div id="typeTwoContainer" class="cellTypeContainers">
-            <div id='typeTwo' class="cellLogicTypes">typeTwo</div>
+            <input id='typeTwo' class="cellNames" type="text" value="">
+
             <div class="cellTypeOptions">
-              <div id="typeTwoColor" class="cellLogicColors"></div>
-              <button type="button" class="logicModalButtons" name="button">
-                <i class="fa fa-cog fa-2x fa-2x"></i>
-              </button>
-              <button type="button" class="currentTypeButtons">
-                <i class="currentTypeCheckboxes fa fa-square-o fa-2x"></i>
-              </button>
+              <div class="logicModalButtons" name="div"><i class="fa fa-cog"></i></div>
+
+              <div class="currentTypeButtons">
+                <i class="currentTypeCheckboxes fa fa-square-o"></i>
+              </div>
             </div>
           </div>
 
           <div id="typeThreeContainer" class="cellTypeContainers">
-            <div id='typeThree' class="cellLogicTypes">typeThree</div>
+            <input id='typeThree' class="cellNames" type="text" value="">
+
             <div class="cellTypeOptions">
-              <div id="typeThreeColor" class="cellLogicColors"></div>
-              <button type="button" class="logicModalButtons" name="button">
-                <i class="fa fa-cog fa-2x"></i>
-              </button>
-              <button type="button" class="currentTypeButtons">
-                <i class="currentTypeCheckboxes fa fa-square-o fa-2x"></i>
-              </button>
+              <div class="logicModalButtons" name="div"><i class="fa fa-cog"></i></div>
+
+              <div class="currentTypeButtons">
+                <i class="currentTypeCheckboxes fa fa-square-o"></i>
+              </div>
             </div>
           </div>
 
           <div id="typeFourContainer" class="cellTypeContainers">
-            <div id='typeFour' class="cellLogicTypes">typeFour</div>
+            <input id='typeFour' class="cellNames" type="text" value="">
+
             <div class="cellTypeOptions">
-              <div id="typeFourColor" class="cellLogicColors"></div>
-              <button type="button" class="logicModalButtons" name="button">
-                <i class="fa fa-cog fa-2x"></i>
-              </button>
-              <button type="button" class="currentTypeButtons">
-                <i class="currentTypeCheckboxes fa fa-square-o fa-2x"></i>
-              </button>
+              <div class="logicModalButtons" name="div"><i class="fa fa-cog"></i></div>
+
+              <div class="currentTypeButtons">
+                <i class="currentTypeCheckboxes fa fa-square-o"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -118,13 +111,13 @@
           <div id="cellLogicModal">
             <div id="cellInfoAndConditions">
               <div id="cellInfoContainer">
-                <div id="cellNameContainer">
+                <!-- <div id="cellNameContainer">
                   <input id="cellName" type="text" value="">
-                </div>
+                </div> -->
 
-                <div id="cellColorContainer">
+                <!-- <div id="cellColorContainer">
                   <input id="colorPicker" class="jscolor" val="000">
-                </div>
+                </div> -->
               </div>
               <div id="cellConditionContainer">
                 <div class="conditionContainers">

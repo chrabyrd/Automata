@@ -7,14 +7,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellLogicModal = document.getElementById("cellLogicModal");
   const modalBackdrop = document.getElementById("modal-backdrop");
 
-  const cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
+  const cellNames = document.getElementsByClassName("cellNames");
   const cellLogicColors = document.getElementsByClassName("cellLogicColors");
   const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
+  const cellTypeOptions = document.getElementsByClassName("cellTypeOptions");
   const logicModalButtons = document.getElementsByClassName("logicModalButtons");
   const currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
-
-  const cellName = document.getElementById("cellName");
-  const colorPicker = document.getElementById("colorPicker");
+  const colorPickers = document.getElementsByClassName("colorPickers");
 
   const neighborTypes = document.getElementsByClassName("neighborTypes");
   const comparators = document.getElementsByClassName("comparators");
@@ -156,32 +155,13 @@ document.addEventListener("DOMContentLoaded", () => {
   ), false);
 
   // Keyboard Shortcuts
-  const changeCurrentCellType = type => {
-    for (let i = 0; i < cellLogicTypes.length; i++) {
-      const currentLogicType = cellLogicTypes[i];
-      const currentTypeContainer = cellTypeContainers[i];
-      const currentTypeCheckbox = currentTypeCheckboxes[i];
-
-      currentTypeContainer.style.opacity = 0;
-      currentTypeCheckbox.classList.add('fa-square-o');
-      currentTypeCheckbox.classList.remove('fa-check-square-o');
-
-      if (currentLogicType.id === type) {
-        currentTypeContainer.style.opacity = 1;
-        currentTypeCheckbox.classList.remove('fa-square-o');
-        currentTypeCheckbox.classList.add('fa-check-square-o');
-      }
-    }
-
-    container.cellType = type;
-  };
-
   document.body.addEventListener('keydown', e => {
 
     if (cellLogicModal.style.display) return;
 
     switch (e.keyCode) {
       case 32:
+        e.preventDefault();
         container.handlePauseEvent();
         break;
       case 49:
@@ -223,46 +203,52 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Cell Logic Bar
-  const refreshCellLogicColors = () => {
-    for (let i = 0; i < cellLogicColors.length; i++) {
-      const currentColor = cellLogicColors[i];
-      const currentType = cellLogicTypes[i];
+  const changeCurrentCellType = type => {
+    for (let i = 0; i < cellNames.length; i++) {
+      const currentName = cellNames[i];
+      const currentTypeContainer = cellTypeContainers[i];
+      const currentTypeCheckbox = currentTypeCheckboxes[i];
 
-      currentColor.style.background = conditionalHash[currentType.id].color;
+      currentTypeContainer.style.opacity = 0;
+      currentTypeCheckbox.classList.add('fa-square-o');
+      currentTypeCheckbox.classList.remove('fa-check-square-o');
+
+      if (currentName.id === type) {
+        currentTypeContainer.style.opacity = 1;
+        currentTypeCheckbox.classList.remove('fa-square-o');
+        currentTypeCheckbox.classList.add('fa-check-square-o');
+      }
+    }
+
+    container.cellType = type;
+  };
+
+  const handleCellNames = cellType => {
+    for (let i = 0; i < cellNames.length; i++) {
+      const currentName = cellNames[i];
+
+      currentName.value = conditionalHash[currentName.id].name;
+
+      currentName.addEventListener('input', () => {
+        conditionalHash[currentName.id].name = currentName.value;
+      });
     }
   };
 
-  const updateCellLogicNames = cellType => {
-    for (let i = 0; i < cellLogicTypes.length; i++) {
-      const currentType = cellLogicTypes[i];
+  const populateColorPickers = () => {
+    for (let i = 0; i < cellTypeOptions.length; i++) {
+      const currentOption = cellTypeOptions[i];
+      const currentType = Object.keys(conditionalHash)[i];
+      const colorPicker = document.createElement('input');
 
-      currentType.innerText = conditionalHash[currentType.id].name;
+      colorPicker.type = 'color';
+      colorPicker.value = conditionalHash[currentType].color;
+      colorPicker.addEventListener('change', e => {
+        conditionalHash[currentType].color = e.target.value;
+      });
+
+      currentOption.append(colorPicker);
     }
-  };
-
-  const handleCellColorChange = cellType => {
-    const updateCellColor = () => {
-      conditionalHash[cellType].color = `#${colorPicker.value}`;
-      refreshCellLogicColors(cellType);
-    };
-
-    colorPicker.value = conditionalHash[cellType].color;
-    colorPicker.style.background = colorPicker.value;
-    colorPicker.onchange = updateCellColor;
-  };
-
-  const handleNameChange = cellType => {
-    cellName.value = conditionalHash[cellType].name;
-
-    const updateName = () => {
-      conditionalHash[cellType].name = cellName.value;
-      updateCellLogicNames(cellType);
-      refreshConditionalStatements(cellType);
-      populateConditionalDropdowns();
-      populateValidNeighborBoxes(cellType);
-    };
-
-    cellName.oninput = updateName;
   };
 
   const translateStatement = string => {
@@ -642,8 +628,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
 
-    handleNameChange(cellType);
-    handleCellColorChange(cellType);
     populateConditionalDropdowns();
     refreshConditionalStatements(cellType);
     resetMenuValues();
@@ -653,15 +637,15 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const populateTypeContainers = () => {
-    updateCellLogicNames();
-    refreshCellLogicColors();
+    handleCellNames();
+    populateColorPickers();
 
     cellTypeContainers[0].style.opacity = '1';
 
     for (let i = 0; i < cellTypeContainers.length; i++) {
       const currentTypeContainer = cellTypeContainers[i];
-      const currentTypeCheckbox = currentTypeCheckboxes[i];
       const currentLogicModalButton = logicModalButtons[i];
+      const currentTypeCheckbox = currentTypeCheckboxes[i];
       const currentType = Object.keys(conditionalHash)[i];
 
       currentLogicModalButton.addEventListener('click', () => {

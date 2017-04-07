@@ -59,14 +59,13 @@
 	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var modalBackdrop = document.getElementById("modal-backdrop");
 
-	  var cellLogicTypes = document.getElementsByClassName("cellLogicTypes");
+	  var cellNames = document.getElementsByClassName("cellNames");
 	  var cellLogicColors = document.getElementsByClassName("cellLogicColors");
 	  var cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
+	  var cellTypeOptions = document.getElementsByClassName("cellTypeOptions");
 	  var logicModalButtons = document.getElementsByClassName("logicModalButtons");
 	  var currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
-
-	  var cellName = document.getElementById("cellName");
-	  var colorPicker = document.getElementById("colorPicker");
+	  var colorPickers = document.getElementsByClassName("colorPickers");
 
 	  var neighborTypes = document.getElementsByClassName("neighborTypes");
 	  var comparators = document.getElementsByClassName("comparators");
@@ -207,32 +206,13 @@
 	  }, false);
 
 	  // Keyboard Shortcuts
-	  var changeCurrentCellType = function changeCurrentCellType(type) {
-	    for (var i = 0; i < cellLogicTypes.length; i++) {
-	      var currentLogicType = cellLogicTypes[i];
-	      var currentTypeContainer = cellTypeContainers[i];
-	      var currentTypeCheckbox = currentTypeCheckboxes[i];
-
-	      currentTypeContainer.style.opacity = 0;
-	      currentTypeCheckbox.classList.add('fa-square-o');
-	      currentTypeCheckbox.classList.remove('fa-check-square-o');
-
-	      if (currentLogicType.id === type) {
-	        currentTypeContainer.style.opacity = 1;
-	        currentTypeCheckbox.classList.remove('fa-square-o');
-	        currentTypeCheckbox.classList.add('fa-check-square-o');
-	      }
-	    }
-
-	    container.cellType = type;
-	  };
-
 	  document.body.addEventListener('keydown', function (e) {
 
 	    if (cellLogicModal.style.display) return;
 
 	    switch (e.keyCode) {
 	      case 32:
+	        e.preventDefault();
 	        container.handlePauseEvent();
 	        break;
 	      case 49:
@@ -274,46 +254,60 @@
 	  });
 
 	  // Cell Logic Bar
-	  var refreshCellLogicColors = function refreshCellLogicColors() {
-	    for (var i = 0; i < cellLogicColors.length; i++) {
-	      var currentColor = cellLogicColors[i];
-	      var currentType = cellLogicTypes[i];
+	  var changeCurrentCellType = function changeCurrentCellType(type) {
+	    for (var i = 0; i < cellNames.length; i++) {
+	      var currentName = cellNames[i];
+	      var currentTypeContainer = cellTypeContainers[i];
+	      var currentTypeCheckbox = currentTypeCheckboxes[i];
 
-	      currentColor.style.background = conditionalHash[currentType.id].color;
+	      currentTypeContainer.style.opacity = 0;
+	      currentTypeCheckbox.classList.add('fa-square-o');
+	      currentTypeCheckbox.classList.remove('fa-check-square-o');
+
+	      if (currentName.id === type) {
+	        currentTypeContainer.style.opacity = 1;
+	        currentTypeCheckbox.classList.remove('fa-square-o');
+	        currentTypeCheckbox.classList.add('fa-check-square-o');
+	      }
+	    }
+
+	    container.cellType = type;
+	  };
+
+	  var handleCellNames = function handleCellNames(cellType) {
+	    var _loop = function _loop(i) {
+	      var currentName = cellNames[i];
+
+	      currentName.value = conditionalHash[currentName.id].name;
+
+	      currentName.addEventListener('input', function () {
+	        conditionalHash[currentName.id].name = currentName.value;
+	      });
+	    };
+
+	    for (var i = 0; i < cellNames.length; i++) {
+	      _loop(i);
 	    }
 	  };
 
-	  var updateCellLogicNames = function updateCellLogicNames(cellType) {
-	    for (var i = 0; i < cellLogicTypes.length; i++) {
-	      var currentType = cellLogicTypes[i];
+	  var populateColorPickers = function populateColorPickers() {
+	    var _loop2 = function _loop2(i) {
+	      var currentOption = cellTypeOptions[i];
+	      var currentType = Object.keys(conditionalHash)[i];
+	      var colorPicker = document.createElement('input');
 
-	      currentType.innerText = conditionalHash[currentType.id].name;
+	      colorPicker.type = 'color';
+	      colorPicker.value = conditionalHash[currentType].color;
+	      colorPicker.addEventListener('change', function (e) {
+	        conditionalHash[currentType].color = e.target.value;
+	      });
+
+	      currentOption.append(colorPicker);
+	    };
+
+	    for (var i = 0; i < cellTypeOptions.length; i++) {
+	      _loop2(i);
 	    }
-	  };
-
-	  var handleCellColorChange = function handleCellColorChange(cellType) {
-	    var updateCellColor = function updateCellColor() {
-	      conditionalHash[cellType].color = "#" + colorPicker.value;
-	      refreshCellLogicColors(cellType);
-	    };
-
-	    colorPicker.value = conditionalHash[cellType].color;
-	    colorPicker.style.background = colorPicker.value;
-	    colorPicker.onchange = updateCellColor;
-	  };
-
-	  var handleNameChange = function handleNameChange(cellType) {
-	    cellName.value = conditionalHash[cellType].name;
-
-	    var updateName = function updateName() {
-	      conditionalHash[cellType].name = cellName.value;
-	      updateCellLogicNames(cellType);
-	      refreshConditionalStatements(cellType);
-	      populateConditionalDropdowns();
-	      populateValidNeighborBoxes(cellType);
-	    };
-
-	    cellName.oninput = updateName;
 	  };
 
 	  var translateStatement = function translateStatement(string) {
@@ -348,10 +342,10 @@
 
 	    var populateDropdown = function populateDropdown(arr) {
 	      for (var i = 0; i < arr.length; i++) {
-	        var currentType = arr[i];
+	        var _currentType = arr[i];
 
-	        for (var j = 0; j < currentType.options.length; j++) {
-	          var currentOption = currentType.options[j];
+	        for (var j = 0; j < _currentType.options.length; j++) {
+	          var currentOption = _currentType.options[j];
 	          currentOption.innerText = translateStatement(currentOption.value);
 	        }
 	      }
@@ -395,14 +389,14 @@
 	  };
 
 	  var populateConditionalStatements = function populateConditionalStatements(cellType) {
-	    var _loop = function _loop(i) {
+	    var _loop3 = function _loop3(i) {
 	      var currentStatement = conditionalStatements[i];
 	      var currentOutput = chanceOutputs[i];
 	      var currentSliderContainer = sliderContainers[i];
 	      var conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
 	      var conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
 
-	      var _loop2 = function _loop2(j) {
+	      var _loop4 = function _loop4(j) {
 	        var statement = conditionalStatementArray[j];
 
 	        if (statement === "") return "continue";
@@ -488,14 +482,14 @@
 	      };
 
 	      for (var j = 0; j < conditionalStatementArray.length; j++) {
-	        var _ret2 = _loop2(j);
+	        var _ret4 = _loop4(j);
 
-	        if (_ret2 === "continue") continue;
+	        if (_ret4 === "continue") continue;
 	      }
 	    };
 
 	    for (var i = 0; i < conditionalStatements.length; i++) {
-	      _loop(i);
+	      _loop3(i);
 	    }
 	  };
 
@@ -572,7 +566,7 @@
 
 	    removeChanceEventListeners();
 
-	    var _loop3 = function _loop3(i) {
+	    var _loop5 = function _loop5(i) {
 	      var currentSlider = chanceSliders[i];
 	      var currentSliderContainer = sliderContainers[i];
 	      var currentOutput = chanceOutputs[i];
@@ -615,7 +609,7 @@
 	    };
 
 	    for (var i = 0; i < chanceSliders.length; i++) {
-	      _loop3(i);
+	      _loop5(i);
 	    }
 	  };
 
@@ -634,7 +628,7 @@
 	    };
 
 	    var populateSubmitEventListeners = function populateSubmitEventListeners() {
-	      var _loop4 = function _loop4(i) {
+	      var _loop6 = function _loop6(i) {
 	        var currentButton = conditionalSubmitButtons[i];
 	        var currentSliderContainer = sliderContainers[i];
 
@@ -656,7 +650,7 @@
 	      };
 
 	      for (var i = 0; i < conditionalSubmitButtons.length; i++) {
-	        _loop4(i);
+	        _loop6(i);
 	      }
 	    };
 
@@ -675,7 +669,7 @@
 
 	    resetNeighborBoxes();
 
-	    var _loop5 = function _loop5(i) {
+	    var _loop7 = function _loop7(i) {
 	      var currentBox = validNeighborBoxes[i];
 	      var currentName = neighborTypeNames[i];
 
@@ -691,7 +685,7 @@
 	    };
 
 	    for (var i = 0; i < validNeighborBoxes.length; i++) {
-	      _loop5(i);
+	      _loop7(i);
 	    }
 	  };
 
@@ -701,8 +695,6 @@
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
 
-	    handleNameChange(cellType);
-	    handleCellColorChange(cellType);
 	    populateConditionalDropdowns();
 	    refreshConditionalStatements(cellType);
 	    resetMenuValues();
@@ -712,15 +704,15 @@
 	  };
 
 	  var populateTypeContainers = function populateTypeContainers() {
-	    updateCellLogicNames();
-	    refreshCellLogicColors();
+	    handleCellNames();
+	    populateColorPickers();
 
 	    cellTypeContainers[0].style.opacity = '1';
 
-	    var _loop6 = function _loop6(i) {
+	    var _loop8 = function _loop8(i) {
 	      var currentTypeContainer = cellTypeContainers[i];
-	      var currentTypeCheckbox = currentTypeCheckboxes[i];
 	      var currentLogicModalButton = logicModalButtons[i];
+	      var currentTypeCheckbox = currentTypeCheckboxes[i];
 	      var currentType = Object.keys(conditionalHash)[i];
 
 	      currentLogicModalButton.addEventListener('click', function () {
@@ -743,7 +735,7 @@
 	    };
 
 	    for (var i = 0; i < cellTypeContainers.length; i++) {
-	      _loop6(i);
+	      _loop8(i);
 	    }
 	  };
 
