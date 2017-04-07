@@ -201,21 +201,27 @@
 	        handlePauseEvent();
 	        break;
 	      case 49:
+	        // 1
 	        changeCurrentCellType('typeOne');
 	        break;
 	      case 50:
+	        // 2
 	        changeCurrentCellType('typeTwo');
 	        break;
 	      case 51:
+	        // 3
 	        changeCurrentCellType('typeThree');
 	        break;
 	      case 52:
+	        // 4
 	        changeCurrentCellType('typeFour');
 	        break;
 	      case 78:
+	        // n
 	        handleNextFrameEvent();
 	        break;
 	      case 82:
+	        // r
 	        handleResetEvent();
 	        break;
 	    }
@@ -394,15 +400,17 @@
 	              return str !== "";
 	            });
 
-	            if (conditionalArray[0] === '&&' || conditionalArray[0] === '||') {
-	              conditionalArray.shift();
-	            }
-
 	            if (conditionalArray[0] === 'Math.random()') {
 	              conditionalArray[conditionalArray.length - 1] = "100";
 	              conditionalArray.unshift('false &&');
 	              currentOutput.value = 100;
 	              currentSliderContainer.style.display = "none";
+	            }
+
+	            for (var k = 0; k < conditionalArray.length; k++) {
+	              if (conditionalArray[k] === 'Math.random()') {
+	                conditionalArray[k - 1] = '&&';
+	              }
 	            }
 
 	            conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
