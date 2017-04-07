@@ -7,13 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellLogicModal = document.getElementById("cellLogicModal");
   const modalBackdrop = document.getElementById("modal-backdrop");
 
-  const cellNames = document.getElementsByClassName("cellNames");
-  const cellLogicColors = document.getElementsByClassName("cellLogicColors");
   const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
-  const cellTypeOptions = document.getElementsByClassName("cellTypeOptions");
+  const cellNames = document.getElementsByClassName("cellNames");
+  const colorPickers = document.getElementsByClassName("colorPickers");
   const logicModalButtons = document.getElementsByClassName("logicModalButtons");
   const currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
-  const colorPickers = document.getElementsByClassName("colorPickers");
 
   const neighborTypes = document.getElementsByClassName("neighborTypes");
   const comparators = document.getElementsByClassName("comparators");
@@ -31,24 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextFrameButton = document.getElementById("nextFrameButton");
   const resetButton = document.getElementById("resetButton");
 
-  const faster = document.getElementById("faster");
-  const currentSpeed = document.getElementById("currentSpeed");
-  const speedDropdown = document.getElementById("speedDropdown");
-  const speedDropdownContainer = document.getElementById("speedDropdownContainer");
-  const slower = document.getElementById("slower");
-
-  const gridDropdownContainer = document.getElementById("gridDropdownContainer");
-  const widthDropdownContainer = document.getElementById("widthDropdownContainer");
-  const heightDropdownContainer = document.getElementById("heightDropdownContainer");
-  const widthDropdown = document.getElementById("widthDropdown");
-  const heightDropdown = document.getElementById("heightDropdown");
-  const gridSizeContainer = document.getElementById("gridSizeContainer");
+  const speedSlider = document.getElementById("speedSlider");
+  const cellSizeDropdown = document.getElementById("cellSizeDropdown");
   const currentWidth = document.getElementById("currentWidth");
   const currentHeight = document.getElementById("currentHeight");
-
-  const cellSize = document.getElementById("cellSize");
-  const cellSizeDropdown = document.getElementById("cellSizeDropdown");
-  const cellSizeDropdownContainer = document.getElementById("cellSizeDropdownContainer");
 
   const conditionalHash = {
     'typeOne': {
@@ -147,7 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-
   const container = new Container(mainCanvas, mainCtx, conditionalHash);
 
   mainCanvas.addEventListener('click',(e) => (
@@ -160,8 +143,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cellLogicModal.style.display) return;
 
     switch (e.keyCode) {
-      case 32:
+      case 32: // Spacebar
         e.preventDefault();
+        // playPauseButton.classList.toggle("fa-pause");
+        // playPauseButton.classList.toggle("fa-play");
         container.handlePauseEvent();
         break;
       case 49:
@@ -185,24 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Modals
-  modalBackdrop.addEventListener('click', e => {
-    if (e.target.id !== 'modal-backdrop') return;
-    if (container.pauseEvent) container.handlePauseEvent(e);
-    speedDropdown.innerHTML = "";
-    cellSizeDropdown.innerHTML = "";
-    widthDropdown.innerHTML = "";
-    heightDropdown.innerHTML = "";
-    speedDropdownContainer.style.display = null;
-    cellSizeDropdownContainer.style.display = null;
-    widthDropdownContainer.style.display = null;
-    heightDropdownContainer.style.display = null;
-    gridDropdownContainer.style.display = null;
-    cellLogicModal.style.display = null;
-    modalBackdrop.style.display = null;
-  });
-
-  // Cell Logic Bar
   const changeCurrentCellType = type => {
     for (let i = 0; i < cellNames.length; i++) {
       const currentName = cellNames[i];
@@ -236,8 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const populateColorPickers = () => {
-    for (let i = 0; i < cellTypeOptions.length; i++) {
-      const currentOption = cellTypeOptions[i];
+    for (let i = 0; i < colorPickers.length; i++) {
       const currentColorPicker = colorPickers[i];
       const currentType = Object.keys(conditionalHash)[i];
 
@@ -625,6 +591,16 @@ document.addEventListener("DOMContentLoaded", () => {
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
 
+    modalBackdrop.addEventListener('click', e => {
+      if (e.target.id !== 'modal-backdrop') return;
+      if (!container.pauseEvent) container.handlePauseEvent(e);
+
+      // playPauseButton.classList.toggle("fa-pause");
+      // playPauseButton.classList.toggle("fa-play");
+      cellLogicModal.style.display = null;
+      modalBackdrop.style.display = null;
+    });
+
     populateConditionalDropdowns();
     refreshConditionalStatements(cellType);
     resetMenuValues();
@@ -665,102 +641,70 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  const handleGridControlButtons = () => {
+
+    const handlePauseEvent = (e = null) => {
+      e.preventDefault();
+      // playPauseButton.classList.toggle("fa-pause");
+      // playPauseButton.classList.toggle("fa-play");
+      container.handlePauseEvent();
+    };
+
+    const handleNextFrameEvent = () => {
+      container.handleNextFrameEvent();
+    };
+
+    const handleResetEvent = () => {
+      container.handleResetEvent();
+    };
+
+    const handleSpeedChangeEvent = () => {
+      container.handleSpeedChangeEvent(100 - speedSlider.value);
+    };
+
+    const handleCellResizeEvent = () => {
+      container.handleCellResizeEvent(cellSizeDropdown.value);
+    };
+
+    const handleResizeWidthEvent = () => {
+      container.handleResizeEvent('width', parseInt(currentWidth.value));
+    };
+
+    const handleResizeHeightEvent = () => {
+      container.handleResizeEvent('height', parseInt(currentHeight.value));
+    };
+
+    const populateGridDimensions = () => {
+      const possibleDimensions = container.gridDimensions.sort((a, b) => a - b);
+
+      possibleDimensions.reverse().forEach(num => {
+        const widthOption = document.createElement('option');
+        widthOption.value = num;
+        widthOption.text = num;
+
+        const heightOption = document.createElement('option');
+        heightOption.value = num;
+        heightOption.text = num;
+
+        currentWidth.add(widthOption);
+        currentHeight.add(heightOption);
+      });
+
+      currentWidth.value = container.width;
+      currentHeight.value = container.height;
+    };
+
+    populateGridDimensions();
+
+    playPauseButton.addEventListener('click', handlePauseEvent);
+    nextFrameButton.addEventListener('click', handleNextFrameEvent);
+    resetButton.addEventListener('click', handleResetEvent);
+    speedSlider.addEventListener('change', handleSpeedChangeEvent);
+    cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
+    currentWidth.addEventListener('change', handleResizeWidthEvent);
+    currentHeight.addEventListener('change', handleResizeHeightEvent);
+  };
+
   populateTypeContainers();
-
-  // Play Buttons
-  playPauseButton.addEventListener('click', e => {
-    playPauseButton.classList.toggle("fa-pause");
-    container.handlePauseEvent(e);
-  });
-
-  nextFrameButton.addEventListener('click', e => {
-    container.handleNextFrameEvent(e);
-  });
-
-  resetButton.addEventListener('click', e => {
-    container.handleResetEvent(e);
-  });
-
-  // Speed
-  faster.addEventListener('click', e => {
-    container.handleSpeedChangeEvent(container.drawspeed - 1);
-    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
-  });
-
-  slower.addEventListener('click', e => {
-    container.handleSpeedChangeEvent(container.drawspeed + 1);
-    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
-  });
-
-  currentSpeed.addEventListener('click', e => {
-    container.validDrawspeeds.forEach(function(num) {
-      speedDropdown.innerHTML += `<li>${num}</li>`;
-    });
-
-    speedDropdownContainer.style.display = "flex";
-    gridDropdownContainer.style.display = "flex";
-    modalBackdrop.style.display = "flex";
-  });
-
-  speedDropdown.addEventListener('click', e => {
-    container.handleSpeedChangeEvent(1000 / e.target.innerHTML);
-    currentSpeed.innerHTML = e.target.innerHTML;
-    speedDropdown.innerHTML = "";
-    speedDropdown.style.display = null;
-    modalBackdrop.style.display = null;
-  });
-
-  // Grid Size
-  currentWidth.innerHTML = container.width;
-  currentHeight.innerHTML = container.height;
-
-  gridSizeContainer.addEventListener('click', e => {
-    const gridDimensions = container.gridDimensions.sort((a, b) => a - b);
-
-    gridDimensions.forEach(function(num) {
-      widthDropdown.innerHTML += `<li>${num}</li>`;
-      heightDropdown.innerHTML += `<li>${num}</li>`;
-    });
-
-    widthDropdownContainer.style.display = "flex";
-    heightDropdownContainer.style.display = "flex";
-    gridDropdownContainer.style.display = "flex";
-    modalBackdrop.style.display = "flex";
-  });
-
-  widthDropdown.addEventListener('click', e => {
-    container.handleResizeEvent('width', e.target.innerHTML);
-    currentWidth.innerHTML = e.target.innerHTML;
-    widthDropdown.innerHTML = "";
-    widthDropdown.style.display = null;
-    modalBackdrop.style.display = null;
-  });
-
-  heightDropdown.addEventListener('click', e => {
-    container.handleResizeEvent('height', e.target.innerHTML);
-    currentHeight.innerHTML = e.target.innerHTML;
-    heightDropdown.innerHTML = "";
-    heightDropdown.style.display = null;
-    modalBackdrop.style.display = null;
-  });
-
-  // Cell Size
-  cellSize.addEventListener('click', e => {
-    container.cellSizes.forEach(function(num) {
-      cellSizeDropdown.innerHTML += `<li>${num}</li>`;
-    });
-
-    cellSizeDropdownContainer.style.display = "flex";
-    gridDropdownContainer.style.display = "flex";
-    modalBackdrop.style.display = "flex";
-  });
-
-  cellSizeDropdown.addEventListener('click', e => {
-    container.handleCellResizeEvent(parseInt(e.target.innerHTML));
-    cellSize.innerHTML = e.target.innerHTML;
-    cellSizeDropdown.innerHTML = "";
-    cellSizeDropdown.style.display = null;
-    modalBackdrop.style.display = null;
-  });
-
+  handleGridControlButtons();
 });

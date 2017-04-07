@@ -7,7 +7,6 @@ class Container {
     this.mainCtx = mainCtx;
     this.conditionalHash = conditionalHash;
     this.gridDimensions = [];
-    this.validDrawspeeds = [];
     this.cellSizes = [1, 2, 4, 8, 16, 32];
     this.width = window.innerWidth;
     this.height = window.innerHeight;
@@ -19,7 +18,6 @@ class Container {
     this.getGridSize();
     this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
     this.automata = new Automata(this.board);
-    this.populateValidDrawspeeds();
     this.handlePlayEvent();
   }
 
@@ -47,15 +45,8 @@ class Container {
     this.gridDimensions = gridDimensions;
   }
 
-  populateValidDrawspeeds () {
-    for (let i = 1; i <= 200; i++) {
-      this.validDrawspeeds.push((1000 / i).toFixed(2));
-    }
-  }
-
   handleClickEvent (e) {
     const color = this.conditionalHash[this.cellType].color;
-    console.log(color);
     this.board.toggleCell(e, this.cellType, color);
   }
 
@@ -94,7 +85,7 @@ class Container {
   }
 
   handleCellResizeEvent (size) {
-    this.cellSize = size;
+    this.cellSize = parseInt(size);
     this.handleResetEvent();
   }
 

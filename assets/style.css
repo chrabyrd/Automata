@@ -59,27 +59,74 @@ body {
   justify-content: center;
 }
 
+#mainCanvas {
+	border: 2px solid #333;
+	border-top: none;
+}
+
 li:hover {
   background-color: green;
   cursor: pointer;
 }
 
+/* Controls */
+
 #gridControls {
-  background-color: red;
+  background-color: #FFF;
+	padding: 5px;
+	position: fixed;
   display: flex;
-  position: fixed;
+	justify-content: space-around;
+	color: #333;
+	font-size: 20px;
+	width: 100%;
   bottom: 0px;
-  margin-bottom: 10px;
-  justify-content: space-around;
-  width: 100%;
+}
+
+.controlContainers {
+	display: flex;
+	align-items: center;
 }
 
 #cellLogicControls {
   display: flex;
   position: fixed;
+	width: 100%;
   top: 0px;
+}
+
+.cellTypeContainers {
+	opacity: 0;
+	display: flex;
+	padding: 5px;
+	background-color: #FFF;
+	color: #333;
+	font-size: 20px;
+	justify-content: space-around;
+	cursor: default;
+}
+
+.cellNames {
+	background-color: lightgrey;
+	flex: auto;
+	font-family: Economica;
+	font-size: 28px;
+	border: none;
+	width: 100%;
+}
+
+.cellTypeOptions {
+	display: flex;
 	align-items: center;
-  width: 100%;
+	border: 1px black solid;
+}
+
+.logicModalButtons,
+.currentTypeButtons,
+.colorPickers {
+	justify-content: center;
+	color: #333;
+	cursor: pointer;
 }
 
 /* Modals */
@@ -110,77 +157,11 @@ li:hover {
   background-color: chartreuse;
 }
 
-/* Dropdowns */
-
-#gridDropdownContainer {
-  display: none;
-  position: fixed;
-  overflow: scroll;
-  justify-content: space-around;
-  height: 70px;
-  width: 100%;
-  background-color: pink;
-  align-self: flex-end;
-}
-
-#speedDropdownContainer,
-#cellSizeDropdownContainer,
-#widthDropdownContainer,
-#heightDropdownContainer {
-  display: none;
-}
-
-/* Cell Logic */
-#cellInfoAndConditions {
-	display: flex;
-}
-
-#cellInfoContainer {
-	display: flex;
-	flex: auto;
-	flex-direction: column;
-	justify-content: space-around;
-	overflow: scroll;
-	background-color: teal;
-}
+/* Cell Conditions */
 
 #validNeighborsContainer {
 	display: flex;
 	background-color: beige;
-}
-
-.cellTypeContainers {
-	opacity: 0;
-	display: flex;
-	padding: 5px;
-	background-color: #FFF;
-	color: #333;
-	font-size: 26px;
-	justify-content: space-around;
-	cursor: default;
-	width: 100%;
-}
-
-.cellNames {
-	background-color: lightgrey;
-	flex: auto;
-	font-family: Economica;
-	font-size: 28px;
-	border: none;
-}
-
-.cellTypeOptions {
-	display: flex;
-	align-items: center;
-	border: 1px black solid;
-}
-
-.logicModalButtons,
-.currentTypeButtons,
-.colorPickers {
-	justify-content: center;
-	color: #333;
-	cursor: pointer;
 }
 
 .conditionContainers {

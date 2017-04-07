@@ -84,34 +84,39 @@
         </div>
 
         <div id="gridControls">
-          <div id="playButtonsContainer">
-            <i id="playPauseButton" class="fa fa-play fa"></i>
+          <div id="playButtonsContainer" class="controlContainers">
+            <i id="playPauseButton" class="fa fa-pause fa"></i>
             <i id="nextFrameButton" class="fa fa-step-forward fa"></i>
             <i id="resetButton" class="fa fa-refresh fa"></i>
           </div>
 
-          <div id="speedContainer">
-            <i id="slower" class="fa fa-backward fa"></i>
-            <span id="currentSpeed">20.00</span>
-            <span>&nbsp;fps</span>
-            <i id="faster" class="fa fa-forward fa"></i>
+          <div id="speedContainer" class="controlContainers">
+            <div>Speed:&nbsp;</div>
+            <input id="speedSlider" type="range" min="1" max="99" value ="50" class="">
+            </input>
           </div>
 
-          <div id="cellSizeContainer">
-            <span>Cell Size:&nbsp;</span>
-            <span id="cellSize">16</span>
+          <div id="cellSizeContainer" class="controlContainers">
+            <div>Cell Size:&nbsp;</div>
+            <select id="cellSizeDropdown">
+              <option value="32">32 pixels</option>
+              <option selected value="16">16 pixels</option>
+              <option value="8">8 pixels</option>
+              <option value="4">4 pixels</option>
+              <option value="2">2 pixels</option>
+              <option value="1">1 pixel</option>
+            </select>
           </div>
 
-          <div id="gridSizeContainer">
-            <span>Grid Size:&nbsp;</span>
-            <span id="currentWidth">*</span>
-            <span>x</span>
-            <span id="currentHeight">*</span>
+          <div id="gridSizeContainer" class="controlContainers">
+            <div>Grid Size:&nbsp;</div>
+            <select id="currentWidth"></select>
+            <div>x</div>
+            <select id="currentHeight"></select>
           </div>
         </div>
 
         <div id="modal-backdrop">
-
           <div id="cellLogicModal">
             <div class="conditionContainers">
               <div class="conditionOptions">
@@ -484,31 +489,7 @@
                      >
             </div>
           </div>
-
-          <div id="gridDropdownContainer">
-            <div id="speedDropdownContainer">
-              <div>Frames Per Second: </div>
-              <div id="speedDropdown"></div>
-            </div>
-
-            <div id="cellSizeDropdownContainer">
-              <div>Cell Sizes: </div>
-              <div id="cellSizeDropdown"></div>
-            </div>
-
-            <div id="widthDropdownContainer">
-              <div>Dimensions: </div>
-              <div id="widthDropdown"></div>
-            </div>
-
-            <div id="heightDropdownContainer">
-              <div id="heightDropdown"></div>
-            </div>
-          </div>
         </div>
-
-
-
 
         <!-- <div id="rulesModal">
           <div id="modal-content">

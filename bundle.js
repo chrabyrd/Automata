@@ -59,13 +59,11 @@
 	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var modalBackdrop = document.getElementById("modal-backdrop");
 
-	  var cellNames = document.getElementsByClassName("cellNames");
-	  var cellLogicColors = document.getElementsByClassName("cellLogicColors");
 	  var cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
-	  var cellTypeOptions = document.getElementsByClassName("cellTypeOptions");
+	  var cellNames = document.getElementsByClassName("cellNames");
+	  var colorPickers = document.getElementsByClassName("colorPickers");
 	  var logicModalButtons = document.getElementsByClassName("logicModalButtons");
 	  var currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
-	  var colorPickers = document.getElementsByClassName("colorPickers");
 
 	  var neighborTypes = document.getElementsByClassName("neighborTypes");
 	  var comparators = document.getElementsByClassName("comparators");
@@ -83,24 +81,10 @@
 	  var nextFrameButton = document.getElementById("nextFrameButton");
 	  var resetButton = document.getElementById("resetButton");
 
-	  var faster = document.getElementById("faster");
-	  var currentSpeed = document.getElementById("currentSpeed");
-	  var speedDropdown = document.getElementById("speedDropdown");
-	  var speedDropdownContainer = document.getElementById("speedDropdownContainer");
-	  var slower = document.getElementById("slower");
-
-	  var gridDropdownContainer = document.getElementById("gridDropdownContainer");
-	  var widthDropdownContainer = document.getElementById("widthDropdownContainer");
-	  var heightDropdownContainer = document.getElementById("heightDropdownContainer");
-	  var widthDropdown = document.getElementById("widthDropdown");
-	  var heightDropdown = document.getElementById("heightDropdown");
-	  var gridSizeContainer = document.getElementById("gridSizeContainer");
+	  var speedSlider = document.getElementById("speedSlider");
+	  var cellSizeDropdown = document.getElementById("cellSizeDropdown");
 	  var currentWidth = document.getElementById("currentWidth");
 	  var currentHeight = document.getElementById("currentHeight");
-
-	  var cellSize = document.getElementById("cellSize");
-	  var cellSizeDropdown = document.getElementById("cellSizeDropdown");
-	  var cellSizeDropdownContainer = document.getElementById("cellSizeDropdownContainer");
 
 	  var conditionalHash = {
 	    'typeOne': {
@@ -212,7 +196,10 @@
 
 	    switch (e.keyCode) {
 	      case 32:
+	        // Spacebar
 	        e.preventDefault();
+	        // playPauseButton.classList.toggle("fa-pause");
+	        // playPauseButton.classList.toggle("fa-play");
 	        container.handlePauseEvent();
 	        break;
 	      case 49:
@@ -236,24 +223,6 @@
 	    }
 	  });
 
-	  // Modals
-	  modalBackdrop.addEventListener('click', function (e) {
-	    if (e.target.id !== 'modal-backdrop') return;
-	    if (container.pauseEvent) container.handlePauseEvent(e);
-	    speedDropdown.innerHTML = "";
-	    cellSizeDropdown.innerHTML = "";
-	    widthDropdown.innerHTML = "";
-	    heightDropdown.innerHTML = "";
-	    speedDropdownContainer.style.display = null;
-	    cellSizeDropdownContainer.style.display = null;
-	    widthDropdownContainer.style.display = null;
-	    heightDropdownContainer.style.display = null;
-	    gridDropdownContainer.style.display = null;
-	    cellLogicModal.style.display = null;
-	    modalBackdrop.style.display = null;
-	  });
-
-	  // Cell Logic Bar
 	  var changeCurrentCellType = function changeCurrentCellType(type) {
 	    for (var i = 0; i < cellNames.length; i++) {
 	      var currentName = cellNames[i];
@@ -292,7 +261,6 @@
 
 	  var populateColorPickers = function populateColorPickers() {
 	    var _loop2 = function _loop2(i) {
-	      var currentOption = cellTypeOptions[i];
 	      var currentColorPicker = colorPickers[i];
 	      var currentType = Object.keys(conditionalHash)[i];
 
@@ -302,7 +270,7 @@
 	      });
 	    };
 
-	    for (var i = 0; i < cellTypeOptions.length; i++) {
+	    for (var i = 0; i < colorPickers.length; i++) {
 	      _loop2(i);
 	    }
 	  };
@@ -692,6 +660,16 @@
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
 
+	    modalBackdrop.addEventListener('click', function (e) {
+	      if (e.target.id !== 'modal-backdrop') return;
+	      if (!container.pauseEvent) container.handlePauseEvent(e);
+
+	      // playPauseButton.classList.toggle("fa-pause");
+	      // playPauseButton.classList.toggle("fa-play");
+	      cellLogicModal.style.display = null;
+	      modalBackdrop.style.display = null;
+	    });
+
 	    populateConditionalDropdowns();
 	    refreshConditionalStatements(cellType);
 	    resetMenuValues();
@@ -736,105 +714,76 @@
 	    }
 	  };
 
+	  var handleGridControlButtons = function handleGridControlButtons() {
+
+	    var handlePauseEvent = function handlePauseEvent() {
+	      var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+	      e.preventDefault();
+	      // playPauseButton.classList.toggle("fa-pause");
+	      // playPauseButton.classList.toggle("fa-play");
+	      container.handlePauseEvent();
+	    };
+
+	    var handleNextFrameEvent = function handleNextFrameEvent() {
+	      container.handleNextFrameEvent();
+	    };
+
+	    var handleResetEvent = function handleResetEvent() {
+	      container.handleResetEvent();
+	    };
+
+	    var handleSpeedChangeEvent = function handleSpeedChangeEvent() {
+	      container.handleSpeedChangeEvent(100 - speedSlider.value);
+	    };
+
+	    var handleCellResizeEvent = function handleCellResizeEvent() {
+	      container.handleCellResizeEvent(cellSizeDropdown.value);
+	    };
+
+	    var handleResizeWidthEvent = function handleResizeWidthEvent() {
+	      container.handleResizeEvent('width', parseInt(currentWidth.value));
+	    };
+
+	    var handleResizeHeightEvent = function handleResizeHeightEvent() {
+	      container.handleResizeEvent('height', parseInt(currentHeight.value));
+	    };
+
+	    var populateGridDimensions = function populateGridDimensions() {
+	      var possibleDimensions = container.gridDimensions.sort(function (a, b) {
+	        return a - b;
+	      });
+
+	      possibleDimensions.reverse().forEach(function (num) {
+	        var widthOption = document.createElement('option');
+	        widthOption.value = num;
+	        widthOption.text = num;
+
+	        var heightOption = document.createElement('option');
+	        heightOption.value = num;
+	        heightOption.text = num;
+
+	        currentWidth.add(widthOption);
+	        currentHeight.add(heightOption);
+	      });
+
+	      currentWidth.value = container.width;
+	      currentHeight.value = container.height;
+	    };
+
+	    populateGridDimensions();
+
+	    playPauseButton.addEventListener('click', handlePauseEvent);
+	    nextFrameButton.addEventListener('click', handleNextFrameEvent);
+	    resetButton.addEventListener('click', handleResetEvent);
+	    speedSlider.addEventListener('change', handleSpeedChangeEvent);
+	    cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
+	    currentWidth.addEventListener('change', handleResizeWidthEvent);
+	    currentHeight.addEventListener('change', handleResizeHeightEvent);
+	  };
+
 	  populateTypeContainers();
-
-	  // Play Buttons
-	  playPauseButton.addEventListener('click', function (e) {
-	    playPauseButton.classList.toggle("fa-pause");
-	    container.handlePauseEvent(e);
-	  });
-
-	  nextFrameButton.addEventListener('click', function (e) {
-	    container.handleNextFrameEvent(e);
-	  });
-
-	  resetButton.addEventListener('click', function (e) {
-	    container.handleResetEvent(e);
-	  });
-
-	  // Speed
-	  faster.addEventListener('click', function (e) {
-	    container.handleSpeedChangeEvent(container.drawspeed - 1);
-	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
-	  });
-
-	  slower.addEventListener('click', function (e) {
-	    container.handleSpeedChangeEvent(container.drawspeed + 1);
-	    currentSpeed.innerHTML = (1000 / container.drawspeed).toFixed(2);
-	  });
-
-	  currentSpeed.addEventListener('click', function (e) {
-	    container.validDrawspeeds.forEach(function (num) {
-	      speedDropdown.innerHTML += "<li>" + num + "</li>";
-	    });
-
-	    speedDropdownContainer.style.display = "flex";
-	    gridDropdownContainer.style.display = "flex";
-	    modalBackdrop.style.display = "flex";
-	  });
-
-	  speedDropdown.addEventListener('click', function (e) {
-	    container.handleSpeedChangeEvent(1000 / e.target.innerHTML);
-	    currentSpeed.innerHTML = e.target.innerHTML;
-	    speedDropdown.innerHTML = "";
-	    speedDropdown.style.display = null;
-	    modalBackdrop.style.display = null;
-	  });
-
-	  // Grid Size
-	  currentWidth.innerHTML = container.width;
-	  currentHeight.innerHTML = container.height;
-
-	  gridSizeContainer.addEventListener('click', function (e) {
-	    var gridDimensions = container.gridDimensions.sort(function (a, b) {
-	      return a - b;
-	    });
-
-	    gridDimensions.forEach(function (num) {
-	      widthDropdown.innerHTML += "<li>" + num + "</li>";
-	      heightDropdown.innerHTML += "<li>" + num + "</li>";
-	    });
-
-	    widthDropdownContainer.style.display = "flex";
-	    heightDropdownContainer.style.display = "flex";
-	    gridDropdownContainer.style.display = "flex";
-	    modalBackdrop.style.display = "flex";
-	  });
-
-	  widthDropdown.addEventListener('click', function (e) {
-	    container.handleResizeEvent('width', e.target.innerHTML);
-	    currentWidth.innerHTML = e.target.innerHTML;
-	    widthDropdown.innerHTML = "";
-	    widthDropdown.style.display = null;
-	    modalBackdrop.style.display = null;
-	  });
-
-	  heightDropdown.addEventListener('click', function (e) {
-	    container.handleResizeEvent('height', e.target.innerHTML);
-	    currentHeight.innerHTML = e.target.innerHTML;
-	    heightDropdown.innerHTML = "";
-	    heightDropdown.style.display = null;
-	    modalBackdrop.style.display = null;
-	  });
-
-	  // Cell Size
-	  cellSize.addEventListener('click', function (e) {
-	    container.cellSizes.forEach(function (num) {
-	      cellSizeDropdown.innerHTML += "<li>" + num + "</li>";
-	    });
-
-	    cellSizeDropdownContainer.style.display = "flex";
-	    gridDropdownContainer.style.display = "flex";
-	    modalBackdrop.style.display = "flex";
-	  });
-
-	  cellSizeDropdown.addEventListener('click', function (e) {
-	    container.handleCellResizeEvent(parseInt(e.target.innerHTML));
-	    cellSize.innerHTML = e.target.innerHTML;
-	    cellSizeDropdown.innerHTML = "";
-	    cellSizeDropdown.style.display = null;
-	    modalBackdrop.style.display = null;
-	  });
+	  handleGridControlButtons();
 	});
 
 /***/ },
@@ -869,7 +818,6 @@
 	    this.mainCtx = mainCtx;
 	    this.conditionalHash = conditionalHash;
 	    this.gridDimensions = [];
-	    this.validDrawspeeds = [];
 	    this.cellSizes = [1, 2, 4, 8, 16, 32];
 	    this.width = window.innerWidth;
 	    this.height = window.innerHeight;
@@ -881,7 +829,6 @@
 	    this.getGridSize();
 	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
 	    this.automata = new _automata2.default(this.board);
-	    this.populateValidDrawspeeds();
 	    this.handlePlayEvent();
 	  }
 
@@ -912,17 +859,9 @@
 	      this.gridDimensions = gridDimensions;
 	    }
 	  }, {
-	    key: "populateValidDrawspeeds",
-	    value: function populateValidDrawspeeds() {
-	      for (var i = 1; i <= 200; i++) {
-	        this.validDrawspeeds.push((1000 / i).toFixed(2));
-	      }
-	    }
-	  }, {
 	    key: "handleClickEvent",
 	    value: function handleClickEvent(e) {
 	      var color = this.conditionalHash[this.cellType].color;
-	      console.log(color);
 	      this.board.toggleCell(e, this.cellType, color);
 	    }
 	  }, {
@@ -969,7 +908,7 @@
 	  }, {
 	    key: "handleCellResizeEvent",
 	    value: function handleCellResizeEvent(size) {
-	      this.cellSize = size;
+	      this.cellSize = parseInt(size);
 	      this.handleResetEvent();
 	    }
 	  }, {
