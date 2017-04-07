@@ -145,9 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (e.keyCode) {
       case 32: // Spacebar
         e.preventDefault();
-        // playPauseButton.classList.toggle("fa-pause");
-        // playPauseButton.classList.toggle("fa-play");
-        container.handlePauseEvent();
+        handlePauseEvent();
         break;
       case 49:
         changeCurrentCellType('typeOne');
@@ -162,13 +160,27 @@ document.addEventListener("DOMContentLoaded", () => {
         changeCurrentCellType('typeFour');
         break;
       case 78:
-        container.handleNextFrameEvent();
+        handleNextFrameEvent();
         break;
       case 82:
-        container.handleResetEvent();
+        handleResetEvent();
         break;
     }
   });
+
+  const handlePauseEvent = () => {
+    playPauseButton.classList.toggle("fa-pause");
+    playPauseButton.classList.add("fa-play");
+    container.handlePauseEvent();
+  };
+
+  const handleNextFrameEvent = () => {
+    container.handleNextFrameEvent();
+  };
+
+  const handleResetEvent = () => {
+    container.handleResetEvent();
+  };
 
   const changeCurrentCellType = type => {
     for (let i = 0; i < cellNames.length; i++) {
@@ -586,14 +598,14 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const changeCellLogicModalType = cellType => {
-    if (!container.pauseEvent) container.handlePauseEvent();
+    if (!container.pauseEvent) handlePauseEvent();
 
     cellLogicModal.style.display = 'flex';
     modalBackdrop.style.display = "flex";
 
     modalBackdrop.addEventListener('click', e => {
       if (e.target.id !== 'modal-backdrop') return;
-      if (container.pauseEvent) container.handlePauseEvent(e);
+      if (container.pauseEvent) handlePauseEvent(e);
 
       // playPauseButton.classList.toggle("fa-pause");
       // playPauseButton.classList.toggle("fa-play");
@@ -643,23 +655,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const handleGridControlButtons = () => {
 
-    const handlePauseEvent = (e = null) => {
-      e.preventDefault();
-      // playPauseButton.classList.toggle("fa-pause");
-      // playPauseButton.classList.toggle("fa-play");
-      container.handlePauseEvent();
-    };
-
-    const handleNextFrameEvent = () => {
-      container.handleNextFrameEvent();
-    };
-
-    const handleResetEvent = () => {
-      container.handleResetEvent();
-    };
-
     const handleSpeedChangeEvent = () => {
-      container.handleSpeedChangeEvent(100 - speedSlider.value);
+      container.handleSpeedChangeEvent(300 - speedSlider.value);
     };
 
     const handleCellResizeEvent = () => {

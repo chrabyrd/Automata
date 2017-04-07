@@ -198,9 +198,7 @@
 	      case 32:
 	        // Spacebar
 	        e.preventDefault();
-	        // playPauseButton.classList.toggle("fa-pause");
-	        // playPauseButton.classList.toggle("fa-play");
-	        container.handlePauseEvent();
+	        handlePauseEvent();
 	        break;
 	      case 49:
 	        changeCurrentCellType('typeOne');
@@ -215,13 +213,27 @@
 	        changeCurrentCellType('typeFour');
 	        break;
 	      case 78:
-	        container.handleNextFrameEvent();
+	        handleNextFrameEvent();
 	        break;
 	      case 82:
-	        container.handleResetEvent();
+	        handleResetEvent();
 	        break;
 	    }
 	  });
+
+	  var handlePauseEvent = function handlePauseEvent() {
+	    playPauseButton.classList.toggle("fa-pause");
+	    playPauseButton.classList.add("fa-play");
+	    container.handlePauseEvent();
+	  };
+
+	  var handleNextFrameEvent = function handleNextFrameEvent() {
+	    container.handleNextFrameEvent();
+	  };
+
+	  var handleResetEvent = function handleResetEvent() {
+	    container.handleResetEvent();
+	  };
 
 	  var changeCurrentCellType = function changeCurrentCellType(type) {
 	    for (var i = 0; i < cellNames.length; i++) {
@@ -655,14 +667,14 @@
 	  };
 
 	  var changeCellLogicModalType = function changeCellLogicModalType(cellType) {
-	    if (!container.pauseEvent) container.handlePauseEvent();
+	    if (!container.pauseEvent) handlePauseEvent();
 
 	    cellLogicModal.style.display = 'flex';
 	    modalBackdrop.style.display = "flex";
 
 	    modalBackdrop.addEventListener('click', function (e) {
 	      if (e.target.id !== 'modal-backdrop') return;
-	      if (container.pauseEvent) container.handlePauseEvent(e);
+	      if (container.pauseEvent) handlePauseEvent(e);
 
 	      // playPauseButton.classList.toggle("fa-pause");
 	      // playPauseButton.classList.toggle("fa-play");
@@ -716,25 +728,8 @@
 
 	  var handleGridControlButtons = function handleGridControlButtons() {
 
-	    var handlePauseEvent = function handlePauseEvent() {
-	      var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-	      e.preventDefault();
-	      // playPauseButton.classList.toggle("fa-pause");
-	      // playPauseButton.classList.toggle("fa-play");
-	      container.handlePauseEvent();
-	    };
-
-	    var handleNextFrameEvent = function handleNextFrameEvent() {
-	      container.handleNextFrameEvent();
-	    };
-
-	    var handleResetEvent = function handleResetEvent() {
-	      container.handleResetEvent();
-	    };
-
 	    var handleSpeedChangeEvent = function handleSpeedChangeEvent() {
-	      container.handleSpeedChangeEvent(100 - speedSlider.value);
+	      container.handleSpeedChangeEvent(300 - speedSlider.value);
 	    };
 
 	    var handleCellResizeEvent = function handleCellResizeEvent() {
