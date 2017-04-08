@@ -65,6 +65,8 @@
 	  var logicModalButtons = document.getElementsByClassName("logicModalButtons");
 	  var currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
 
+	  var cellName = document.getElementById("cellName");
+
 	  var neighborTypes = document.getElementsByClassName("neighborTypes");
 	  var comparators = document.getElementsByClassName("comparators");
 	  var comparisonValues = document.getElementsByClassName("comparisonValues");
@@ -345,23 +347,29 @@
 	    }, []);
 	  };
 
-	  var parseConditionalValues = function parseConditionalValues(value, operator) {
-	    var valueArray = value.split(" " + operator + " ");
-	    var returnArray = [];
-	    for (var j = 0; j < valueArray.length - 1; j++) {
-	      returnArray.push(valueArray[j].concat(" " + operator));
-	    }
-	    returnArray.push(valueArray[valueArray.length - 1]);
-	    return returnArray;
-	  };
-
 	  var parseConditionalHashStatements = function parseConditionalHashStatements(condition) {
+
+	    var parseConditionalValues = function parseConditionalValues(value, operator) {
+	      var valueArray = value.split(" " + operator + " ");
+	      var returnArray = [];
+	      for (var j = 0; j < valueArray.length - 1; j++) {
+	        returnArray.push(valueArray[j].concat(" " + operator));
+	      }
+	      returnArray.push(valueArray[valueArray.length - 1]);
+	      return returnArray;
+	    };
+
 	    var andOperator = parseConditionalValues(condition, '&&');
+
 	    var bothOperators = andOperator.map(function (value) {
 	      return parseConditionalValues(value, '||');
 	    });
 
 	    return flatten(bothOperators);
+	  };
+
+	  var changeModalCellName = function changeModalCellName(cellType) {
+	    cellName.innerText = conditionalHash[cellType].name + " Cell Behavior";
 	  };
 
 	  var refreshConditionalStatements = function refreshConditionalStatements(cellType) {
@@ -409,14 +417,21 @@
 
 	            for (var k = 0; k < conditionalArray.length; k++) {
 	              if (conditionalArray[k] === 'Math.random()') {
-	                conditionalArray[k - 1] = '&&';
+	                if (conditionalArray[k - 1] !== 'false &&') {
+	                  conditionalArray[k - 1] = '&&';
+	                }
 	              }
 	            }
-
 	            conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
 	          };
 
-	          button.innerText = "" + symbol;
+	          if (symbol === 'Delete') {
+	            button.classList.add('deleteButtons');
+	            button.classList.add('fa');
+	            button.classList.add('fa-times');
+	          } else {
+	            button.innerText = "" + symbol;
+	          }
 
 	          button.addEventListener('click', function () {
 	            for (var k = 0; k < conditionalArray.length; k++) {
@@ -496,7 +511,10 @@
 	      addValueToReturnString(neighborTypes, button.name);
 	      addValueToReturnString(comparators, button.name);
 	      addValueToReturnString(comparisonValues, button.name);
+
 	      returnString = returnString.trim();
+
+	      if (!returnString) return;
 
 	      if (currentCondition.substring(0, 5) === 'false') {
 	        conditionalHash[cellType]['conditions'][button.name] = currentCondition.substring(9, currentCondition.length);
@@ -684,12 +702,11 @@
 	      if (e.target.id !== 'modal-backdrop') return;
 	      if (container.pauseEvent) handlePauseEvent(e);
 
-	      // playPauseButton.classList.toggle("fa-pause");
-	      // playPauseButton.classList.toggle("fa-play");
 	      cellLogicModal.style.display = null;
 	      modalBackdrop.style.display = null;
 	    });
 
+	    changeModalCellName(cellType);
 	    populateConditionalDropdowns();
 	    refreshConditionalStatements(cellType);
 	    resetMenuValues();
@@ -1075,13 +1092,29 @@
 	      });
 	    }
 	  }, {
+	    key: 'hexToRgbA',
+	    value: function hexToRgbA(hex) {
+	      var c = void 0;
+
+	      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+	        c = hex.substring(1).split('');
+	        if (c.length === 3) {
+	          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+	        }
+	        c = '0x' + c.join('');
+	        return 'rgba(' + [c >> 16 & 255, c >> 8 & 255, c & 255].join(',') + ', .9)';
+	      }
+	      throw new Error('Bad Hex');
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      this.ctx.clearRect(this.x, this.y, this.cellSize, this.cellSize);
 
 	      if (this.type === 'false') return;
 
-	      this.ctx.fillStyle = this.color;
+	      // Converting Hex to RGBA in case of future opacity tweaking
+	      this.ctx.fillStyle = this.hexToRgbA(this.color);
 
 	      this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
 	    }

@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const logicModalButtons = document.getElementsByClassName("logicModalButtons");
   const currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
 
+  const cellName = document.getElementById("cellName");
+
   const neighborTypes = document.getElementsByClassName("neighborTypes");
   const comparators = document.getElementsByClassName("comparators");
   const comparisonValues = document.getElementsByClassName("comparisonValues");
@@ -294,23 +296,29 @@ document.addEventListener("DOMContentLoaded", () => {
     []
   );
 
-  const parseConditionalValues = (value, operator) => {
-    const valueArray = value.split(` ${operator} `);
-    const returnArray = [];
-    for (let j = 0; j < valueArray.length - 1; j++) {
-      returnArray.push(valueArray[j].concat(` ${operator}`));
-    }
-    returnArray.push(valueArray[valueArray.length - 1]);
-    return returnArray;
-  };
-
   const parseConditionalHashStatements = condition => {
+
+    const parseConditionalValues = (value, operator) => {
+      const valueArray = value.split(` ${operator} `);
+      const returnArray = [];
+      for (let j = 0; j < valueArray.length - 1; j++) {
+        returnArray.push(valueArray[j].concat(` ${operator}`));
+      }
+      returnArray.push(valueArray[valueArray.length - 1]);
+      return returnArray;
+    };
+
     const andOperator = parseConditionalValues(condition, '&&');
+
     const bothOperators = andOperator.map(function(value) {
       return parseConditionalValues(value, '||');
     });
 
     return flatten(bothOperators);
+  };
+
+  const changeModalCellName = cellType => {
+    cellName.innerText = `${conditionalHash[cellType].name} Cell Behavior`;
   };
 
   const refreshConditionalStatements = cellType => {
@@ -358,14 +366,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
             for (let k = 0; k < conditionalArray.length; k++ ) {
               if (conditionalArray[k] === 'Math.random()') {
-                conditionalArray[k - 1] = '&&';
+                if (conditionalArray[k - 1] !== 'false &&') {
+                  conditionalArray[k - 1] = '&&';
+                }
               }
             }
-
             conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
           };
 
-          button.innerText = `${symbol}`;
+          if (symbol === 'Delete') {
+            button.classList.add('deleteButtons');
+            button.classList.add('fa');
+            button.classList.add('fa-times');
+          } else {
+            button.innerText = `${symbol}`;
+          }
 
           button.addEventListener('click', () => {
             for (let k = 0; k < conditionalArray.length; k++) {
@@ -436,7 +451,10 @@ document.addEventListener("DOMContentLoaded", () => {
       addValueToReturnString(neighborTypes, button.name);
       addValueToReturnString(comparators, button.name);
       addValueToReturnString(comparisonValues, button.name);
+
       returnString = returnString.trim();
+      
+      if (!returnString) return;
 
       if (currentCondition.substring(0, 5) === 'false') {
         conditionalHash[cellType]['conditions'][button.name] = currentCondition.substring(9, currentCondition.length);
@@ -609,12 +627,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.target.id !== 'modal-backdrop') return;
       if (container.pauseEvent) handlePauseEvent(e);
 
-      // playPauseButton.classList.toggle("fa-pause");
-      // playPauseButton.classList.toggle("fa-play");
       cellLogicModal.style.display = null;
       modalBackdrop.style.display = null;
     });
 
+    changeModalCellName(cellType);
     populateConditionalDropdowns();
     refreshConditionalStatements(cellType);
     resetMenuValues();

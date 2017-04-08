@@ -55,8 +55,23 @@ body {
   display: flex;
 	/* TITLE FONT IS CATAMARAN */
   font-family: Economica;
-	letter-spacing: 1px;
+	letter-spacing: 2px;
   justify-content: center;
+}
+
+h3 {
+	font-size: 1.5em;
+}
+
+select {
+	-webkit-appearance: none;
+	font-family: inherit;
+	letter-spacing: inherit;
+	flex: auto;
+	justify-content: center;
+	border-radius: 0;
+	padding: 5px;
+	font-size: 1em;
 }
 
 #mainCanvas {
@@ -152,23 +167,72 @@ li:hover {
   top: 0;
   bottom: 0;
   margin: auto;
-  width: 900px;
-  height: 500px;
-  background-color: chartreuse;
+  width: 550px;
+	background-color: lightblue;
 }
 
 /* Cell Conditions */
 
+#cellName {
+	display: flex;
+	font-size: 2em;
+	padding: 5px;
+	justify-content: center;
+	background-color: beige;
+}
+
 #validNeighborsContainer {
 	display: flex;
+	font-size: 1.2em;
+	flex-direction: column;
+}
+
+#validNeighborTitle {
+	display: flex;
+	justify-content: center;
+	padding: 5px;
+	background-color: beige;
+}
+
+#validNeighborTypes {
+	display: flex;
+	justify-content: space-around;
+	padding: 5px;
 	background-color: beige;
 }
 
 .conditionContainers {
 	display: flex;
+	flex: auto;
+	/*font-size: 1.2em;*/
+	justify-content: center;
 	flex-direction: column;
 }
 
 .conditionOptions {
 	display: flex;
+	font-size: 1em;
+	align-items: stretch;
+}
+
+.deleteButtons {
+  background-color: rgba(0,0,0,0);
+	border: none;
+}
+
+.conditionalSubmitButtons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.conditionTitles {
+	display: flex;
+	align-items: center;
+}
+
+.conditionalStatementContainers {
+	font-size: 1.1em;
+	min-height: 25px;
+	overflow: auto;
 }

@@ -1,5 +1,9 @@
 # Automata
 
+[Live][website]
+
+[website]: https://chrabyrd.github.io/Automata
+
 ### THIS PROJECT IS CURRENTLY UNDER DEVELOPMENT
 
 #### Note: Cells that `wander` need logic to handle when there are no valid neighboring cells. To keep errors from occurring, please ensure that each wandering cell keeps one of these conditions:
@@ -9,10 +13,6 @@
 ##### - Stay Condition: `validCells === 0` (100% chance)
 
 ##### - Die Condition: `validCells === 0` (100% chance)
-
-[Live][website]
-
-[website]: https://chrabyrd.github.io/Automata
 
 #### Overview
 
