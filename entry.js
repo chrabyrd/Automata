@@ -268,7 +268,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const valueArray = parseConditionalHashStatements(filteredString.join(' '));
 
     const filteredArray = valueArray.filter(statement => {
-      if (statement.substring(0, 4) !== 'Math') return statement;
+      if (!statement.startsWith('Math') && !statement.startsWith('true')){
+        return statement;
+      }
     });
 
     return filteredArray.join(' ');
@@ -375,6 +377,8 @@ document.addEventListener("DOMContentLoaded", () => {
               }
             }
             conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
+
+            handleConditionalSwitches(cellType);
           };
 
           if (symbol === 'Delete') {
@@ -418,6 +422,8 @@ document.addEventListener("DOMContentLoaded", () => {
         mapButtonBehavior(orButton, '||');
         mapButtonBehavior(deleteButton, 'Delete');
 
+        if (statement === 'true &&') continue;
+
         if (j === conditionalStatementArray.length - 2) {
           li.appendChild(document.createTextNode(simplifyStatement(translateStatement(statement))));
         } else {
@@ -426,8 +432,6 @@ document.addEventListener("DOMContentLoaded", () => {
           const lastChar = statement.charAt(statement.length - 1);
           lastChar === '&' ? li.appendChild(orButton) : li.appendChild(andButton);
         }
-
-        if (li.innerText === 'false') continue;
 
         li.appendChild(deleteButton);
         if (j !== conditionalStatementArray.length - 1) currentStatement.appendChild(li);
@@ -629,6 +633,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const currentContainer = conditionalStatementContainers[i];
       const currentCondition = conditionalHash[cellType]['conditions'][currentSwitch.name];
 
+      if (currentCondition.startsWith('false')) {
+        currentSwitch.checked = false;
+      }
 
       currentSwitch.checked = false;
       currentOption.style.display = "none";
@@ -641,7 +648,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       currentSwitch.onclick = () => {
-
         if (currentSwitch.checked) {
           conditionalHash[cellType]['conditions'][currentSwitch.name] = currentCondition.replace(/false/i, "true");
           currentOption.style.display = "flex";
@@ -653,7 +659,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         handleChanceSliders(cellType);
-        console.log(conditionalHash[cellType]['conditions'][currentSwitch.name]);
+        refreshConditionalStatements(cellType);
       };
 
     }

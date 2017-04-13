@@ -320,7 +320,9 @@
 	    var valueArray = parseConditionalHashStatements(filteredString.join(' '));
 
 	    var filteredArray = valueArray.filter(function (statement) {
-	      if (statement.substring(0, 4) !== 'Math') return statement;
+	      if (!statement.startsWith('Math') && !statement.startsWith('true')) {
+	        return statement;
+	      }
 	    });
 
 	    return filteredArray.join(' ');
@@ -426,6 +428,8 @@
 	              }
 	            }
 	            conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
+
+	            handleConditionalSwitches(cellType);
 	          };
 
 	          if (symbol === 'Delete') {
@@ -469,6 +473,8 @@
 	        mapButtonBehavior(orButton, '||');
 	        mapButtonBehavior(deleteButton, 'Delete');
 
+	        if (statement === 'true &&') return "continue";
+
 	        if (j === conditionalStatementArray.length - 2) {
 	          li.appendChild(document.createTextNode(simplifyStatement(translateStatement(statement))));
 	        } else {
@@ -477,8 +483,6 @@
 	          var lastChar = statement.charAt(statement.length - 1);
 	          lastChar === '&' ? li.appendChild(orButton) : li.appendChild(andButton);
 	        }
-
-	        if (li.innerText === 'false') return "continue";
 
 	        li.appendChild(deleteButton);
 	        if (j !== conditionalStatementArray.length - 1) currentStatement.appendChild(li);
@@ -704,6 +708,10 @@
 	      var currentContainer = conditionalStatementContainers[i];
 	      var currentCondition = conditionalHash[cellType]['conditions'][currentSwitch.name];
 
+	      if (currentCondition.startsWith('false')) {
+	        currentSwitch.checked = false;
+	      }
+
 	      currentSwitch.checked = false;
 	      currentOption.style.display = "none";
 	      currentContainer.style.display = "none";
@@ -715,7 +723,6 @@
 	      }
 
 	      currentSwitch.onclick = function () {
-
 	        if (currentSwitch.checked) {
 	          conditionalHash[cellType]['conditions'][currentSwitch.name] = currentCondition.replace(/false/i, "true");
 	          currentOption.style.display = "flex";
@@ -727,7 +734,7 @@
 	        }
 
 	        handleChanceSliders(cellType);
-	        console.log(conditionalHash[cellType]['conditions'][currentSwitch.name]);
+	        refreshConditionalStatements(cellType);
 	      };
 	    };
 
