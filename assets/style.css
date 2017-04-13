@@ -70,7 +70,7 @@ select {
 	flex: auto;
 	justify-content: center;
 	border-radius: 0;
-	padding: 5px;
+	padding: 3px;
 	font-size: 1em;
 }
 
@@ -167,7 +167,8 @@ li:hover {
   top: 0;
   bottom: 0;
   margin: auto;
-  width: 550px;
+	max-height: 90%;
+  max-width: 50%;
 	background-color: lightblue;
 }
 
@@ -210,7 +211,7 @@ li:hover {
 }
 
 .conditionOptions {
-	display: flex;
+	display: none;
 	font-size: 1em;
 	align-items: stretch;
 }
@@ -232,7 +233,63 @@ li:hover {
 }
 
 .conditionalStatementContainers {
+	display: none;
 	font-size: 1.1em;
 	min-height: 25px;
 	overflow: auto;
+}
+
+
+
+/* BUTTONS */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 3em;
+  height: 1.5em;
+}
+
+.switch input {
+	display:none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: red;
+  -webkit-transition: .4s;
+  transition: .4s;
+	border-radius: 2em;
+}
+
+.slider:before {
+	border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: 1em;
+  width: 1em;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: blue;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(1.5em);
+  -ms-transform: translateX(1.5em);
+  transform: translateX(1.5em);
 }

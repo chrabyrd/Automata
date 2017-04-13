@@ -67,10 +67,13 @@
 
 	  var cellName = document.getElementById("cellName");
 
+	  var conditionalSwitches = document.getElementsByClassName("conditionalSwitches");
+	  var conditionOptions = document.getElementsByClassName("conditionOptions");
 	  var neighborTypes = document.getElementsByClassName("neighborTypes");
 	  var comparators = document.getElementsByClassName("comparators");
 	  var comparisonValues = document.getElementsByClassName("comparisonValues");
 	  var conditionalStatements = document.getElementsByClassName("conditionalStatements");
+	  var conditionalStatementContainers = document.getElementsByClassName("conditionalStatementContainers");
 	  var sliderContainers = document.getElementsByClassName("sliderContainers");
 	  var chanceSliders = document.getElementsByClassName("chanceSliders");
 	  var chanceOutputs = document.getElementsByClassName("chanceOutputs");
@@ -95,7 +98,7 @@
 	      'conditions': {
 	        'skipCon': "false && Math.random() * 100 < 100",
 	        'dieCon': "false && Math.random() * 100 < 100",
-	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'stayCon': "true && validNeighbors.length === 0 && Math.random() * 100 < 100",
 	        'wanderCon': "false && Math.random() * 100 < 100",
 	        'reproduceCon': "true && Math.random() * 100 < 100"
 	      },
@@ -113,10 +116,10 @@
 	      'color': '#2552B2',
 	      'conditions': {
 	        'skipCon': "false && Math.random() * 100 < 100",
-	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
-	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'dieCon': "true && typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
+	        'stayCon': "true && validNeighbors.length === 0 && Math.random() * 100 < 100",
 	        'wanderCon': "true && Math.random() * 100 < 100",
-	        'reproduceCon': "typeHash['typeTwo'] > 0 && Math.random() * 100 < 50"
+	        'reproduceCon': "true && typeHash['typeTwo'] > 0 && Math.random() * 100 < 50"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -132,10 +135,10 @@
 	      'color': '#FF851B',
 	      'conditions': {
 	        'skipCon': "false && Math.random() * 100 < 100",
-	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
-	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'dieCon': "true && typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
+	        'stayCon': "true && validNeighbors.length === 0 && Math.random() * 100 < 100",
 	        'wanderCon': "true && Math.random() * 100 < 100",
-	        'reproduceCon': "typeHash['typeThree'] > 0 && Math.random() * 100 < 50"
+	        'reproduceCon': "true && typeHash['typeThree'] > 0 && Math.random() * 100 < 50"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -151,10 +154,10 @@
 	      'color': '#8b0000',
 	      'conditions': {
 	        'skipCon': "false && Math.random() * 100 < 100",
-	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
-	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'dieCon': "true && typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
+	        'stayCon': "true && validNeighbors.length === 0 && Math.random() * 100 < 100",
 	        'wanderCon': "true && Math.random() * 100 < 100",
-	        'reproduceCon': "typeHash['typeFour'] > 0 && Math.random() * 100 < 50"
+	        'reproduceCon': "true && typeHash['typeFour'] > 0 && Math.random() * 100 < 50"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -603,6 +606,8 @@
 	        });
 	      };
 
+	      currentSliderContainer.style.display = "flex";
+
 	      if (currentHashConditionArray[0] === 'false &&') {
 	        currentSliderContainer.style.display = "none";
 	      }
@@ -692,6 +697,45 @@
 	    }
 	  };
 
+	  var handleConditionalSwitches = function handleConditionalSwitches(cellType) {
+	    var _loop8 = function _loop8(i) {
+	      var currentSwitch = conditionalSwitches[i];
+	      var currentOption = conditionOptions[i];
+	      var currentContainer = conditionalStatementContainers[i];
+	      var currentCondition = conditionalHash[cellType]['conditions'][currentSwitch.name];
+
+	      currentSwitch.checked = false;
+	      currentOption.style.display = "none";
+	      currentContainer.style.display = "none";
+
+	      if (!currentCondition.startsWith('false')) {
+	        currentSwitch.checked = true;
+	        currentOption.style.display = "flex";
+	        currentContainer.style.display = "flex";
+	      }
+
+	      currentSwitch.onclick = function () {
+
+	        if (currentSwitch.checked) {
+	          conditionalHash[cellType]['conditions'][currentSwitch.name] = currentCondition.replace(/false/i, "true");
+	          currentOption.style.display = "flex";
+	          currentContainer.style.display = "flex";
+	        } else {
+	          conditionalHash[cellType]['conditions'][currentSwitch.name] = 'false && Math.random() * 100 < 100';
+	          currentOption.style.display = "none";
+	          currentContainer.style.display = "none";
+	        }
+
+	        handleChanceSliders(cellType);
+	        console.log(conditionalHash[cellType]['conditions'][currentSwitch.name]);
+	      };
+	    };
+
+	    for (var i = 0; i < conditionalSwitches.length; i++) {
+	      _loop8(i);
+	    }
+	  };
+
 	  var changeCellLogicModalType = function changeCellLogicModalType(cellType) {
 	    if (!container.pauseEvent) handlePauseEvent();
 
@@ -707,6 +751,7 @@
 	    });
 
 	    changeModalCellName(cellType);
+	    handleConditionalSwitches(cellType);
 	    populateConditionalDropdowns();
 	    refreshConditionalStatements(cellType);
 	    resetMenuValues();
@@ -721,7 +766,7 @@
 
 	    cellTypeContainers[0].style.opacity = '1';
 
-	    var _loop8 = function _loop8(i) {
+	    var _loop9 = function _loop9(i) {
 	      var currentTypeContainer = cellTypeContainers[i];
 	      var currentLogicModalButton = logicModalButtons[i];
 	      var currentTypeCheckbox = currentTypeCheckboxes[i];
@@ -747,7 +792,7 @@
 	    };
 
 	    for (var i = 0; i < cellTypeContainers.length; i++) {
-	      _loop8(i);
+	      _loop9(i);
 	    }
 	  };
 
