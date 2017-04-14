@@ -53,9 +53,7 @@ table {
 body {
   overflow: auto;
   display: flex;
-	/* TITLE FONT IS CATAMARAN */
-  font-family: Economica;
-	letter-spacing: 2px;
+  font-family: Source Code Pro;
   justify-content: center;
 }
 
@@ -124,7 +122,7 @@ li:hover {
 .cellNames {
 	background-color: lightgrey;
 	flex: auto;
-	font-family: Economica;
+	font-family: Source Code Pro;
 	font-size: 1.2em;
 	border: none;
 	width: 100%;
@@ -169,17 +167,19 @@ li:hover {
   margin: auto;
 	max-height: 90%;
   max-width: 50%;
-	background-color: lightblue;
+	background-color: white;
 }
 
 /* Cell Conditions */
 
 #cellName {
 	display: flex;
-	font-size: 2em;
+	font-size: 3em;
 	padding: 5px;
 	justify-content: center;
-	background-color: beige;
+	font-family: Poiret One;
+	letter-spacing: 2px;
+	background-color: white;
 }
 
 #validNeighborsContainer {
@@ -188,24 +188,15 @@ li:hover {
 	flex-direction: column;
 }
 
-#validNeighborTitle {
-	display: flex;
-	justify-content: center;
-	padding: 5px;
-	background-color: beige;
-}
-
 #validNeighborTypes {
 	display: flex;
 	justify-content: space-around;
 	padding: 5px;
-	background-color: beige;
+	background-color: white;
 }
 
 .conditionContainers {
 	display: flex;
-	flex: auto;
-	/*font-size: 1.2em;*/
 	justify-content: center;
 	flex-direction: column;
 }
@@ -230,18 +221,19 @@ li:hover {
 .conditionTitles {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 }
 
 .conditionalStatementContainers {
 	display: none;
-	font-size: 1.1em;
+	font-size: 1em;
 	min-height: 25px;
 	overflow: auto;
 }
 
 
 
-/* BUTTONS */
+/* SWITCHES */
 
 .switch {
   position: relative;
@@ -292,4 +284,101 @@ input:checked + .slider:before {
   -webkit-transform: translateX(1.5em);
   -ms-transform: translateX(1.5em);
   transform: translateX(1.5em);
+}
+
+/* BUTTONS */
+
+.tgl {
+  display: none;
+}
+.tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl + .tgl-btn {
+  box-sizing: border-box;
+}
+.tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl + .tgl-btn::-moz-selection {
+  background: none;
+}
+.tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl + .tgl-btn::selection {
+  background: none;
+}
+.tgl + .tgl-btn {
+  outline: 0;
+  display: block;
+  width: 4em;
+  height: 2em;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.tgl + .tgl-btn:after, .tgl + .tgl-btn:before {
+  position: relative;
+  display: block;
+  content: "";
+  width: 50%;
+  height: 100%;
+}
+.tgl + .tgl-btn:after {
+  left: 0;
+}
+.tgl + .tgl-btn:before {
+  display: none;
+}
+.tgl:checked + .tgl-btn:after {
+  left: 50%;
+}
+
+.tgl-flip + .tgl-btn {
+  padding: 2px;
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease;
+  font-family: sans-serif;
+  -webkit-perspective: 100px;
+          perspective: 100px;
+}
+.tgl-flip + .tgl-btn:after, .tgl-flip + .tgl-btn:before {
+  display: inline-block;
+  -webkit-transition: all .4s ease;
+  transition: all .4s ease;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  line-height: 2em;
+  font-weight: bold;
+  color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  border-radius: 4px;
+}
+.tgl-flip + .tgl-btn:after {
+  content: attr(name);
+  background: #02C66F;
+  -webkit-transform: rotateY(-180deg);
+          transform: rotateY(-180deg);
+}
+.tgl-flip + .tgl-btn:before {
+  background: #FF3A19;
+  content: attr(name);
+}
+.tgl-flip + .tgl-btn:active:before {
+  -webkit-transform: rotateY(-20deg);
+          transform: rotateY(-20deg);
+}
+.tgl-flip:checked + .tgl-btn:before {
+  -webkit-transform: rotateY(180deg);
+          transform: rotateY(180deg);
+}
+.tgl-flip:checked + .tgl-btn:after {
+  -webkit-transform: rotateY(0);
+          transform: rotateY(0);
+  left: 0;
+  background: #7FC6A6;
+}
+.tgl-flip:checked + .tgl-btn:active:after {
+  -webkit-transform: rotateY(20deg);
+          transform: rotateY(20deg);
 }

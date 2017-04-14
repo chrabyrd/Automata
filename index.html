@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="./assets/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Catamaran|Economica" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poiret+One|Source+Code+Pro" rel="stylesheet">
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -129,6 +129,8 @@
             </div>
 
             <div class="sliderContainers">
+              <h3>Chance:&nbsp;</h3>
+
               <input
               id="skipConSlider"
               name="skipCon"
@@ -434,7 +436,7 @@
                 <div class="slider"></div>
               </label>
             </div>
-            
+
             <div class="sliderContainers">
               <input
               id="wanderConSlider"
@@ -504,53 +506,31 @@
 
           <div id="validNeighborsContainer">
 
-            <div id="validNeighborTitle">Valid Cells:</div>
-
             <div id="validNeighborTypes">
 
               <div class="neighborTypeContainers">
-                <span class="neighborTypeNames" value="typeOne"></span>
-                <input id="neighborTypeOneBox"
-                class="validNeighborBox"
-                type="checkbox"
-                value="typeOne"
-                >
+                <input class="validNeighborBox tgl tgl-flip" id="typeOneBox" value="typeOne" type="checkbox"/>
+                <label class="neighborTypeNames tgl-btn" for="typeOneBox"></label>
               </div>
 
               <div class="neighborTypeContainers">
-                <span class="neighborTypeNames" value="typeTwo"></span>
-                <input id="neighborTypeTwoBox"
-                class="validNeighborBox"
-                type="checkbox"
-                value="typeTwo"
-                >
+                <input class="validNeighborBox tgl tgl-flip" id="typeTwoBox" value="typeTwo" type="checkbox"/>
+                <label class="neighborTypeNames tgl-btn" for="typeTwoBox"></label>
               </div>
 
               <div class="neighborTypeContainers">
-                <span class="neighborTypeNames" value="typeThree"></span>
-                <input id="neighborTypeThreeBox"
-                class="validNeighborBox"
-                type="checkbox"
-                value="typeThree"
-                >
+                <input class="validNeighborBox tgl tgl-flip" id="typeThreeBox" value="typeThree" type="checkbox"/>
+                <label class="neighborTypeNames tgl-btn" for="typeThreeBox"></label>
               </div>
 
               <div class="neighborTypeContainers">
-                <span class="neighborTypeNames" value="typeFour"></span>
-                <input id="neighborTypeFourBox"
-                class="validNeighborBox"
-                type="checkbox"
-                value="typeFour"
-                >
+                <input class="validNeighborBox tgl tgl-flip" id="typeFourBox" value="typeFour" type="checkbox"/>
+                <label class="neighborTypeNames tgl-btn" for="typeFourBox"></label>
               </div>
 
               <div class="neighborTypeContainers">
-                <span value="false">false</span>
-                <input id="neighborTypeFalseBox"
-                class="validNeighborBox"
-                type="checkbox"
-                value="false"
-                >
+                <input class="validNeighborBox tgl tgl-flip" id="neighborTypeFalseBox" value="false" type="checkbox"/>
+                <label class="neighborTypeNames tgl-btn" for="neighborTypeFalseBox"></label>
               </div>
 
             </div>

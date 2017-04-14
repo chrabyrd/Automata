@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'false': {
-      'name': '',
+      'name': 'false',
       'color': 'rgba(255, 255, 255, 0)',
       'conditions': {
         'skipCon': `true`,
@@ -620,7 +620,8 @@ document.addEventListener("DOMContentLoaded", () => {
         conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
       };
 
-      if (currentName) currentName.innerText = conditionalHash[currentBox.value].name;
+      currentName.setAttribute("name", conditionalHash[currentBox.value].name);
+
       currentBox.checked = conditionalHash[cellType]['neighborHash'][currentBox.value];
       currentBox.onclick = () => getType(cellType);
     }
