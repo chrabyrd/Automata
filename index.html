@@ -90,7 +90,7 @@
 
         <div id="speedContainer" class="controlContainers">
           <div>Speed:&nbsp;</div>
-          <input id="speedSlider" type="range" min="1" max="299" value ="250" class="">
+          <input id="speedSlider" type="range" min="0" max="299" value ="250" class="">
           </input>
         </div>
 
@@ -116,396 +116,385 @@
 
       <div id="modal-backdrop">
         <div id="cellLogicModal">
+
           <div id="cellName"></div>
 
-          <div class="conditionContainers">
-            <div class="conditionTitles">
-              <h3>Skip:&nbsp;</h3>
+          <div id="cellConditions">
+            <div class="conditionContainers">
 
-              <label class="switch">
-                <input name="skipCon" class="conditionalSwitches" type="checkbox">
-                <div class="slider"></div>
-              </label>
+              <div class="conditionTitles">
+                <h3>Skip:&nbsp;</h3>
+
+                <div class="sliderContainers">
+
+                <input
+                id="skipConSlider"
+                name="skipCon"
+                class="chanceSliders"
+                type="range"
+                min="0"
+                max="100"
+                value="100"
+                step="1"
+                />
+
+                <output class="chanceOutputs" for="skipConSlider" name="skipCon">100</output>
+                <span>%</span>
+              </div>
+              </div>
+
+
+              <div class="conditionOptions">
+                <select name="skipCon" class="neighborTypes">
+                  <optgroup label="Cell Types">
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                    <option value="validNeighbors.length">Valid Neighbors</option>
+                    <option value="totalNeighbors.length">Total Neighbors</option>
+                  </optgroup>
+                </select>
+
+                <select name="skipCon" class="comparators">
+                  <optgroup label="Symbols">
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                    <option value="<"><</option>
+                    <option value="<="><=</option>
+                    <option value="===">==</option>
+                    <option value="!==">!=</option>
+                  </optgroup>
+                </select>
+
+                <select name="skipCon" class="comparisonValues">
+                  <optgroup label="Comparison Values">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                  </optgroup>
+                </select>
+
+                <button name="skipCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
+              </div>
+
+              <div class="conditionalStatementContainers">
+                <ul class="conditionalStatements" id="skipCon"></ul>
+              </div>
             </div>
 
-            <div class="sliderContainers">
-              <h3>Chance:&nbsp;</h3>
+            <div class="conditionContainers">
+              <div class="conditionTitles">
 
-              <input
-              id="skipConSlider"
-              name="skipCon"
-              class="chanceSliders"
-              type="range"
-              min="1"
-              max="100"
-              value="100"
-              step="1"
-              />
+                <h3>Die:&nbsp;</h3>
 
-              <output class="chanceOutputs" for="skipConSlider" name="skipCon">100</output>
+                <div class="sliderContainers">
+                <input
+                id="dieConSlider"
+                name="dieCon"
+                class="chanceSliders"
+                type="range"
+                min="0"
+                max="100"
+                value="100"
+                step="1"
+                />
+
+                <output class="chanceOutputs" for="dieConSlider" name="dieCon">100</output>
+                <span>%</span>
+              </div>
+
+              </div>
+
+
+              <div class="conditionOptions">
+
+                <select name="dieCon" class="neighborTypes">
+                  <optgroup label="Cell Types">
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                    <option value="validNeighbors.length">Valid Neighbors</option>
+                    <option value="totalNeighbors.length">Total Neighbors</option>
+                  </optgroup>
+                </select>
+
+                <select name="dieCon" class="comparators">
+                  <optgroup label="Symbols">
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                    <option value="<"><</option>
+                    <option value="<="><=</option>
+                    <option value="===">==</option>
+                    <option value="!==">!=</option>
+                  </optgroup>
+                </select>
+
+                <select name="dieCon" class="comparisonValues">
+                  <optgroup label="Comparison Values">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                  </optgroup>
+                </select>
+
+                <button name="dieCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
+              </div>
+
+              <div class="conditionalStatementContainers">
+                <ul class="conditionalStatements" id="dieCon"></ul>
+              </div>
             </div>
 
-            <div class="conditionOptions">
+            <div class="conditionContainers">
+              <div class="conditionTitles">
 
-              <select name="skipCon" class="neighborTypes">
-                <optgroup label="Cell Types">
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                  <option value="validNeighbors.length">Valid Neighbors</option>
-                  <option value="totalNeighbors.length">Total Neighbors</option>
-                  <option value="true">true</option>
-                </optgroup>
-              </select>
+                <h3>Stay:&nbsp;</h3>
 
-              <select name="skipCon" class="comparators">
-                <optgroup label="Symbols">
-                  <option value=">">></option>
-                  <option value=">=">>=</option>
-                  <option value="<"><</option>
-                  <option value="<="><=</option>
-                  <option value="===">==</option>
-                  <option value="!==">!=</option>
-                </optgroup>
-              </select>
+                <div class="sliderContainers">
+                <input
+                id="stayConSlider"
+                name="stayCon"
+                class="chanceSliders"
+                type="range"
+                min="0"
+                max="100"
+                value="100"
+                step="1"
+                />
 
-              <select name="skipCon" class="comparisonValues">
-                <optgroup label="Comparison Values">
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                </optgroup>
-              </select>
+                <output class="chanceOutputs" for="stayConSlider" name="stayCon">100</output>
+                <span>%</span>
+              </div>
 
-              <button name="skipCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
+              </div>
+
+
+              <div class="conditionOptions">
+
+                <select name="stayCon" class="neighborTypes">
+                  <optgroup label="Cell Types">
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                    <option value="validNeighbors.length">Valid Neighbors</option>
+                    <option value="totalNeighbors.length">Total Neighbors</option>
+                  </optgroup>
+                </select>
+
+                <select name="stayCon" class="comparators">
+                  <optgroup label="Symbols">
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                    <option value="<"><</option>
+                    <option value="<="><=</option>
+                    <option value="===">==</option>
+                    <option value="!==">!=</option>
+                  </optgroup>
+                </select>
+
+                <select name="stayCon" class="comparisonValues">
+                  <optgroup label="Comparison Values">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                  </optgroup>
+                </select>
+
+                <button name="stayCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
+
+              </div>
+
+              <div class="conditionalStatementContainers">
+                <ul class="conditionalStatements" id="stayCon"></ul>
+              </div>
             </div>
 
-            <div class="conditionalStatementContainers">
-              <ul class="conditionalStatements" id="skipCon"></ul>
-            </div>
-          </div>
+            <div class="conditionContainers">
+              <div class="conditionTitles">
 
-          <div class="conditionContainers">
-            <div class="conditionTitles">
-              <h3>Die:&nbsp;</h3>
+                <h3>Reproduce:&nbsp;</h3>
 
-              <label class="switch">
-                <input name="dieCon" class="conditionalSwitches" type="checkbox">
-                <div class="slider"></div>
-              </label>
-            </div>
+                <div class="sliderContainers">
+                  <input
+                  id="reproduceConSlider"
+                  name="reproduceCon"
+                  class="chanceSliders"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="100"
+                  step="1"
+                  />
 
-            <div class="sliderContainers">
-              <input
-              id="dieConSlider"
-              name="dieCon"
-              class="chanceSliders"
-              type="range"
-              min="1"
-              max="100"
-              value="100"
-              step="1"
-              />
+                  <output class="chanceOutputs" for="reproduceConSlider" name="reproduceCon">100</output>
+                  <span>%</span>
+                </div>
 
-              <output class="chanceOutputs" for="dieConSlider" name="dieCon">100</output>
-            </div>
+              </div>
 
-            <div class="conditionOptions">
 
-              <select name="dieCon" class="neighborTypes">
-                <optgroup label="Cell Types">
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                  <option value="validNeighbors.length">Valid Neighbors</option>
-                  <option value="totalNeighbors.length">Total Neighbors</option>
-                  <option value="true">true</option>
-                </optgroup>
-              </select>
+              <div class="conditionOptions">
 
-              <select name="dieCon" class="comparators">
-                <optgroup label="Symbols">
-                  <option value=">">></option>
-                  <option value=">=">>=</option>
-                  <option value="<"><</option>
-                  <option value="<="><=</option>
-                  <option value="===">==</option>
-                  <option value="!==">!=</option>
-                </optgroup>
-              </select>
+                <select name="reproduceCon" class="neighborTypes">
+                  <optgroup label="Cell Types">
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                    <option value="validNeighbors.length">Valid Neighbors</option>
+                    <option value="totalNeighbors.length">Total Neighbors</option>
+                  </optgroup>
+                </select>
 
-              <select name="dieCon" class="comparisonValues">
-                <optgroup label="Comparison Values">
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                </optgroup>
-              </select>
+                <select name="reproduceCon" class="comparators">
+                  <optgroup label="Symbols">
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                    <option value="<"><</option>
+                    <option value="<="><=</option>
+                    <option value="===">==</option>
+                    <option value="!==">!=</option>
+                  </optgroup>
+                </select>
 
-              <button name="dieCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
-            </div>
+                <select name="reproduceCon" class="comparisonValues">
+                  <optgroup label="Comparison Values">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                  </optgroup>
+                </select>
 
-            <div class="conditionalStatementContainers">
-              <ul class="conditionalStatements" id="dieCon"></ul>
-            </div>
-          </div>
+                <button name="reproduceCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
 
-          <div class="conditionContainers">
-            <div class="conditionTitles">
-              <h3>Stay:&nbsp;</h3>
+              </div>
 
-              <label class="switch">
-                <input name="stayCon" class="conditionalSwitches" type="checkbox">
-                <div class="slider"></div>
-              </label>
-            </div>
-
-            <div class="sliderContainers">
-              <input
-              id="stayConSlider"
-              name="stayCon"
-              class="chanceSliders"
-              type="range"
-              min="1"
-              max="100"
-              value="100"
-              step="1"
-              />
-
-              <output class="chanceOutputs" for="stayConSlider" name="stayCon">100</output>
-            </div>
-
-            <div class="conditionOptions">
-
-              <select name="stayCon" class="neighborTypes">
-                <optgroup label="Cell Types">
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                  <option value="validNeighbors.length">Valid Neighbors</option>
-                  <option value="totalNeighbors.length">Total Neighbors</option>
-                  <option value="true">true</option>
-                </optgroup>
-              </select>
-
-              <select name="stayCon" class="comparators">
-                <optgroup label="Symbols">
-                  <option value=">">></option>
-                  <option value=">=">>=</option>
-                  <option value="<"><</option>
-                  <option value="<="><=</option>
-                  <option value="===">==</option>
-                  <option value="!==">!=</option>
-                </optgroup>
-              </select>
-
-              <select name="stayCon" class="comparisonValues">
-                <optgroup label="Comparison Values">
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                </optgroup>
-              </select>
-
-              <button name="stayCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
-
-            </div>
-
-            <div class="conditionalStatementContainers">
-              <ul class="conditionalStatements" id="stayCon"></ul>
-            </div>
-          </div>
-
-          <div class="conditionContainers">
-            <div class="conditionTitles">
-              <h3>Reproduce:&nbsp;</h3>
-
-              <label class="switch">
-                <input name="reproduceCon" class="conditionalSwitches" type="checkbox">
-                <div class="slider"></div>
-              </label>
-            </div>
-
-            <div class="sliderContainers">
-              <input
-              id="reproduceConSlider"
-              name="reproduceCon"
-              class="chanceSliders"
-              type="range"
-              min="1"
-              max="100"
-              value="100"
-              step="1"
-              />
-
-              <output class="chanceOutputs" for="reproduceConSlider" name="reproduceCon">100</output>
-            </div>
-
-            <div class="conditionOptions">
-
-              <select name="reproduceCon" class="neighborTypes">
-                <optgroup label="Cell Types">
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                  <option value="validNeighbors.length">Valid Neighbors</option>
-                  <option value="totalNeighbors.length">Total Neighbors</option>
-                  <option value="true">true</option>
-                </optgroup>
-              </select>
-
-              <select name="reproduceCon" class="comparators">
-                <optgroup label="Symbols">
-                  <option value=">">></option>
-                  <option value=">=">>=</option>
-                  <option value="<"><</option>
-                  <option value="<="><=</option>
-                  <option value="===">==</option>
-                  <option value="!==">!=</option>
-                </optgroup>
-              </select>
-
-              <select name="reproduceCon" class="comparisonValues">
-                <optgroup label="Comparison Values">
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                </optgroup>
-              </select>
-
-              <button name="reproduceCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
+              <div class="conditionalStatementContainers">
+                <ul class="conditionalStatements" id="reproduceCon"></ul>
+              </div>
 
             </div>
 
-            <div class="conditionalStatementContainers">
-              <ul class="conditionalStatements" id="reproduceCon"></ul>
-            </div>
+            <div class="conditionContainers">
+              <div class="conditionTitles">
 
-          </div>
+                <h3>Wander:&nbsp;</h3>
 
-          <div class="conditionContainers">
-            <div class="conditionTitles">
-              <h3>Wander:&nbsp;</h3>
+                <div class="sliderContainers">
+                <input
+                id="wanderConSlider"
+                name="wanderCon"
+                class="chanceSliders"
+                type="range"
+                min="0"
+                max="100"
+                value="100"
+                step="1"
+                />
 
-              <label class="switch">
-                <input name="wanderCon" class="conditionalSwitches" type="checkbox">
-                <div class="slider"></div>
-              </label>
-            </div>
+                <output class="chanceOutputs" for="wanderConSlider" name="wanderCon">100</output>
+                <span>%</span>
+              </div>
 
-            <div class="sliderContainers">
-              <input
-              id="wanderConSlider"
-              name="wanderCon"
-              class="chanceSliders"
-              type="range"
-              min="1"
-              max="100"
-              value="100"
-              step="1"
-              />
+              </div>
 
-              <output class="chanceOutputs" for="wanderConSlider" name="wanderCon">100</output>
-            </div>
 
-            <div class="conditionOptions">
+              <div class="conditionOptions">
 
-              <select name="wanderCon" class="neighborTypes">
-                <optgroup label="Cell Types">
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                  <option value="validNeighbors.length">Valid Neighbors</option>
-                  <option value="totalNeighbors.length">Total Neighbors</option>
-                  <option value="true">true</option>
-                </optgroup>
-              </select>
+                <select name="wanderCon" class="neighborTypes">
+                  <optgroup label="Cell Types">
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                    <option value="validNeighbors.length">Valid Neighbors</option>
+                    <option value="totalNeighbors.length">Total Neighbors</option>
+                  </optgroup>
+                </select>
 
-              <select name="wanderCon" class="comparators">
-                <optgroup label="Symbols">
-                  <option value=">">></option>
-                  <option value=">=">>=</option>
-                  <option value="<"><</option>
-                  <option value="<="><=</option>
-                  <option value="===">==</option>
-                  <option value="!==">!=</option>
-                </optgroup>
-              </select>
+                <select name="wanderCon" class="comparators">
+                  <optgroup label="Symbols">
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                    <option value="<"><</option>
+                    <option value="<="><=</option>
+                    <option value="===">==</option>
+                    <option value="!==">!=</option>
+                  </optgroup>
+                </select>
 
-              <select name="wanderCon" class="comparisonValues">
-                <optgroup label="Comparison Values">
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="typeHash['typeOne']"></option>
-                  <option value="typeHash['typeTwo']"></option>
-                  <option value="typeHash['typeThree']"></option>
-                  <option value="typeHash['typeFour']"></option>
-                </optgroup>
-              </select>
+                <select name="wanderCon" class="comparisonValues">
+                  <optgroup label="Comparison Values">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="typeHash['typeOne']"></option>
+                    <option value="typeHash['typeTwo']"></option>
+                    <option value="typeHash['typeThree']"></option>
+                    <option value="typeHash['typeFour']"></option>
+                  </optgroup>
+                </select>
 
-              <button name="wanderCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
+                <button name="wanderCon" class="conditionalSubmitButtons"><i class="fa fa-plus"></i></button>
 
-            </div>
+              </div>
 
-            <div class="conditionalStatementContainers">
-              <ul class="conditionalStatements" id="wanderCon"></ul>
+              <div class="conditionalStatementContainers">
+                <ul class="conditionalStatements" id="wanderCon"></ul>
+              </div>
             </div>
           </div>
 
           <div id="validNeighborsContainer">
-
             <div id="validNeighborTypes">
 
               <div class="neighborTypeContainers">
@@ -534,7 +523,6 @@
               </div>
 
             </div>
-
           </div>
 
         </div>

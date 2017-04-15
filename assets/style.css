@@ -63,13 +63,13 @@ h3 {
 
 select {
 	-webkit-appearance: none;
-	font-family: inherit;
+	/*font-family: inherit;
 	letter-spacing: inherit;
 	flex: auto;
 	justify-content: center;
 	border-radius: 0;
 	padding: 3px;
-	font-size: 1em;
+	font-size: 1em;*/
 }
 
 #mainCanvas {
@@ -158,8 +158,8 @@ li:hover {
 #cellLogicModal {
   display: none;
 	flex-direction: column;
-  position: fixed;
 	overflow: scroll;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
@@ -175,17 +175,28 @@ li:hover {
 #cellName {
 	display: flex;
 	font-size: 3em;
-	padding: 5px;
 	justify-content: center;
 	font-family: Poiret One;
 	letter-spacing: 2px;
 	background-color: white;
+	padding: 5px;
+	flex: 0 0 auto;
+}
+
+#cellConditions {
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	flex: 1 1 auto;
+	overflow: scroll;
 }
 
 #validNeighborsContainer {
 	display: flex;
-	font-size: 1.2em;
+	font-size: 1em;
 	flex-direction: column;
+	padding: 5px;
+	flex: 0 0 auto;
 }
 
 #validNeighborTypes {
@@ -195,16 +206,23 @@ li:hover {
 	background-color: white;
 }
 
+.sliderContainers {
+	display: flex;
+}
+
 .conditionContainers {
 	display: flex;
-	justify-content: center;
 	flex-direction: column;
+	align-items: center;
+	padding: 5px;
+	background-color: beige;
+	min-height: 8em;
 }
 
 .conditionOptions {
-	display: none;
+	display: flex;
 	font-size: 1em;
-	align-items: stretch;
+	min-height: 1em;
 }
 
 .deleteButtons {
@@ -220,70 +238,20 @@ li:hover {
 
 .conditionTitles {
 	display: flex;
+	font-size: 1.2em;
 	align-items: center;
 	justify-content: center;
 }
 
 .conditionalStatementContainers {
-	display: none;
+	display: flex;
 	font-size: 1em;
-	min-height: 25px;
-	overflow: auto;
-}
-
-
-
-/* SWITCHES */
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 3em;
-  height: 1.5em;
-}
-
-.switch input {
-	display:none;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: red;
-  -webkit-transition: .4s;
-  transition: .4s;
-	border-radius: 2em;
-}
-
-.slider:before {
-	border-radius: 50%;
-  position: absolute;
-  content: "";
-  height: 1em;
-  width: 1em;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: blue;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(1.5em);
-  -ms-transform: translateX(1.5em);
-  transform: translateX(1.5em);
+	font-weight: bold;
+	overflow: scroll;
+	height: 3em;
+	background-color: lightgrey;
+	align-self: center;
+	width: 90%;
 }
 
 /* BUTTONS */

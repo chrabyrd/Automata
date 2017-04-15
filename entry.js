@@ -15,16 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const cellName = document.getElementById("cellName");
 
-  const conditionalSwitches = document.getElementsByClassName("conditionalSwitches");
+  const chanceSliders = document.getElementsByClassName("chanceSliders");
+  const chanceOutputs = document.getElementsByClassName("chanceOutputs");
   const conditionOptions = document.getElementsByClassName("conditionOptions");
   const neighborTypes = document.getElementsByClassName("neighborTypes");
   const comparators = document.getElementsByClassName("comparators");
   const comparisonValues = document.getElementsByClassName("comparisonValues");
   const conditionalStatements = document.getElementsByClassName("conditionalStatements");
   const conditionalStatementContainers = document.getElementsByClassName("conditionalStatementContainers");
-  const sliderContainers = document.getElementsByClassName("sliderContainers");
-  const chanceSliders = document.getElementsByClassName("chanceSliders");
-  const chanceOutputs = document.getElementsByClassName("chanceOutputs");
   const conditionalSubmitButtons = document.getElementsByClassName("conditionalSubmitButtons");
 
   const neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
@@ -44,11 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'Grass',
       'color': '#507F2C',
       'conditions': {
-        'skipCon': `false && Math.random() * 100 < 100`,
-        'dieCon': `false && Math.random() * 100 < 100`,
-        'stayCon': `true && validNeighbors.length === 0 && Math.random() * 100 < 100`,
-        'wanderCon': `false && Math.random() * 100 < 100`,
-        'reproduceCon': `true && Math.random() * 100 < 100`
+        'skipCon': `Math.random() * 100 < 0`,
+        'dieCon': `Math.random() * 100 < 0`,
+        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'wanderCon': `Math.random() * 100 < 0`,
+        'reproduceCon': `Math.random() * 100 < 100`
       },
       'neighborHash': {
         'typeOne': false,
@@ -63,11 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'Cow',
       'color': '#2552B2',
       'conditions': {
-        'skipCon': `false && Math.random() * 100 < 100`,
-        'dieCon': `true && typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
-        'stayCon': `true && validNeighbors.length === 0 && Math.random() * 100 < 100`,
-        'wanderCon': `true && Math.random() * 100 < 100`,
-        'reproduceCon': `true && typeHash['typeTwo'] > 0 && Math.random() * 100 < 50`
+        'skipCon': `Math.random() * 100 < 0`,
+        'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
+        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'wanderCon': `Math.random() * 100 < 100`,
+        'reproduceCon': `typeHash['typeTwo'] > 0 && Math.random() * 100 < 50`
       },
       'neighborHash': {
         'typeOne': true,
@@ -82,11 +80,11 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'Sheep',
       'color': '#FF851B',
       'conditions': {
-        'skipCon': `false && Math.random() * 100 < 100`,
-        'dieCon': `true && typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
-        'stayCon': `true && validNeighbors.length === 0 && Math.random() * 100 < 100`,
-        'wanderCon': `true && Math.random() * 100 < 100`,
-        'reproduceCon': `true && typeHash['typeThree'] > 0 && Math.random() * 100 < 50`
+        'skipCon': `Math.random() * 100 < 0`,
+        'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
+        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'wanderCon': `Math.random() * 100 < 100`,
+        'reproduceCon': `typeHash['typeThree'] > 0 && Math.random() * 100 < 50`
       },
       'neighborHash': {
         'typeOne': true,
@@ -101,11 +99,11 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'Goat',
       'color': '#8b0000',
       'conditions': {
-        'skipCon': `false && Math.random() * 100 < 100`,
-        'dieCon': `true && typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
-        'stayCon': `true && validNeighbors.length === 0 && Math.random() * 100 < 100`,
-        'wanderCon': `true && Math.random() * 100 < 100`,
-        'reproduceCon': `true && typeHash['typeFour'] > 0 && Math.random() * 100 < 50`
+        'skipCon': `Math.random() * 100 < 100`,
+        'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
+        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'wanderCon': `Math.random() * 100 < 100`,
+        'reproduceCon': `typeHash['typeFour'] > 0 && Math.random() * 100 < 50`
       },
       'neighborHash': {
         'typeOne': true,
@@ -120,11 +118,11 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'false',
       'color': 'rgba(255, 255, 255, 0)',
       'conditions': {
-        'skipCon': `true`,
-        'dieCon': `false`,
-        'stayCon': `false`,
-        'wanderCon': `false`,
-        'reproduceCon': `false`
+        'skipCon': `Math.random() * 100 < 100`,
+        'dieCon': `Math.random() * 100 < 0`,
+        'stayCon': `Math.random() * 100 < 0`,
+        'wanderCon': `Math.random() * 100 < 0`,
+        'reproduceCon': `Math.random() * 100 < 0`
       },
       'neighborHash': {
         'typeOne': false,
@@ -337,7 +335,6 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < conditionalStatements.length; i++) {
       const currentStatement = conditionalStatements[i];
       const currentOutput = chanceOutputs[i];
-      const currentSliderContainer = sliderContainers[i];
       const conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
       const conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
 
@@ -366,7 +363,6 @@ document.addEventListener("DOMContentLoaded", () => {
               conditionalArray[conditionalArray.length - 1] = "100";
               conditionalArray.unshift('false &&');
               currentOutput.value = 100;
-              currentSliderContainer.style.display = "none";
             }
 
             for (let k = 0; k < conditionalArray.length; k++ ) {
@@ -378,7 +374,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
 
-            handleConditionalSwitches(cellType);
           };
 
           if (symbol === 'Delete') {
@@ -499,61 +494,57 @@ document.addEventListener("DOMContentLoaded", () => {
     resetMenuValue(comparisonValues);
   };
 
-  const removeChanceEventListeners = () => {
-    for (let i = 0; i < chanceSliders.length; i++) {
-      const currentSlider = chanceSliders[i];
-      const clone = currentSlider.cloneNode();
-
-      while (currentSlider.firstChild) {
-        clone.appendChild(currentSlider.lastChild);
-      }
-      currentSlider.parentNode.replaceChild(clone, currentSlider);
-    }
-  };
-
   const handleChanceSliders = cellType => {
+
+    const removeChanceEventListeners = () => {
+      for (let i = 0; i < chanceSliders.length; i++) {
+        const currentSlider = chanceSliders[i];
+        const clone = currentSlider.cloneNode();
+
+        while (currentSlider.firstChild) {
+          clone.appendChild(currentSlider.lastChild);
+        }
+        currentSlider.parentNode.replaceChild(clone, currentSlider);
+      }
+    };
 
     removeChanceEventListeners();
 
     for (let i = 0; i < chanceSliders.length; i++) {
       const currentSlider = chanceSliders[i];
-      const currentSliderContainer = sliderContainers[i];
       const currentOutput = chanceOutputs[i];
+      const currentConditionOption = conditionOptions[i];
+      const currentStatementContainer = conditionalStatementContainers[i];
       const currentHashCondition = conditionalHash[cellType]['conditions'][currentSlider.name];
-      const currentHashConditionArray = parseConditionalHashStatements(currentHashCondition);
       const conditionalArray = parseConditionalHashStatements(currentHashCondition);
 
       const updateOutput = () => {
-        const filteredArray = conditionalArray.filter(statement => {
-          if (statement.substring(0, 4) !== 'Math') return statement;
-        });
-        const lastElementArray = filteredArray[filteredArray.length - 1].split(' ');
-        const lastValue = lastElementArray[lastElementArray.length - 1];
+        const updatedValueArray = conditionalArray.map( condition => {
+          if (condition.startsWith("Math.random()")) {
+            return `${condition.slice(0, 22)}${currentSlider.value}`;
+          }
 
-        if (lastValue !== '&&') filteredArray.push(`&&`);
-        filteredArray.push(`Math.random() * 100 < ${currentSlider.value}`);
-        conditionalHash[cellType]['conditions'][currentOutput.name] = filteredArray.join(' ');
+          return condition;
+        });
+
+        conditionalHash[cellType]['conditions'][currentOutput.name] = updatedValueArray.join(' ');
         currentOutput.value = currentSlider.value;
       };
 
       const setSliderValues = () => {
-        currentSlider.value = 100;
-        currentOutput.value = 100;
-
-        currentHashConditionArray.forEach(statement => {
+        conditionalArray.forEach(statement => {
           if (statement.substring(0, 4) === 'Math') {
             const percentage = statement.match(/\d+/g)[1];
             currentSlider.value = percentage;
-            updateOutput(percentage);
+            currentOutput.value = percentage;
           }
         });
+
+        if (currentSlider.value === '0') {
+          currentConditionOption.style.display = 'none';
+          currentStatementContainer.style.display = 'none';
+        }
       };
-
-      currentSliderContainer.style.display = "flex";
-
-      if (currentHashConditionArray[0] === 'false &&') {
-        currentSliderContainer.style.display = "none";
-      }
 
       setSliderValues();
       currentSlider.addEventListener('input', updateOutput);
@@ -577,22 +568,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const populateSubmitEventListeners = () => {
       for (let i = 0; i < conditionalSubmitButtons.length; i++) {
         const currentButton = conditionalSubmitButtons[i];
-        const currentSliderContainer = sliderContainers[i];
 
-        const toggleSliderDisplay = () => {
-          const currentHashCondition = conditionalHash[cellType]['conditions'][currentButton.name];
-          const currentHashConditionArray = parseConditionalHashStatements(currentHashCondition);
-
-          if (currentHashConditionArray[0] !== 'false &&') {
-            currentSliderContainer.style.display = "flex";
-          }
-        };
 
         currentButton.addEventListener('click', () => {
           addStatementToConditionalHash(cellType, currentButton);
           refreshConditionalStatements(cellType);
           resetMenuValues(currentButton);
-          toggleSliderDisplay();
         });
       }
     };
@@ -627,45 +608,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const handleConditionalSwitches = cellType => {
-    for (let i = 0; i < conditionalSwitches.length; i++) {
-      const currentSwitch = conditionalSwitches[i];
-      const currentOption = conditionOptions[i];
-      const currentContainer = conditionalStatementContainers[i];
-      const currentCondition = conditionalHash[cellType]['conditions'][currentSwitch.name];
-
-      if (currentCondition.startsWith('false')) {
-        currentSwitch.checked = false;
-      }
-
-      currentSwitch.checked = false;
-      currentOption.style.display = "none";
-      currentContainer.style.display = "none";
-
-      if (!currentCondition.startsWith('false')) {
-        currentSwitch.checked = true;
-        currentOption.style.display = "flex";
-        currentContainer.style.display = "flex";
-      }
-
-      currentSwitch.onclick = () => {
-        if (currentSwitch.checked) {
-          conditionalHash[cellType]['conditions'][currentSwitch.name] = currentCondition.replace(/false/i, "true");
-          currentOption.style.display = "flex";
-          currentContainer.style.display = "flex";
-        } else {
-          conditionalHash[cellType]['conditions'][currentSwitch.name] = 'false && Math.random() * 100 < 100';
-          currentOption.style.display = "none";
-          currentContainer.style.display = "none";
-        }
-
-        handleChanceSliders(cellType);
-        refreshConditionalStatements(cellType);
-      };
-
-    }
-  };
-
   const changeCellLogicModalType = cellType => {
     if (!container.pauseEvent) handlePauseEvent();
 
@@ -681,7 +623,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     changeModalCellName(cellType);
-    handleConditionalSwitches(cellType);
     populateConditionalDropdowns();
     refreshConditionalStatements(cellType);
     resetMenuValues();

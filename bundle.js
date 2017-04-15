@@ -67,16 +67,14 @@
 
 	  var cellName = document.getElementById("cellName");
 
-	  var conditionalSwitches = document.getElementsByClassName("conditionalSwitches");
+	  var chanceSliders = document.getElementsByClassName("chanceSliders");
+	  var chanceOutputs = document.getElementsByClassName("chanceOutputs");
 	  var conditionOptions = document.getElementsByClassName("conditionOptions");
 	  var neighborTypes = document.getElementsByClassName("neighborTypes");
 	  var comparators = document.getElementsByClassName("comparators");
 	  var comparisonValues = document.getElementsByClassName("comparisonValues");
 	  var conditionalStatements = document.getElementsByClassName("conditionalStatements");
 	  var conditionalStatementContainers = document.getElementsByClassName("conditionalStatementContainers");
-	  var sliderContainers = document.getElementsByClassName("sliderContainers");
-	  var chanceSliders = document.getElementsByClassName("chanceSliders");
-	  var chanceOutputs = document.getElementsByClassName("chanceOutputs");
 	  var conditionalSubmitButtons = document.getElementsByClassName("conditionalSubmitButtons");
 
 	  var neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
@@ -96,11 +94,11 @@
 	      'name': 'Grass',
 	      'color': '#507F2C',
 	      'conditions': {
-	        'skipCon': "false && Math.random() * 100 < 100",
-	        'dieCon': "false && Math.random() * 100 < 100",
-	        'stayCon': "true && validNeighbors.length === 0 && Math.random() * 100 < 100",
-	        'wanderCon': "false && Math.random() * 100 < 100",
-	        'reproduceCon': "true && Math.random() * 100 < 100"
+	        'skipCon': "Math.random() * 100 < 0",
+	        'dieCon': "Math.random() * 100 < 0",
+	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'wanderCon': "Math.random() * 100 < 0",
+	        'reproduceCon': "Math.random() * 100 < 100"
 	      },
 	      'neighborHash': {
 	        'typeOne': false,
@@ -115,11 +113,11 @@
 	      'name': 'Cow',
 	      'color': '#2552B2',
 	      'conditions': {
-	        'skipCon': "false && Math.random() * 100 < 100",
-	        'dieCon': "true && typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
-	        'stayCon': "true && validNeighbors.length === 0 && Math.random() * 100 < 100",
-	        'wanderCon': "true && Math.random() * 100 < 100",
-	        'reproduceCon': "true && typeHash['typeTwo'] > 0 && Math.random() * 100 < 50"
+	        'skipCon': "Math.random() * 100 < 0",
+	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
+	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'wanderCon': "Math.random() * 100 < 100",
+	        'reproduceCon': "typeHash['typeTwo'] > 0 && Math.random() * 100 < 50"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -134,11 +132,11 @@
 	      'name': 'Sheep',
 	      'color': '#FF851B',
 	      'conditions': {
-	        'skipCon': "false && Math.random() * 100 < 100",
-	        'dieCon': "true && typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
-	        'stayCon': "true && validNeighbors.length === 0 && Math.random() * 100 < 100",
-	        'wanderCon': "true && Math.random() * 100 < 100",
-	        'reproduceCon': "true && typeHash['typeThree'] > 0 && Math.random() * 100 < 50"
+	        'skipCon': "Math.random() * 100 < 0",
+	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
+	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'wanderCon': "Math.random() * 100 < 100",
+	        'reproduceCon': "typeHash['typeThree'] > 0 && Math.random() * 100 < 50"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -153,11 +151,11 @@
 	      'name': 'Goat',
 	      'color': '#8b0000',
 	      'conditions': {
-	        'skipCon': "false && Math.random() * 100 < 100",
-	        'dieCon': "true && typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
-	        'stayCon': "true && validNeighbors.length === 0 && Math.random() * 100 < 100",
-	        'wanderCon': "true && Math.random() * 100 < 100",
-	        'reproduceCon': "true && typeHash['typeFour'] > 0 && Math.random() * 100 < 50"
+	        'skipCon': "Math.random() * 100 < 100",
+	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
+	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'wanderCon': "Math.random() * 100 < 100",
+	        'reproduceCon': "typeHash['typeFour'] > 0 && Math.random() * 100 < 50"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -172,11 +170,11 @@
 	      'name': 'false',
 	      'color': 'rgba(255, 255, 255, 0)',
 	      'conditions': {
-	        'skipCon': "true",
-	        'dieCon': "false",
-	        'stayCon': "false",
-	        'wanderCon': "false",
-	        'reproduceCon': "false"
+	        'skipCon': "Math.random() * 100 < 100",
+	        'dieCon': "Math.random() * 100 < 0",
+	        'stayCon': "Math.random() * 100 < 0",
+	        'wanderCon': "Math.random() * 100 < 0",
+	        'reproduceCon': "Math.random() * 100 < 0"
 	      },
 	      'neighborHash': {
 	        'typeOne': false,
@@ -388,7 +386,6 @@
 	    var _loop3 = function _loop3(i) {
 	      var currentStatement = conditionalStatements[i];
 	      var currentOutput = chanceOutputs[i];
-	      var currentSliderContainer = sliderContainers[i];
 	      var conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
 	      var conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
 
@@ -417,7 +414,6 @@
 	              conditionalArray[conditionalArray.length - 1] = "100";
 	              conditionalArray.unshift('false &&');
 	              currentOutput.value = 100;
-	              currentSliderContainer.style.display = "none";
 	            }
 
 	            for (var k = 0; k < conditionalArray.length; k++) {
@@ -428,8 +424,6 @@
 	              }
 	            }
 	            conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
-
-	            handleConditionalSwitches(cellType);
 	          };
 
 	          if (symbol === 'Delete') {
@@ -560,61 +554,57 @@
 	    resetMenuValue(comparisonValues);
 	  };
 
-	  var removeChanceEventListeners = function removeChanceEventListeners() {
-	    for (var i = 0; i < chanceSliders.length; i++) {
-	      var currentSlider = chanceSliders[i];
-	      var clone = currentSlider.cloneNode();
-
-	      while (currentSlider.firstChild) {
-	        clone.appendChild(currentSlider.lastChild);
-	      }
-	      currentSlider.parentNode.replaceChild(clone, currentSlider);
-	    }
-	  };
-
 	  var handleChanceSliders = function handleChanceSliders(cellType) {
+
+	    var removeChanceEventListeners = function removeChanceEventListeners() {
+	      for (var i = 0; i < chanceSliders.length; i++) {
+	        var currentSlider = chanceSliders[i];
+	        var clone = currentSlider.cloneNode();
+
+	        while (currentSlider.firstChild) {
+	          clone.appendChild(currentSlider.lastChild);
+	        }
+	        currentSlider.parentNode.replaceChild(clone, currentSlider);
+	      }
+	    };
 
 	    removeChanceEventListeners();
 
 	    var _loop5 = function _loop5(i) {
 	      var currentSlider = chanceSliders[i];
-	      var currentSliderContainer = sliderContainers[i];
 	      var currentOutput = chanceOutputs[i];
+	      var currentConditionOption = conditionOptions[i];
+	      var currentStatementContainer = conditionalStatementContainers[i];
 	      var currentHashCondition = conditionalHash[cellType]['conditions'][currentSlider.name];
-	      var currentHashConditionArray = parseConditionalHashStatements(currentHashCondition);
 	      var conditionalArray = parseConditionalHashStatements(currentHashCondition);
 
 	      var updateOutput = function updateOutput() {
-	        var filteredArray = conditionalArray.filter(function (statement) {
-	          if (statement.substring(0, 4) !== 'Math') return statement;
-	        });
-	        var lastElementArray = filteredArray[filteredArray.length - 1].split(' ');
-	        var lastValue = lastElementArray[lastElementArray.length - 1];
+	        var updatedValueArray = conditionalArray.map(function (condition) {
+	          if (condition.startsWith("Math.random()")) {
+	            return "" + condition.slice(0, 22) + currentSlider.value;
+	          }
 
-	        if (lastValue !== '&&') filteredArray.push("&&");
-	        filteredArray.push("Math.random() * 100 < " + currentSlider.value);
-	        conditionalHash[cellType]['conditions'][currentOutput.name] = filteredArray.join(' ');
+	          return condition;
+	        });
+
+	        conditionalHash[cellType]['conditions'][currentOutput.name] = updatedValueArray.join(' ');
 	        currentOutput.value = currentSlider.value;
 	      };
 
 	      var setSliderValues = function setSliderValues() {
-	        currentSlider.value = 100;
-	        currentOutput.value = 100;
-
-	        currentHashConditionArray.forEach(function (statement) {
+	        conditionalArray.forEach(function (statement) {
 	          if (statement.substring(0, 4) === 'Math') {
 	            var percentage = statement.match(/\d+/g)[1];
 	            currentSlider.value = percentage;
-	            updateOutput(percentage);
+	            currentOutput.value = percentage;
 	          }
 	        });
+
+	        if (currentSlider.value === '0') {
+	          currentConditionOption.style.display = 'none';
+	          currentStatementContainer.style.display = 'none';
+	        }
 	      };
-
-	      currentSliderContainer.style.display = "flex";
-
-	      if (currentHashConditionArray[0] === 'false &&') {
-	        currentSliderContainer.style.display = "none";
-	      }
 
 	      setSliderValues();
 	      currentSlider.addEventListener('input', updateOutput);
@@ -642,22 +632,11 @@
 	    var populateSubmitEventListeners = function populateSubmitEventListeners() {
 	      var _loop6 = function _loop6(i) {
 	        var currentButton = conditionalSubmitButtons[i];
-	        var currentSliderContainer = sliderContainers[i];
-
-	        var toggleSliderDisplay = function toggleSliderDisplay() {
-	          var currentHashCondition = conditionalHash[cellType]['conditions'][currentButton.name];
-	          var currentHashConditionArray = parseConditionalHashStatements(currentHashCondition);
-
-	          if (currentHashConditionArray[0] !== 'false &&') {
-	            currentSliderContainer.style.display = "flex";
-	          }
-	        };
 
 	        currentButton.addEventListener('click', function () {
 	          addStatementToConditionalHash(cellType, currentButton);
 	          refreshConditionalStatements(cellType);
 	          resetMenuValues(currentButton);
-	          toggleSliderDisplay();
 	        });
 	      };
 
@@ -702,48 +681,6 @@
 	    }
 	  };
 
-	  var handleConditionalSwitches = function handleConditionalSwitches(cellType) {
-	    var _loop8 = function _loop8(i) {
-	      var currentSwitch = conditionalSwitches[i];
-	      var currentOption = conditionOptions[i];
-	      var currentContainer = conditionalStatementContainers[i];
-	      var currentCondition = conditionalHash[cellType]['conditions'][currentSwitch.name];
-
-	      if (currentCondition.startsWith('false')) {
-	        currentSwitch.checked = false;
-	      }
-
-	      currentSwitch.checked = false;
-	      currentOption.style.display = "none";
-	      currentContainer.style.display = "none";
-
-	      if (!currentCondition.startsWith('false')) {
-	        currentSwitch.checked = true;
-	        currentOption.style.display = "flex";
-	        currentContainer.style.display = "flex";
-	      }
-
-	      currentSwitch.onclick = function () {
-	        if (currentSwitch.checked) {
-	          conditionalHash[cellType]['conditions'][currentSwitch.name] = currentCondition.replace(/false/i, "true");
-	          currentOption.style.display = "flex";
-	          currentContainer.style.display = "flex";
-	        } else {
-	          conditionalHash[cellType]['conditions'][currentSwitch.name] = 'false && Math.random() * 100 < 100';
-	          currentOption.style.display = "none";
-	          currentContainer.style.display = "none";
-	        }
-
-	        handleChanceSliders(cellType);
-	        refreshConditionalStatements(cellType);
-	      };
-	    };
-
-	    for (var i = 0; i < conditionalSwitches.length; i++) {
-	      _loop8(i);
-	    }
-	  };
-
 	  var changeCellLogicModalType = function changeCellLogicModalType(cellType) {
 	    if (!container.pauseEvent) handlePauseEvent();
 
@@ -759,7 +696,6 @@
 	    });
 
 	    changeModalCellName(cellType);
-	    handleConditionalSwitches(cellType);
 	    populateConditionalDropdowns();
 	    refreshConditionalStatements(cellType);
 	    resetMenuValues();
@@ -774,7 +710,7 @@
 
 	    cellTypeContainers[0].style.opacity = '1';
 
-	    var _loop9 = function _loop9(i) {
+	    var _loop8 = function _loop8(i) {
 	      var currentTypeContainer = cellTypeContainers[i];
 	      var currentLogicModalButton = logicModalButtons[i];
 	      var currentTypeCheckbox = currentTypeCheckboxes[i];
@@ -800,7 +736,7 @@
 	    };
 
 	    for (var i = 0; i < cellTypeContainers.length; i++) {
-	      _loop9(i);
+	      _loop8(i);
 	    }
 	  };
 
