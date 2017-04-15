@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
       'conditions': {
         'skipCon': `Math.random() * 100 < 0`,
         'dieCon': `Math.random() * 100 < 0`,
-        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
         'wanderCon': `Math.random() * 100 < 0`,
         'reproduceCon': `Math.random() * 100 < 100`
       },
@@ -62,10 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
       'color': '#2552B2',
       'conditions': {
         'skipCon': `Math.random() * 100 < 0`,
-        'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
-        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
+        'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
         'wanderCon': `Math.random() * 100 < 100`,
-        'reproduceCon': `typeHash['typeTwo'] > 0 && Math.random() * 100 < 50`
+        'reproduceCon': `Math.random() * 100 < 50 && typeHash['typeTwo'] > 0`
       },
       'neighborHash': {
         'typeOne': true,
@@ -81,10 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
       'color': '#FF851B',
       'conditions': {
         'skipCon': `Math.random() * 100 < 0`,
-        'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
-        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
+        'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
         'wanderCon': `Math.random() * 100 < 100`,
-        'reproduceCon': `typeHash['typeThree'] > 0 && Math.random() * 100 < 50`
+        'reproduceCon': `Math.random() * 100 < 50 && typeHash['typeThree'] > 0`
       },
       'neighborHash': {
         'typeOne': true,
@@ -99,11 +99,11 @@ document.addEventListener("DOMContentLoaded", () => {
       'name': 'Goat',
       'color': '#8b0000',
       'conditions': {
-        'skipCon': `Math.random() * 100 < 100`,
-        'dieCon': `typeHash['typeOne'] === 0 && Math.random() * 100 < 100`,
-        'stayCon': `validNeighbors.length === 0 && Math.random() * 100 < 100`,
+        'skipCon': `Math.random() * 100 < 0`,
+        'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
+        'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
         'wanderCon': `Math.random() * 100 < 100`,
-        'reproduceCon': `typeHash['typeFour'] > 0 && Math.random() * 100 < 50`
+        'reproduceCon': `Math.random() * 100 < 50 && typeHash['typeFour'] > 0`
       },
       'neighborHash': {
         'typeOne': true,
@@ -334,55 +334,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const populateConditionalStatements = cellType => {
     for (let i = 0; i < conditionalStatements.length; i++) {
       const currentStatement = conditionalStatements[i];
-      const currentOutput = chanceOutputs[i];
       const conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
       const conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
 
       for (let j = 0; j < conditionalStatementArray.length; j++) {
-        const statement = conditionalStatementArray[j];
-
-        if (statement === "") continue;
-
         const li = document.createElement("li");
         const andButton = document.createElement("button");
         const orButton = document.createElement("button");
         const deleteButton = document.createElement("button");
+        const statement = conditionalStatementArray[j];
 
         const mapButtonBehavior = (button, symbol) => {
           const statementArray = statement.split(' ');
-          let conditionalArray = conditionalHash[cellType]['conditions'][currentStatement.id].split(' ');
+          const conditionalArray = conditionalHash[cellType]['conditions'][currentStatement.id].split(' ');
 
           const removeStatementFromConditionalHash = conditionalHashStatement => {
-            conditionalArray = conditionalStatement.replace(`${conditionalHashStatement}`, "").split(' ');
+            const currentCondition = conditionalHash[cellType]['conditions'][currentStatement.id];
+            let returnCondition = currentCondition.replace(`${conditionalHashStatement}`, '');
 
-            conditionalArray = conditionalArray.filter(str => {
-              return str !== "";
-            });
+            returnCondition = returnCondition.trim();
 
-            if (conditionalArray[0] === 'Math.random()') {
-              conditionalArray[conditionalArray.length - 1] = "100";
-              conditionalArray.unshift('false &&');
-              currentOutput.value = 100;
+            if (returnCondition.endsWith('&&')) {
+              returnCondition = returnCondition.slice(0, returnCondition.length - 3);
             }
 
-            for (let k = 0; k < conditionalArray.length; k++ ) {
-              if (conditionalArray[k] === 'Math.random()') {
-                if (conditionalArray[k - 1] !== 'false &&') {
-                  conditionalArray[k - 1] = '&&';
-                }
-              }
-            }
-            conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
-
+            conditionalHash[cellType]['conditions'][currentStatement.id] = returnCondition;
+            console.log(conditionalHash[cellType]['conditions'][currentStatement.id]);
           };
 
-          if (symbol === 'Delete') {
-            button.classList.add('deleteButtons');
-            button.classList.add('fa');
-            button.classList.add('fa-times');
-          } else {
-            button.innerText = `${symbol}`;
-          }
+          const mapButtonSymbol = () => {
+            if (symbol === 'Delete') {
+              button.classList.add('deleteButtons');
+              button.classList.add('fa');
+              button.classList.add('fa-times');
+            } else {
+              button.innerText = `${symbol}`;
+            }
+          };
+
+          mapButtonSymbol();
 
           button.addEventListener('click', () => {
             for (let k = 0; k < conditionalArray.length; k++) {
@@ -395,7 +385,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (symbol === 'Delete') {
                   removeStatementFromConditionalHash(conditionalSliceStatement);
                 } else {
-                  conditionalArray[operatorIndex] = `${symbol}`;
+
+                  if (symbol === '&&') {
+                    conditionalArray[operatorIndex] = `||`;
+                  } else if (symbol === '||') {
+                    conditionalArray[operatorIndex] = `&&`;
+                  }
                   conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
                 }
 
@@ -413,24 +408,26 @@ document.addEventListener("DOMContentLoaded", () => {
           return filteredString.join(' ');
         };
 
+        const translatedStatement = translateStatement(statement);
+        const simplifiedStatement = simplifyStatement(translatedStatement);
+
         mapButtonBehavior(andButton, '&&');
         mapButtonBehavior(orButton, '||');
         mapButtonBehavior(deleteButton, 'Delete');
 
-        if (statement === 'true &&') continue;
+        if (!simplifiedStatement) continue;
 
-        if (j === conditionalStatementArray.length - 2) {
-          li.appendChild(document.createTextNode(simplifyStatement(translateStatement(statement))));
-        } else {
-          li.appendChild(document.createTextNode(translateStatement(statement)));
+        li.appendChild(document.createTextNode(simplifiedStatement));
 
-          const lastChar = statement.charAt(statement.length - 1);
-          lastChar === '&' ? li.appendChild(orButton) : li.appendChild(andButton);
+        if (translatedStatement.endsWith('&&')) {
+          li.appendChild(andButton);
+        } else if (translatedStatement.endsWith('||')) {
+          li.appendChild(orButton);
         }
 
         li.appendChild(deleteButton);
-        if (j !== conditionalStatementArray.length - 1) currentStatement.appendChild(li);
 
+        currentStatement.appendChild(li);
       }
     }
   };
@@ -458,12 +455,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!returnString) return;
 
-      if (currentCondition.substring(0, 5) === 'false') {
-        conditionalHash[cellType]['conditions'][button.name] = currentCondition.substring(9, currentCondition.length);
-      }
-
       conditionalHash[cellType]['conditions'][button.name] += ` && ${returnString}`;
-
     };
 
     addReturnStringToConditionalHash();
@@ -527,8 +519,17 @@ document.addEventListener("DOMContentLoaded", () => {
           return condition;
         });
 
+        if (currentSlider.value === '0') {
+          currentConditionOption.style.display = 'none';
+          currentStatementContainer.style.display = 'none';
+        } else {
+          currentConditionOption.style.display = 'flex';
+          currentStatementContainer.style.display = 'flex';
+        }
+
         conditionalHash[cellType]['conditions'][currentOutput.name] = updatedValueArray.join(' ');
         currentOutput.value = currentSlider.value;
+        refreshConditionalStatements(cellType);
       };
 
       const setSliderValues = () => {

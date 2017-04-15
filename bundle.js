@@ -96,7 +96,7 @@
 	      'conditions': {
 	        'skipCon': "Math.random() * 100 < 0",
 	        'dieCon': "Math.random() * 100 < 0",
-	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
 	        'wanderCon': "Math.random() * 100 < 0",
 	        'reproduceCon': "Math.random() * 100 < 100"
 	      },
@@ -114,10 +114,10 @@
 	      'color': '#2552B2',
 	      'conditions': {
 	        'skipCon': "Math.random() * 100 < 0",
-	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
-	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'dieCon': "Math.random() * 100 < 100 && typeHash['typeOne'] === 0",
+	        'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
 	        'wanderCon': "Math.random() * 100 < 100",
-	        'reproduceCon': "typeHash['typeTwo'] > 0 && Math.random() * 100 < 50"
+	        'reproduceCon': "Math.random() * 100 < 50 && typeHash['typeTwo'] > 0"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -133,10 +133,10 @@
 	      'color': '#FF851B',
 	      'conditions': {
 	        'skipCon': "Math.random() * 100 < 0",
-	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
-	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'dieCon': "Math.random() * 100 < 100 && typeHash['typeOne'] === 0",
+	        'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
 	        'wanderCon': "Math.random() * 100 < 100",
-	        'reproduceCon': "typeHash['typeThree'] > 0 && Math.random() * 100 < 50"
+	        'reproduceCon': "Math.random() * 100 < 50 && typeHash['typeThree'] > 0"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -151,11 +151,11 @@
 	      'name': 'Goat',
 	      'color': '#8b0000',
 	      'conditions': {
-	        'skipCon': "Math.random() * 100 < 100",
-	        'dieCon': "typeHash['typeOne'] === 0 && Math.random() * 100 < 100",
-	        'stayCon': "validNeighbors.length === 0 && Math.random() * 100 < 100",
+	        'skipCon': "Math.random() * 100 < 0",
+	        'dieCon': "Math.random() * 100 < 100 && typeHash['typeOne'] === 0",
+	        'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
 	        'wanderCon': "Math.random() * 100 < 100",
-	        'reproduceCon': "typeHash['typeFour'] > 0 && Math.random() * 100 < 50"
+	        'reproduceCon': "Math.random() * 100 < 50 && typeHash['typeFour'] > 0"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
@@ -385,54 +385,45 @@
 	  var populateConditionalStatements = function populateConditionalStatements(cellType) {
 	    var _loop3 = function _loop3(i) {
 	      var currentStatement = conditionalStatements[i];
-	      var currentOutput = chanceOutputs[i];
 	      var conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
 	      var conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
 
 	      var _loop4 = function _loop4(j) {
-	        var statement = conditionalStatementArray[j];
-
-	        if (statement === "") return "continue";
-
 	        var li = document.createElement("li");
 	        var andButton = document.createElement("button");
 	        var orButton = document.createElement("button");
 	        var deleteButton = document.createElement("button");
+	        var statement = conditionalStatementArray[j];
 
 	        var mapButtonBehavior = function mapButtonBehavior(button, symbol) {
 	          var statementArray = statement.split(' ');
 	          var conditionalArray = conditionalHash[cellType]['conditions'][currentStatement.id].split(' ');
 
 	          var removeStatementFromConditionalHash = function removeStatementFromConditionalHash(conditionalHashStatement) {
-	            conditionalArray = conditionalStatement.replace("" + conditionalHashStatement, "").split(' ');
+	            var currentCondition = conditionalHash[cellType]['conditions'][currentStatement.id];
+	            var returnCondition = currentCondition.replace("" + conditionalHashStatement, '');
 
-	            conditionalArray = conditionalArray.filter(function (str) {
-	              return str !== "";
-	            });
+	            returnCondition = returnCondition.trim();
 
-	            if (conditionalArray[0] === 'Math.random()') {
-	              conditionalArray[conditionalArray.length - 1] = "100";
-	              conditionalArray.unshift('false &&');
-	              currentOutput.value = 100;
+	            if (returnCondition.endsWith('&&')) {
+	              returnCondition = returnCondition.slice(0, returnCondition.length - 3);
 	            }
 
-	            for (var k = 0; k < conditionalArray.length; k++) {
-	              if (conditionalArray[k] === 'Math.random()') {
-	                if (conditionalArray[k - 1] !== 'false &&') {
-	                  conditionalArray[k - 1] = '&&';
-	                }
-	              }
-	            }
-	            conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
+	            conditionalHash[cellType]['conditions'][currentStatement.id] = returnCondition;
+	            console.log(conditionalHash[cellType]['conditions'][currentStatement.id]);
 	          };
 
-	          if (symbol === 'Delete') {
-	            button.classList.add('deleteButtons');
-	            button.classList.add('fa');
-	            button.classList.add('fa-times');
-	          } else {
-	            button.innerText = "" + symbol;
-	          }
+	          var mapButtonSymbol = function mapButtonSymbol() {
+	            if (symbol === 'Delete') {
+	              button.classList.add('deleteButtons');
+	              button.classList.add('fa');
+	              button.classList.add('fa-times');
+	            } else {
+	              button.innerText = "" + symbol;
+	            }
+	          };
+
+	          mapButtonSymbol();
 
 	          button.addEventListener('click', function () {
 	            for (var k = 0; k < conditionalArray.length; k++) {
@@ -445,7 +436,12 @@
 	                if (symbol === 'Delete') {
 	                  removeStatementFromConditionalHash(conditionalSliceStatement);
 	                } else {
-	                  conditionalArray[operatorIndex] = "" + symbol;
+
+	                  if (symbol === '&&') {
+	                    conditionalArray[operatorIndex] = "||";
+	                  } else if (symbol === '||') {
+	                    conditionalArray[operatorIndex] = "&&";
+	                  }
 	                  conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
 	                }
 
@@ -463,23 +459,26 @@
 	          return filteredString.join(' ');
 	        };
 
+	        var translatedStatement = translateStatement(statement);
+	        var simplifiedStatement = simplifyStatement(translatedStatement);
+
 	        mapButtonBehavior(andButton, '&&');
 	        mapButtonBehavior(orButton, '||');
 	        mapButtonBehavior(deleteButton, 'Delete');
 
-	        if (statement === 'true &&') return "continue";
+	        if (!simplifiedStatement) return "continue";
 
-	        if (j === conditionalStatementArray.length - 2) {
-	          li.appendChild(document.createTextNode(simplifyStatement(translateStatement(statement))));
-	        } else {
-	          li.appendChild(document.createTextNode(translateStatement(statement)));
+	        li.appendChild(document.createTextNode(simplifiedStatement));
 
-	          var lastChar = statement.charAt(statement.length - 1);
-	          lastChar === '&' ? li.appendChild(orButton) : li.appendChild(andButton);
+	        if (translatedStatement.endsWith('&&')) {
+	          li.appendChild(andButton);
+	        } else if (translatedStatement.endsWith('||')) {
+	          li.appendChild(orButton);
 	        }
 
 	        li.appendChild(deleteButton);
-	        if (j !== conditionalStatementArray.length - 1) currentStatement.appendChild(li);
+
+	        currentStatement.appendChild(li);
 	      };
 
 	      for (var j = 0; j < conditionalStatementArray.length; j++) {
@@ -516,10 +515,6 @@
 	      returnString = returnString.trim();
 
 	      if (!returnString) return;
-
-	      if (currentCondition.substring(0, 5) === 'false') {
-	        conditionalHash[cellType]['conditions'][button.name] = currentCondition.substring(9, currentCondition.length);
-	      }
 
 	      conditionalHash[cellType]['conditions'][button.name] += " && " + returnString;
 	    };
@@ -587,8 +582,17 @@
 	          return condition;
 	        });
 
+	        if (currentSlider.value === '0') {
+	          currentConditionOption.style.display = 'none';
+	          currentStatementContainer.style.display = 'none';
+	        } else {
+	          currentConditionOption.style.display = 'flex';
+	          currentStatementContainer.style.display = 'flex';
+	        }
+
 	        conditionalHash[cellType]['conditions'][currentOutput.name] = updatedValueArray.join(' ');
 	        currentOutput.value = currentSlider.value;
+	        refreshConditionalStatements(cellType);
 	      };
 
 	      var setSliderValues = function setSliderValues() {

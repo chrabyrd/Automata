@@ -63,13 +63,13 @@ h3 {
 
 select {
 	-webkit-appearance: none;
-	/*font-family: inherit;
+	font-family: inherit;
 	letter-spacing: inherit;
 	flex: auto;
 	justify-content: center;
 	border-radius: 0;
 	padding: 3px;
-	font-size: 1em;*/
+	font-size: 1em;
 }
 
 #mainCanvas {
