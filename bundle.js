@@ -56,6 +56,7 @@
 	  var mainCanvas = document.getElementById("mainCanvas");
 	  var mainCtx = mainCanvas.getContext("2d");
 
+	  var informationModal = document.getElementById("informationModal");
 	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var modalBackdrop = document.getElementById("modal-backdrop");
 
@@ -88,6 +89,8 @@
 	  var cellSizeDropdown = document.getElementById("cellSizeDropdown");
 	  var currentWidth = document.getElementById("currentWidth");
 	  var currentHeight = document.getElementById("currentHeight");
+
+	  var informationButton = document.getElementById("informationButton");
 
 	  var conditionalHash = {
 	    'typeOne': {
@@ -195,7 +198,7 @@
 	  // Keyboard Shortcuts
 	  document.body.addEventListener('keydown', function (e) {
 
-	    if (cellLogicModal.style.display && e.keyCode !== 27) return;
+	    if (cellLogicModal.style.display === 'flex' && e.keyCode !== 27) return;
 
 	    switch (e.keyCode) {
 	      case 27:
@@ -247,10 +250,9 @@
 	  };
 
 	  var toggleUI = function toggleUI() {
-	    if (container.pauseEvent) handlePauseEvent();
-
-	    cellLogicModal.style.display = null;
-	    modalBackdrop.style.display = null;
+	    cellLogicModal.style.display = 'none';
+	    informationModal.style.display = 'none';
+	    modalBackdrop.style.display = 'none';
 	    gridControls.style.display = 'flex';
 
 	    showCellTypeContainers();
@@ -281,6 +283,10 @@
 	  };
 
 	  var handleNextFrameEvent = function handleNextFrameEvent() {
+	    if (playPauseButton.classList.contains("fa-pause")) {
+	      playPauseButton.classList.toggle("fa-pause");
+	      playPauseButton.classList.add("fa-play");
+	    }
 	    container.handleNextFrameEvent();
 	  };
 
@@ -723,16 +729,6 @@
 	    modalBackdrop.style.display = 'flex';
 	    gridControls.style.display = 'none';
 
-	    modalBackdrop.addEventListener('click', function (e) {
-	      if (e.target.id !== 'modal-backdrop') return;
-	      if (container.pauseEvent) handlePauseEvent(e);
-
-	      cellLogicModal.style.display = null;
-	      showCellTypeContainers();
-	      modalBackdrop.style.display = null;
-	      gridControls.style.display = 'flex';
-	    });
-
 	    changeModalCellName(cellType);
 	    populateConditionalDropdowns();
 	    refreshConditionalStatements(cellType);
@@ -745,6 +741,19 @@
 	  var populateTypeContainers = function populateTypeContainers() {
 	    handleCellNames();
 	    populateColorPickers();
+	    hideCellTypeContainers();
+
+	    modalBackdrop.addEventListener('click', function (e) {
+	      if (e.target.id !== 'modal-backdrop') return;
+	      if (container.pauseEvent) handlePauseEvent(e);
+
+	      cellLogicModal.style.display = 'none';
+	      informationModal.style.display = 'none';
+	      modalBackdrop.style.display = 'none';
+	      gridControls.style.display = 'flex';
+
+	      showCellTypeContainers();
+	    });
 
 	    cellTypeContainers[0].style.opacity = '1';
 
@@ -818,6 +827,14 @@
 	      currentHeight.value = container.height;
 	    };
 
+	    var handleInfoEvent = function handleInfoEvent() {
+	      modalBackdrop.style.display = 'flex';
+	      gridControls.style.display = 'none';
+	      hideCellTypeContainers();
+
+	      informationModal.style.display = 'flex';
+	    };
+
 	    populateGridDimensions();
 
 	    playPauseButton.addEventListener('click', handlePauseEvent);
@@ -827,6 +844,7 @@
 	    cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
 	    currentWidth.addEventListener('change', handleResizeWidthEvent);
 	    currentHeight.addEventListener('change', handleResizeHeightEvent);
+	    informationButton.addEventListener('click', handleInfoEvent);
 	  };
 
 	  populateTypeContainers();

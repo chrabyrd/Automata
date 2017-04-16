@@ -20,11 +20,6 @@
   </head>
     <body>
 
-    <!-- <div id="header-buttons">
-        <a href="https://github.com/chrabyrd" id="gitHub"><i class="fa fa-github fa-3x"></i></a>
-        <a href="https://www.linkedin.com/in/chrabyrd" id="linkedIn"><i class="fa fa-linkedin-square fa-3x"></i></a>
-      </div> -->
-
       <canvas id="mainCanvas"></canvas>
 
       <div id="cellLogicControls">
@@ -54,7 +49,7 @@
       </div>
 
       <div id="gridControls">
-        <div id="playButtonsContainer" class="controlContainers">
+        <div class="playButtonsContainer controlContainers">
           <i id="playPauseButton" class="fa fa-pause fa"></i>
           <i id="nextFrameButton" class="fa fa-step-forward fa"></i>
           <i id="resetButton" class="fa fa-refresh fa"></i>
@@ -84,9 +79,27 @@
           <div>&nbsp;x&nbsp;</div>
           <select id="currentHeight"></select>
         </div>
+
+        <div class="playButtonsContainer">
+          <i id="informationButton" class="fa fa-question-circle"></i>
+        </div>
       </div>
 
       <div id="modal-backdrop">
+
+        <div id="informationModal">
+          <div id="title">Automata</div>
+          <div id="subtitle">A Cellular Automation Engine</div>
+          <div id="information">
+            Information
+          </div>
+          <div id="links">
+            <div>Christopher Byrd</div>
+            <a target="_blank" href="https://github.com/chrabyrd" id="gitHub"><i class="fa fa-github"></i></a>
+            <a target="_blank" href="https://www.linkedin.com/in/chrabyrd" id="linkedIn"><i class="fa fa-linkedin-square"></i></a>
+          </div>
+        </div>
+
         <div id="cellLogicModal">
 
           <div id="cellName"></div>

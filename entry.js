@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainCanvas = document.getElementById("mainCanvas");
   const mainCtx = mainCanvas.getContext("2d");
 
+  const informationModal = document.getElementById("informationModal");
   const cellLogicModal = document.getElementById("cellLogicModal");
   const modalBackdrop = document.getElementById("modal-backdrop");
 
@@ -36,6 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellSizeDropdown = document.getElementById("cellSizeDropdown");
   const currentWidth = document.getElementById("currentWidth");
   const currentHeight = document.getElementById("currentHeight");
+
+  const informationButton = document.getElementById("informationButton");
 
   const conditionalHash = {
     'typeOne': {
@@ -143,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Keyboard Shortcuts
   document.body.addEventListener('keydown', e => {
 
-    if (cellLogicModal.style.display && e.keyCode !== 27) return;
+    if (cellLogicModal.style.display === 'flex' && e.keyCode !== 27) return;
 
     switch (e.keyCode) {
       case 27: // Esc
@@ -187,10 +190,9 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const toggleUI = () => {
-    if (container.pauseEvent) handlePauseEvent();
-
-    cellLogicModal.style.display = null;
-    modalBackdrop.style.display = null;
+    cellLogicModal.style.display = 'none';
+    informationModal.style.display = 'none';
+    modalBackdrop.style.display = 'none';
     gridControls.style.display = 'flex';
 
     showCellTypeContainers();
@@ -221,6 +223,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const handleNextFrameEvent = () => {
+    if (playPauseButton.classList.contains("fa-pause")) {
+      playPauseButton.classList.toggle("fa-pause");
+      playPauseButton.classList.add("fa-play");
+    }
     container.handleNextFrameEvent();
   };
 
@@ -647,17 +653,6 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBackdrop.style.display = 'flex';
     gridControls.style.display = 'none';
 
-    modalBackdrop.addEventListener('click', e => {
-      if (e.target.id !== 'modal-backdrop') return;
-      if (container.pauseEvent) handlePauseEvent(e);
-
-      cellLogicModal.style.display = null;
-      showCellTypeContainers();
-      modalBackdrop.style.display = null;
-      gridControls.style.display = 'flex';
-
-    });
-
     changeModalCellName(cellType);
     populateConditionalDropdowns();
     refreshConditionalStatements(cellType);
@@ -670,6 +665,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const populateTypeContainers = () => {
     handleCellNames();
     populateColorPickers();
+    hideCellTypeContainers();
+
+    modalBackdrop.addEventListener('click', e => {
+      if (e.target.id !== 'modal-backdrop') return;
+      if (container.pauseEvent) handlePauseEvent(e);
+
+      cellLogicModal.style.display = 'none';
+      informationModal.style.display = 'none';
+      modalBackdrop.style.display = 'none';
+      gridControls.style.display = 'flex';
+
+      showCellTypeContainers();
+    });
 
     cellTypeContainers[0].style.opacity = '1';
 
@@ -737,6 +745,14 @@ document.addEventListener("DOMContentLoaded", () => {
       currentHeight.value = container.height;
     };
 
+    const handleInfoEvent = () => {
+      modalBackdrop.style.display = 'flex';
+      gridControls.style.display = 'none';
+      hideCellTypeContainers();
+
+      informationModal.style.display = 'flex';
+    };
+
     populateGridDimensions();
 
     playPauseButton.addEventListener('click', handlePauseEvent);
@@ -746,6 +762,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
     currentWidth.addEventListener('change', handleResizeWidthEvent);
     currentHeight.addEventListener('change', handleResizeHeightEvent);
+    informationButton.addEventListener('click', handleInfoEvent);
   };
 
   populateTypeContainers();
