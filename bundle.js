@@ -63,7 +63,6 @@
 	  var cellNames = document.getElementsByClassName("cellNames");
 	  var colorPickers = document.getElementsByClassName("colorPickers");
 	  var logicModalButtons = document.getElementsByClassName("logicModalButtons");
-	  var currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
 
 	  var cellName = document.getElementById("cellName");
 
@@ -248,16 +247,11 @@
 	    for (var i = 0; i < cellNames.length; i++) {
 	      var currentName = cellNames[i];
 	      var currentTypeContainer = cellTypeContainers[i];
-	      var currentTypeCheckbox = currentTypeCheckboxes[i];
 
 	      currentTypeContainer.style.opacity = 0;
-	      currentTypeCheckbox.classList.add('fa-square-o');
-	      currentTypeCheckbox.classList.remove('fa-check-square-o');
 
 	      if (currentName.id === type) {
 	        currentTypeContainer.style.opacity = 1;
-	        currentTypeCheckbox.classList.remove('fa-square-o');
-	        currentTypeCheckbox.classList.add('fa-check-square-o');
 	      }
 	    }
 
@@ -519,7 +513,6 @@
 	    };
 
 	    addReturnStringToConditionalHash();
-	    console.log(conditionalHash[cellType]['conditions'][button.name]);
 	  };
 
 	  var resetMenuValues = function resetMenuValues() {
@@ -646,14 +639,13 @@
 	    populateSubmitEventListeners();
 	  };
 
-	  var resetNeighborBoxes = function resetNeighborBoxes() {
-	    for (var i = 0; i < validNeighborBoxes.length; i++) {
-	      var currentBox = validNeighborBoxes[i];
-	      currentBox.checked = false;
-	    }
-	  };
-
 	  var populateValidNeighborBoxes = function populateValidNeighborBoxes(cellType) {
+	    var resetNeighborBoxes = function resetNeighborBoxes() {
+	      for (var i = 0; i < validNeighborBoxes.length; i++) {
+	        var currentBox = validNeighborBoxes[i];
+	        currentBox.checked = false;
+	      }
+	    };
 
 	    resetNeighborBoxes();
 
@@ -661,15 +653,15 @@
 	      var currentBox = validNeighborBoxes[i];
 	      var currentName = neighborTypeNames[i];
 
-	      var getType = function getType(type) {
-	        conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
+	      var getType = function getType() {
+	        conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
 	      };
 
 	      currentName.setAttribute("name", conditionalHash[currentBox.value].name);
 
 	      currentBox.checked = conditionalHash[cellType]['neighborHash'][currentBox.value];
 	      currentBox.onclick = function () {
-	        return getType(cellType);
+	        return getType();
 	      };
 	    };
 
@@ -710,7 +702,6 @@
 	    var _loop8 = function _loop8(i) {
 	      var currentTypeContainer = cellTypeContainers[i];
 	      var currentLogicModalButton = logicModalButtons[i];
-	      var currentTypeCheckbox = currentTypeCheckboxes[i];
 	      var currentType = Object.keys(conditionalHash)[i];
 
 	      currentLogicModalButton.addEventListener('click', function () {
@@ -726,7 +717,7 @@
 	      });
 
 	      currentTypeContainer.addEventListener('mouseleave', function () {
-	        if (currentTypeCheckbox.classList.contains('fa-square-o')) {
+	        if (currentType !== container.cellType) {
 	          currentTypeContainer.style.opacity = '0';
 	        }
 	      });

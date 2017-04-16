@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellNames = document.getElementsByClassName("cellNames");
   const colorPickers = document.getElementsByClassName("colorPickers");
   const logicModalButtons = document.getElementsByClassName("logicModalButtons");
-  const currentTypeCheckboxes = document.getElementsByClassName("currentTypeCheckboxes");
 
   const cellName = document.getElementById("cellName");
 
@@ -189,16 +188,11 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < cellNames.length; i++) {
       const currentName = cellNames[i];
       const currentTypeContainer = cellTypeContainers[i];
-      const currentTypeCheckbox = currentTypeCheckboxes[i];
 
       currentTypeContainer.style.opacity = 0;
-      currentTypeCheckbox.classList.add('fa-square-o');
-      currentTypeCheckbox.classList.remove('fa-check-square-o');
 
       if (currentName.id === type) {
         currentTypeContainer.style.opacity = 1;
-        currentTypeCheckbox.classList.remove('fa-square-o');
-        currentTypeCheckbox.classList.add('fa-check-square-o');
       }
     }
 
@@ -458,7 +452,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     addReturnStringToConditionalHash();
-    console.log(conditionalHash[cellType]['conditions'][button.name]);
   };
 
   const resetMenuValues = (button = null) => {
@@ -511,7 +504,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const updateOutput = () => {
         const originalValue = currentOutput.value;
-        const updatedCondition = conditionalHash[cellType]['conditions'][currentOutput.name].replace(`Math.random() * 100 < ${originalValue}`, `Math.random() * 100 < ${currentSlider.value}`);
+        const updatedCondition = conditionalHash[cellType]['conditions'][currentOutput.name]
+          .replace(`Math.random() * 100 < ${originalValue}`, `Math.random() * 100 < ${currentSlider.value}`);
 
         if (currentSlider.value === '0') {
           currentConditionOption.style.display = 'none';
@@ -576,14 +570,13 @@ document.addEventListener("DOMContentLoaded", () => {
     populateSubmitEventListeners();
   };
 
-  const resetNeighborBoxes = () => {
-    for (let i = 0; i < validNeighborBoxes.length; i++) {
-      const currentBox = validNeighborBoxes[i];
-      currentBox.checked = false;
-    }
-  };
-
   const populateValidNeighborBoxes = cellType => {
+    const resetNeighborBoxes = () => {
+      for (let i = 0; i < validNeighborBoxes.length; i++) {
+        const currentBox = validNeighborBoxes[i];
+        currentBox.checked = false;
+      }
+    };
 
     resetNeighborBoxes();
 
@@ -591,14 +584,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const currentBox = validNeighborBoxes[i];
       const currentName = neighborTypeNames[i];
 
-      const getType = function (type) {
-        conditionalHash[type]['neighborHash'][currentBox.value] = currentBox.checked;
+      const getType = function () {
+        conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
       };
 
       currentName.setAttribute("name", conditionalHash[currentBox.value].name);
 
       currentBox.checked = conditionalHash[cellType]['neighborHash'][currentBox.value];
-      currentBox.onclick = () => getType(cellType);
+      currentBox.onclick = () => getType();
     }
   };
 
@@ -634,7 +627,6 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < cellTypeContainers.length; i++) {
       const currentTypeContainer = cellTypeContainers[i];
       const currentLogicModalButton = logicModalButtons[i];
-      const currentTypeCheckbox = currentTypeCheckboxes[i];
       const currentType = Object.keys(conditionalHash)[i];
 
       currentLogicModalButton.addEventListener('click', () => {
@@ -650,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       currentTypeContainer.addEventListener('mouseleave', () => {
-        if (currentTypeCheckbox.classList.contains('fa-square-o')) {
+        if(currentType !== container.cellType) {
           currentTypeContainer.style.opacity = '0';
         }
       });

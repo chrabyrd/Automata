@@ -57,10 +57,6 @@ body {
   justify-content: center;
 }
 
-h3 {
-	font-size: 1.5em;
-}
-
 select {
 	-webkit-appearance: none;
 	font-family: inherit;
@@ -69,17 +65,37 @@ select {
 	justify-content: center;
 	border-radius: 0;
 	padding: 3px;
+	min-width: 9em;
 	font-size: 1em;
+}
+
+ul {
+	width: 100%;
+	margin-left: 5px;
+}
+
+li {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	font-size: 1em;
+	margin: 5px;
+	margin-top: 0;
+}
+
+li > button {
+	transition: all .2s ease;
+	cursor: pointer;
+	background-color: rgba(0,0,0,0);
+	border: 1px solid #333;
+	border-radius: 2px;
+	font-size: .9em;
+	margin-left: 5px;
 }
 
 #mainCanvas {
 	border: 2px solid #333;
 	border-top: none;
-}
-
-li:hover {
-  background-color: green;
-  cursor: pointer;
 }
 
 /* Controls */
@@ -114,6 +130,7 @@ li:hover {
 	padding: 5px;
 	background-color: #FFF;
 	color: #333;
+	transition: all .2s;
 	font-size: 1.5em;
 	justify-content: space-around;
 	cursor: default;
@@ -122,24 +139,28 @@ li:hover {
 .cellNames {
 	background-color: lightgrey;
 	flex: auto;
-	font-family: Source Code Pro;
+	font-family: BioRhyme;
 	font-size: 1.2em;
 	border: none;
 	width: 100%;
 }
 
-.cellTypeOptions {
-	display: flex;
-	align-items: center;
-	border: 1px black solid;
+.colorPickers {
+	height: 100%;
+	width: 20%;
+	border: none;
 }
 
 .logicModalButtons,
 .currentTypeButtons,
 .colorPickers {
+	background-color: lightgrey;
+	display: flex;
 	justify-content: center;
+	align-items: center;
 	color: #333;
 	cursor: pointer;
+	padding: 0 5px;
 }
 
 /* Modals */
@@ -174,13 +195,19 @@ li:hover {
 
 #cellName {
 	display: flex;
-	font-size: 3em;
+	font-size: 2.5em;
 	justify-content: center;
-	font-family: Poiret One;
+	color: #333;
+	font-family: BioRhyme;
 	letter-spacing: 2px;
 	background-color: white;
-	padding: 5px;
+	border-bottom: 2px solid #333;
+	padding: .5em;
 	flex: 0 0 auto;
+}
+
+.chanceSliders {
+	cursor: pointer;
 }
 
 #cellConditions {
@@ -197,6 +224,7 @@ li:hover {
 	flex-direction: column;
 	padding: 5px;
 	flex: 0 0 auto;
+	border-top: 2px solid #333;
 }
 
 #validNeighborTypes {
@@ -206,16 +234,14 @@ li:hover {
 	background-color: white;
 }
 
-.sliderContainers {
-	display: flex;
-}
-
 .conditionContainers {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	justify-content: center;
 	padding: 5px;
-	background-color: beige;
+	margin: 5px;
+	background-color: #EEE;
 	min-height: 8em;
 }
 
@@ -223,11 +249,17 @@ li:hover {
 	display: flex;
 	font-size: 1em;
 	min-height: 1em;
+	padding-top: 5px;
+	width: 90%;
 }
 
 .deleteButtons {
-  background-color: rgba(0,0,0,0);
-	border: none;
+	color: red;
+}
+
+.deleteButtons:hover {
+	background-color: red;
+	color: black;
 }
 
 .conditionalSubmitButtons {
@@ -238,8 +270,17 @@ li:hover {
 
 .conditionTitles {
 	display: flex;
-	font-size: 1.2em;
-	align-items: center;
+	font-size: 1.5em;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	justify-content: space-around;
+	width: 60%;
+}
+
+.sliderContainers,
+.conditionTitles > span {
+	display: flex;
+	width: 50%;
 	justify-content: center;
 }
 
@@ -251,6 +292,9 @@ li:hover {
 	height: 3em;
 	background-color: lightgrey;
 	align-self: center;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
 	width: 90%;
 }
 
@@ -301,7 +345,8 @@ li:hover {
   padding: 2px;
   -webkit-transition: all .2s ease;
   transition: all .2s ease;
-  font-family: sans-serif;
+  font-family: Source Code Pro;
+	color: white;
   -webkit-perspective: 100px;
           perspective: 100px;
 }
@@ -324,12 +369,12 @@ li:hover {
 }
 .tgl-flip + .tgl-btn:after {
   content: attr(name);
-  background: #02C66F;
+  background: lightblue;
   -webkit-transform: rotateY(-180deg);
           transform: rotateY(-180deg);
 }
 .tgl-flip + .tgl-btn:before {
-  background: #FF3A19;
+  background: grey;
   content: attr(name);
 }
 .tgl-flip + .tgl-btn:active:before {
@@ -344,7 +389,7 @@ li:hover {
   -webkit-transform: rotateY(0);
           transform: rotateY(0);
   left: 0;
-  background: #7FC6A6;
+  background: lightblue;
 }
 .tgl-flip:checked + .tgl-btn:active:after {
   -webkit-transform: rotateY(20deg);
