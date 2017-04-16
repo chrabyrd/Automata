@@ -65,7 +65,6 @@ select {
 	justify-content: center;
 	border-radius: 0;
 	padding: 3px;
-	min-width: 9em;
 	font-size: 1em;
 }
 
@@ -101,10 +100,12 @@ li > button {
 /* Controls */
 
 #gridControls {
+	display: flex;
+	opacity: 1;
+	transition: all .4s;
   background-color: #FFF;
 	padding: 5px;
 	position: fixed;
-  display: flex;
 	justify-content: space-around;
 	color: #333;
 	font-size: 1.2em;
@@ -115,6 +116,16 @@ li > button {
 .controlContainers {
 	display: flex;
 	align-items: center;
+}
+
+.controlContainers > select,
+.controlContainers > input {
+	cursor: pointer;
+}
+
+#playButtonsContainer > i {
+	cursor: pointer;
+	padding: 5px;
 }
 
 #cellLogicControls {

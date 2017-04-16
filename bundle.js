@@ -79,6 +79,7 @@
 	  var neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
 	  var validNeighborBoxes = document.getElementsByClassName("validNeighborBox");
 
+	  var gridControls = document.getElementById("gridControls");
 	  var playPauseButton = document.getElementById("playPauseButton");
 	  var nextFrameButton = document.getElementById("nextFrameButton");
 	  var resetButton = document.getElementById("resetButton");
@@ -194,9 +195,13 @@
 	  // Keyboard Shortcuts
 	  document.body.addEventListener('keydown', function (e) {
 
-	    if (cellLogicModal.style.display) return;
+	    if (cellLogicModal.style.display && e.keyCode !== 27) return;
 
 	    switch (e.keyCode) {
+	      case 27:
+	        // Esc
+	        toggleUI();
+	        break;
 	      case 32:
 	        // Spacebar
 	        e.preventDefault();
@@ -228,6 +233,46 @@
 	        break;
 	    }
 	  });
+
+	  var showCellTypeContainers = function showCellTypeContainers() {
+	    for (var i = 0; i < cellTypeContainers.length; i++) {
+	      cellTypeContainers[i].style.display = 'flex';
+	    }
+	  };
+
+	  var hideCellTypeContainers = function hideCellTypeContainers() {
+	    for (var i = 0; i < cellTypeContainers.length; i++) {
+	      cellTypeContainers[i].style.display = 'none';
+	    }
+	  };
+
+	  var toggleUI = function toggleUI() {
+	    if (container.pauseEvent) handlePauseEvent();
+
+	    cellLogicModal.style.display = null;
+	    modalBackdrop.style.display = null;
+	    gridControls.style.display = 'flex';
+
+	    showCellTypeContainers();
+
+	    if (gridControls.style.opacity === '0') {
+	      gridControls.style.opacity = '1';
+
+	      for (var i = 0; i < cellTypeContainers.length; i++) {
+	        var currentType = Object.keys(conditionalHash)[i];
+
+	        if (currentType === container.cellType) {
+	          cellTypeContainers[i].style.opacity = '1';
+	        }
+	      }
+	    } else {
+	      gridControls.style.opacity = '0';
+
+	      for (var _i = 0; _i < cellTypeContainers.length; _i++) {
+	        cellTypeContainers[_i].style.opacity = '0';
+	      }
+	    }
+	  };
 
 	  var handlePauseEvent = function handlePauseEvent() {
 	    playPauseButton.classList.toggle("fa-pause");
@@ -671,17 +716,21 @@
 	  };
 
 	  var changeCellLogicModalType = function changeCellLogicModalType(cellType) {
+
 	    if (!container.pauseEvent) handlePauseEvent();
 
 	    cellLogicModal.style.display = 'flex';
-	    modalBackdrop.style.display = "flex";
+	    modalBackdrop.style.display = 'flex';
+	    gridControls.style.display = 'none';
 
 	    modalBackdrop.addEventListener('click', function (e) {
 	      if (e.target.id !== 'modal-backdrop') return;
 	      if (container.pauseEvent) handlePauseEvent(e);
 
 	      cellLogicModal.style.display = null;
+	      showCellTypeContainers();
 	      modalBackdrop.style.display = null;
+	      gridControls.style.display = 'flex';
 	    });
 
 	    changeModalCellName(cellType);
@@ -705,6 +754,7 @@
 	      var currentType = Object.keys(conditionalHash)[i];
 
 	      currentLogicModalButton.addEventListener('click', function () {
+	        hideCellTypeContainers();
 	        changeCellLogicModalType(currentType);
 	      });
 

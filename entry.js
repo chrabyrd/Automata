@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
   const validNeighborBoxes = document.getElementsByClassName("validNeighborBox");
 
+  const gridControls = document.getElementById("gridControls");
   const playPauseButton = document.getElementById("playPauseButton");
   const nextFrameButton = document.getElementById("nextFrameButton");
   const resetButton = document.getElementById("resetButton");
@@ -142,9 +143,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Keyboard Shortcuts
   document.body.addEventListener('keydown', e => {
 
-    if (cellLogicModal.style.display) return;
+    if (cellLogicModal.style.display && e.keyCode !== 27) return;
 
     switch (e.keyCode) {
+      case 27: // Esc
+        toggleUI();
+        break;
       case 32: // Spacebar
         e.preventDefault();
         handlePauseEvent();
@@ -169,6 +173,46 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
     }
   });
+
+  const showCellTypeContainers = () => {
+    for (let i = 0; i < cellTypeContainers.length; i++) {
+      cellTypeContainers[i].style.display = 'flex';
+    }
+  };
+
+  const hideCellTypeContainers = () => {
+    for (let i = 0; i < cellTypeContainers.length; i++) {
+      cellTypeContainers[i].style.display = 'none';
+    }
+  };
+
+  const toggleUI = () => {
+    if (container.pauseEvent) handlePauseEvent();
+
+    cellLogicModal.style.display = null;
+    modalBackdrop.style.display = null;
+    gridControls.style.display = 'flex';
+
+    showCellTypeContainers();
+
+    if (gridControls.style.opacity === '0') {
+      gridControls.style.opacity = '1';
+
+      for (let i = 0; i < cellTypeContainers.length; i++) {
+        const currentType = Object.keys(conditionalHash)[i];
+
+        if (currentType === container.cellType) {
+          cellTypeContainers[i].style.opacity = '1';
+        }
+      }
+    } else {
+      gridControls.style.opacity = '0';
+
+      for (let i = 0; i < cellTypeContainers.length; i++) {
+        cellTypeContainers[i].style.opacity = '0';
+      }
+    }
+  };
 
   const handlePauseEvent = () => {
     playPauseButton.classList.toggle("fa-pause");
@@ -596,17 +640,22 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const changeCellLogicModalType = cellType => {
+
     if (!container.pauseEvent) handlePauseEvent();
 
     cellLogicModal.style.display = 'flex';
-    modalBackdrop.style.display = "flex";
+    modalBackdrop.style.display = 'flex';
+    gridControls.style.display = 'none';
 
     modalBackdrop.addEventListener('click', e => {
       if (e.target.id !== 'modal-backdrop') return;
       if (container.pauseEvent) handlePauseEvent(e);
 
       cellLogicModal.style.display = null;
+      showCellTypeContainers();
       modalBackdrop.style.display = null;
+      gridControls.style.display = 'flex';
+
     });
 
     changeModalCellName(cellType);
@@ -630,6 +679,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const currentType = Object.keys(conditionalHash)[i];
 
       currentLogicModalButton.addEventListener('click', () => {
+        hideCellTypeContainers();
         changeCellLogicModalType(currentType);
       });
 
@@ -642,7 +692,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       currentTypeContainer.addEventListener('mouseleave', () => {
-        if(currentType !== container.cellType) {
+        if (currentType !== container.cellType) {
           currentTypeContainer.style.opacity = '0';
         }
       });
