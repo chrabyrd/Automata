@@ -354,12 +354,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             returnCondition = returnCondition.trim();
 
-            if (returnCondition.endsWith('&&')) {
+            if (returnCondition.endsWith('&&') || returnCondition.endsWith('||')) {
               returnCondition = returnCondition.slice(0, returnCondition.length - 3);
             }
 
             conditionalHash[cellType]['conditions'][currentStatement.id] = returnCondition;
-            console.log(conditionalHash[cellType]['conditions'][currentStatement.id]);
           };
 
           const mapButtonSymbol = () => {
@@ -459,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     addReturnStringToConditionalHash();
-    handleChanceSliders(cellType);
+    console.log(conditionalHash[cellType]['conditions'][button.name]);
   };
 
   const resetMenuValues = (button = null) => {
@@ -511,13 +510,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const conditionalArray = parseConditionalHashStatements(currentHashCondition);
 
       const updateOutput = () => {
-        const updatedValueArray = conditionalArray.map( condition => {
-          if (condition.startsWith("Math.random()")) {
-            return `${condition.slice(0, 22)}${currentSlider.value}`;
-          }
-
-          return condition;
-        });
+        const originalValue = currentOutput.value;
+        const updatedCondition = conditionalHash[cellType]['conditions'][currentOutput.name].replace(`Math.random() * 100 < ${originalValue}`, `Math.random() * 100 < ${currentSlider.value}`);
 
         if (currentSlider.value === '0') {
           currentConditionOption.style.display = 'none';
@@ -527,9 +521,8 @@ document.addEventListener("DOMContentLoaded", () => {
           currentStatementContainer.style.display = 'flex';
         }
 
-        conditionalHash[cellType]['conditions'][currentOutput.name] = updatedValueArray.join(' ');
+        conditionalHash[cellType]['conditions'][currentOutput.name] = updatedCondition;
         currentOutput.value = currentSlider.value;
-        refreshConditionalStatements(cellType);
       };
 
       const setSliderValues = () => {
