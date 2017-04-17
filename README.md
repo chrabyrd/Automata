@@ -1,8 +1,32 @@
 # Automata
 
-[Live][website]
+##[Live][website]
 
 [website]: https://chrabyrd.github.io/Automata
+
+## Overview
+
+## Key Bindings
+
+*Note: All key bindings are disabled when changing cell names*
+
+`1 - 4` (Change Type) Change the current cell type.
+
+`Spacebar` (Pause) Stop or start the automation engine.
+
+`Esc` (Toggle UI) Opens or closes all modals and taskbars.
+
+`N` (Next Frame) Execute one logic cycle.
+
+`R` (Reset) Discard the current grid and render a blank one.
+
+`I` (Information) Open the information modal.
+
+`O` (Options) Open the options modal for the current cell type.
+
+## Cellular Logic
+
+
 
 ### THIS PROJECT IS CURRENTLY UNDER DEVELOPMENT
 
