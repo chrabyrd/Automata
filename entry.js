@@ -117,6 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const toggleInformationModal = () => {
+    if (!container.pauseEvent) handlePauseEvent();
+
     if (modalBackdrop.style.display === 'none') {
       modalBackdrop.style.display = 'flex';
       gridControls.style.display = 'none';
@@ -133,7 +135,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const showCellTypeContainers = () => {
     for (let i = 0; i < cellTypeContainers.length; i++) {
+      const currentType = Object.keys(conditionalHash)[i];
+
       cellTypeContainers[i].style.display = 'flex';
+      cellTypeContainers[i].style.opacity = '0';
+
+      if (currentType === container.cellType) {
+        cellTypeContainers[i].style.opacity = '1';
+      }
     }
   };
 
@@ -674,7 +683,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const handleGridControlButtons = () => {
-
     const handleSpeedChangeEvent = () => {
       container.handleSpeedChangeEvent(300 - speedSlider.value);
     };

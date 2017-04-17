@@ -180,6 +180,8 @@
 	  };
 
 	  var toggleInformationModal = function toggleInformationModal() {
+	    if (!container.pauseEvent) handlePauseEvent();
+
 	    if (modalBackdrop.style.display === 'none') {
 	      modalBackdrop.style.display = 'flex';
 	      gridControls.style.display = 'none';
@@ -196,7 +198,14 @@
 
 	  var showCellTypeContainers = function showCellTypeContainers() {
 	    for (var i = 0; i < cellTypeContainers.length; i++) {
+	      var currentType = Object.keys(conditionalHash)[i];
+
 	      cellTypeContainers[i].style.display = 'flex';
+	      cellTypeContainers[i].style.opacity = '0';
+
+	      if (currentType === container.cellType) {
+	        cellTypeContainers[i].style.opacity = '1';
+	      }
 	    }
 	  };
 
@@ -757,7 +766,6 @@
 	  };
 
 	  var handleGridControlButtons = function handleGridControlButtons() {
-
 	    var handleSpeedChangeEvent = function handleSpeedChangeEvent() {
 	      container.handleSpeedChangeEvent(300 - speedSlider.value);
 	    };
