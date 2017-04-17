@@ -3,11 +3,6 @@
 
 [website]: https://chrabyrd.github.io/Automata
 
-<<<<<<< HEAD
-## NEED TO CHANGE 'OR' EVALUATIONS (CURRENTLY BREAKS CELL BEHAVIOR)
-
-### THIS PROJECT IS CURRENTLY UNDER DEVELOPMENT
-=======
 ## Overview
 Automata is a cellular automation engine built entirely out of HTML5, CSS3, and Javascript ES6. No additional libraries (such as jQuery or EaselJS) have been used to assist in program function or DOM manipulation. However the application uses Node.js, Webpack, and Babel to compile the ES6 into browser-parsible code.
 
@@ -19,7 +14,6 @@ This project is still under development. If you have any questions or concerns, 
 `1 - 4` (Change Type) Change the current cell type.
 
 `Spacebar` (Pause) Stop or start the automation engine.
->>>>>>> 127d52c4a0d60d2964ca1d9fa14c6c424e7149a4
 
 `Esc` (Toggle UI) Opens or closes all modals and taskbars.
 
