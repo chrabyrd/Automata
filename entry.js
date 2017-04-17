@@ -483,19 +483,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const handleChanceSliders = cellType => {
-
-    const removeChanceEventListeners = () => {
-      for (let i = 0; i < chanceSliders.length; i++) {
-        const currentSlider = chanceSliders[i];
-        const clone = currentSlider.cloneNode();
-
-        while (currentSlider.firstChild) {
-          clone.appendChild(currentSlider.lastChild);
-        }
-        currentSlider.parentNode.replaceChild(clone, currentSlider);
-      }
-    };
-
     for (let i = 0; i < chanceSliders.length; i++) {
       const currentSlider = chanceSliders[i];
       const currentOutput = chanceOutputs[i];
@@ -539,10 +526,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
-      removeChanceEventListeners();
       toggleConditionalStatements();
       setSliderValues();
-      currentSlider.addEventListener('input', updateOutput);
+      currentSlider.oninput = updateOutput;
     }
   };
 

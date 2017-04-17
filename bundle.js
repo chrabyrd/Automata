@@ -550,19 +550,6 @@
 	  };
 
 	  var handleChanceSliders = function handleChanceSliders(cellType) {
-
-	    var removeChanceEventListeners = function removeChanceEventListeners() {
-	      for (var i = 0; i < chanceSliders.length; i++) {
-	        var currentSlider = chanceSliders[i];
-	        var clone = currentSlider.cloneNode();
-
-	        while (currentSlider.firstChild) {
-	          clone.appendChild(currentSlider.lastChild);
-	        }
-	        currentSlider.parentNode.replaceChild(clone, currentSlider);
-	      }
-	    };
-
 	    var _loop5 = function _loop5(i) {
 	      var currentSlider = chanceSliders[i];
 	      var currentOutput = chanceOutputs[i];
@@ -605,10 +592,9 @@
 	        }
 	      };
 
-	      removeChanceEventListeners();
 	      toggleConditionalStatements();
 	      setSliderValues();
-	      currentSlider.addEventListener('input', updateOutput);
+	      currentSlider.oninput = updateOutput;
 	    };
 
 	    for (var i = 0; i < chanceSliders.length; i++) {
