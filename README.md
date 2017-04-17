@@ -4,6 +4,8 @@
 
 [website]: https://chrabyrd.github.io/Automata
 
+## NEED TO CHANGE 'OR' EVALUATIONS (CURRENTLY BREAKS CELL BEHAVIOR)
+
 ### THIS PROJECT IS CURRENTLY UNDER DEVELOPMENT
 
 #### Note: Cells that `wander` need logic to handle when there are no valid neighboring cells. To keep errors from occurring, please ensure that each wandering cell keeps one of these conditions:

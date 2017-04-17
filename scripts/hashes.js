@@ -100,9 +100,9 @@ export const demoHash = {
     'name': 'Grass',
     'color': '#507F2C',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 0`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
       'dieCon': `Math.random() * 100 < 0`,
-      'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
+      'stayCon': `Math.random() * 100 < 0`,
       'wanderCon': `Math.random() * 100 < 0`,
       'reproduceCon': `Math.random() * 100 < 100`
     },
@@ -116,14 +116,14 @@ export const demoHash = {
   },
 
   'typeTwo': {
-    'name': 'Cow',
+    'name': 'Sheep',
     'color': '#2552B2',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 0`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
       'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
-      'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
-      'wanderCon': `Math.random() * 100 < 100`,
-      'reproduceCon': `Math.random() * 100 < 50 && typeHash['typeTwo'] > 0`
+      'stayCon': `Math.random() * 100 < 33`,
+      'wanderCon': `Math.random() * 100 < 50`,
+      'reproduceCon': `Math.random() * 100 < 25 && typeHash['typeTwo'] > 0 && typeHash['typeOne'] > 2`
     },
     'neighborHash': {
       'typeOne': true,
@@ -135,18 +135,18 @@ export const demoHash = {
   },
 
   'typeThree': {
-    'name': 'Sheep',
+    'name': 'Human',
     'color': '#FF851B',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 0`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
       'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
-      'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
+      'stayCon': `Math.random() * 100 < 33`,
       'wanderCon': `Math.random() * 100 < 100`,
-      'reproduceCon': `Math.random() * 100 < 50 && typeHash['typeThree'] > 0`
+      'reproduceCon': `Math.random() * 100 < 25 && typeHash['typeThree'] > 0 && typeHash['typeOne'] > 2`
     },
     'neighborHash': {
       'typeOne': true,
-      'typeTwo': false,
+      'typeTwo': true,
       'typeThree': false,
       'typeFour': false,
       'false': true
@@ -154,14 +154,14 @@ export const demoHash = {
   },
 
   'typeFour': {
-    'name': 'Goat',
-    'color': '#8b0000',
+    'name': 'Stone',
+    'color': '#333333',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 0`,
-      'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
-      'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
-      'wanderCon': `Math.random() * 100 < 100`,
-      'reproduceCon': `Math.random() * 100 < 50 && typeHash['typeFour'] > 0`
+      'skipCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
+      'dieCon': `Math.random() * 100 < 0`,
+      'stayCon': `Math.random() * 100 < 100`,
+      'wanderCon': `Math.random() * 100 < 0`,
+      'reproduceCon': `Math.random() * 100 < 0`
     },
     'neighborHash': {
       'typeOne': true,

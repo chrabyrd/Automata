@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const toggleCellLogicModal = () => {
-
+    
     const updateModal = () => {
       const cellTypes = Object.keys(conditionalHash);
 

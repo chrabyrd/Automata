@@ -17,4 +17,5 @@ module.exports = {
       loader: 'url'
     }]
   }
+  
 };
