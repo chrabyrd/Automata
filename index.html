@@ -90,9 +90,24 @@
         <div id="informationModal">
           <div id="title">Automata</div>
           <div id="subtitle">A Cellular Automation Engine</div>
+
           <div id="information">
-            Information
+            <div id="explanationText">
+              If this is your first time using Automata, please read the
+              documentation to learn the key bindings and cell logic.
+              <br><br><br>
+              Alternatively, click 'DEMO' to initialize a pre-loaded scenario.
+              <br><br><br>
+              Enjoy!
+            </div>
+
+            <div id="demoButtonsContainer">
+              <button id="newGridButton" type="button" class="demoTypeButtons">NEW GRID</button>
+              <button type="button" class="demoTypeButtons" onClick="window.open('https://github.com/chrabyrd/Automata')">DOCUMENTATION</button>
+              <button id="demoButton" type="button" class="demoTypeButtons">DEMO</button>
+            </div>
           </div>
+
           <div id="links">
             <div>Christopher Byrd</div>
             <a target="_blank" href="https://github.com/chrabyrd" id="gitHub"><i class="fa fa-github"></i></a>

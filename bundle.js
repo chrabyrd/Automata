@@ -91,80 +91,82 @@
 	  var currentHeight = document.getElementById("currentHeight");
 
 	  var informationButton = document.getElementById("informationButton");
+	  var demoButton = document.getElementById("demoButton");
+	  var newGridButton = document.getElementById("newGridButton");
 
 	  var conditionalHash = {
 	    'typeOne': {
-	      'name': 'Grass',
-	      'color': '#507F2C',
+	      'name': 'Type One',
+	      'color': '#FF0000',
 	      'conditions': {
-	        'skipCon': "Math.random() * 100 < 0",
+	        'skipCon': "Math.random() * 100 < 100",
 	        'dieCon': "Math.random() * 100 < 0",
-	        'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
+	        'stayCon': "Math.random() * 100 < 0",
 	        'wanderCon': "Math.random() * 100 < 0",
-	        'reproduceCon': "Math.random() * 100 < 100"
+	        'reproduceCon': "Math.random() * 100 < 0"
 	      },
 	      'neighborHash': {
-	        'typeOne': false,
-	        'typeTwo': false,
-	        'typeThree': false,
-	        'typeFour': false,
+	        'typeOne': true,
+	        'typeTwo': true,
+	        'typeThree': true,
+	        'typeFour': true,
 	        'false': true
 	      }
 	    },
 
 	    'typeTwo': {
-	      'name': 'Cow',
-	      'color': '#2552B2',
+	      'name': 'Type Two',
+	      'color': '#FFA500',
 	      'conditions': {
-	        'skipCon': "Math.random() * 100 < 0",
-	        'dieCon': "Math.random() * 100 < 100 && typeHash['typeOne'] === 0",
-	        'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
-	        'wanderCon': "Math.random() * 100 < 100",
-	        'reproduceCon': "Math.random() * 100 < 50 && typeHash['typeTwo'] > 0"
+	        'skipCon': "Math.random() * 100 < 100",
+	        'dieCon': "Math.random() * 100 < 0",
+	        'stayCon': "Math.random() * 100 < 0",
+	        'wanderCon': "Math.random() * 100 < 0",
+	        'reproduceCon': "Math.random() * 100 < 0"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
-	        'typeTwo': false,
-	        'typeThree': false,
-	        'typeFour': false,
+	        'typeTwo': true,
+	        'typeThree': true,
+	        'typeFour': true,
 	        'false': true
 	      }
 	    },
 
 	    'typeThree': {
-	      'name': 'Sheep',
-	      'color': '#FF851B',
+	      'name': 'Type Three',
+	      'color': '#FFFF00',
 	      'conditions': {
-	        'skipCon': "Math.random() * 100 < 0",
-	        'dieCon': "Math.random() * 100 < 100 && typeHash['typeOne'] === 0",
-	        'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
-	        'wanderCon': "Math.random() * 100 < 100",
-	        'reproduceCon': "Math.random() * 100 < 50 && typeHash['typeThree'] > 0"
+	        'skipCon': "Math.random() * 100 < 100",
+	        'dieCon': "Math.random() * 100 < 0",
+	        'stayCon': "Math.random() * 100 < 0",
+	        'wanderCon': "Math.random() * 100 < 0",
+	        'reproduceCon': "Math.random() * 100 < 0"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
-	        'typeTwo': false,
-	        'typeThree': false,
-	        'typeFour': false,
+	        'typeTwo': true,
+	        'typeThree': true,
+	        'typeFour': true,
 	        'false': true
 	      }
 	    },
 
 	    'typeFour': {
-	      'name': 'Goat',
-	      'color': '#8b0000',
+	      'name': 'Type Four',
+	      'color': '#0000FF',
 	      'conditions': {
-	        'skipCon': "Math.random() * 100 < 0",
-	        'dieCon': "Math.random() * 100 < 100 && typeHash['typeOne'] === 0",
-	        'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
-	        'wanderCon': "Math.random() * 100 < 100",
-	        'reproduceCon': "Math.random() * 100 < 50 && typeHash['typeFour'] > 0"
+	        'skipCon': "Math.random() * 100 < 100",
+	        'dieCon': "Math.random() * 100 < 0",
+	        'stayCon': "Math.random() * 100 < 0",
+	        'wanderCon': "Math.random() * 100 < 0",
+	        'reproduceCon': "Math.random() * 100 < 0"
 	      },
 	      'neighborHash': {
 	        'typeOne': true,
-	        'typeTwo': false,
-	        'typeThree': false,
-	        'typeFour': false,
+	        'typeTwo': true,
+	        'typeThree': true,
+	        'typeFour': true,
 	        'false': true
 	      }
 	    },
@@ -743,18 +745,6 @@
 	    populateColorPickers();
 	    hideCellTypeContainers();
 
-	    modalBackdrop.addEventListener('click', function (e) {
-	      if (e.target.id !== 'modal-backdrop') return;
-	      if (container.pauseEvent) handlePauseEvent(e);
-
-	      cellLogicModal.style.display = 'none';
-	      informationModal.style.display = 'none';
-	      modalBackdrop.style.display = 'none';
-	      gridControls.style.display = 'flex';
-
-	      showCellTypeContainers();
-	    });
-
 	    cellTypeContainers[0].style.opacity = '1';
 
 	    var _loop8 = function _loop8(i) {
@@ -785,6 +775,241 @@
 	    for (var i = 0; i < cellTypeContainers.length; i++) {
 	      _loop8(i);
 	    }
+	  };
+
+	  var handleModalBehavior = function handleModalBehavior() {
+
+	    modalBackdrop.addEventListener('click', function (e) {
+	      if (e.target.id !== 'modal-backdrop') return;
+	      if (container.pauseEvent) handlePauseEvent();
+
+	      cellLogicModal.style.display = 'none';
+	      informationModal.style.display = 'none';
+	      modalBackdrop.style.display = 'none';
+	      gridControls.style.display = 'flex';
+
+	      showCellTypeContainers();
+	    });
+
+	    newGridButton.addEventListener('click', function () {
+	      if (!container.pauseEvent) handlePauseEvent();
+
+	      conditionalHash = {
+	        'typeOne': {
+	          'name': 'Type One',
+	          'color': '#FF0000',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 100",
+	            'dieCon': "Math.random() * 100 < 0",
+	            'stayCon': "Math.random() * 100 < 0",
+	            'wanderCon': "Math.random() * 100 < 0",
+	            'reproduceCon': "Math.random() * 100 < 0"
+	          },
+	          'neighborHash': {
+	            'typeOne': true,
+	            'typeTwo': true,
+	            'typeThree': true,
+	            'typeFour': true,
+	            'false': true
+	          }
+	        },
+
+	        'typeTwo': {
+	          'name': 'Type Two',
+	          'color': '#FFA500',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 100",
+	            'dieCon': "Math.random() * 100 < 0",
+	            'stayCon': "Math.random() * 100 < 0",
+	            'wanderCon': "Math.random() * 100 < 0",
+	            'reproduceCon': "Math.random() * 100 < 0"
+	          },
+	          'neighborHash': {
+	            'typeOne': true,
+	            'typeTwo': true,
+	            'typeThree': true,
+	            'typeFour': true,
+	            'false': true
+	          }
+	        },
+
+	        'typeThree': {
+	          'name': 'Type Three',
+	          'color': '#FFFF00',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 100",
+	            'dieCon': "Math.random() * 100 < 0",
+	            'stayCon': "Math.random() * 100 < 0",
+	            'wanderCon': "Math.random() * 100 < 0",
+	            'reproduceCon': "Math.random() * 100 < 0"
+	          },
+	          'neighborHash': {
+	            'typeOne': true,
+	            'typeTwo': true,
+	            'typeThree': true,
+	            'typeFour': true,
+	            'false': true
+	          }
+	        },
+
+	        'typeFour': {
+	          'name': 'Type Four',
+	          'color': '#0000FF',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 100",
+	            'dieCon': "Math.random() * 100 < 0",
+	            'stayCon': "Math.random() * 100 < 0",
+	            'wanderCon': "Math.random() * 100 < 0",
+	            'reproduceCon': "Math.random() * 100 < 0"
+	          },
+	          'neighborHash': {
+	            'typeOne': true,
+	            'typeTwo': true,
+	            'typeThree': true,
+	            'typeFour': true,
+	            'false': true
+	          }
+	        },
+
+	        'false': {
+	          'name': 'false',
+	          'color': 'rgba(255, 255, 255, 0)',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 100",
+	            'dieCon': "Math.random() * 100 < 0",
+	            'stayCon': "Math.random() * 100 < 0",
+	            'wanderCon': "Math.random() * 100 < 0",
+	            'reproduceCon': "Math.random() * 100 < 0"
+	          },
+	          'neighborHash': {
+	            'typeOne': false,
+	            'typeTwo': false,
+	            'typeThree': false,
+	            'typeFour': false,
+	            'false': true
+	          }
+	        }
+	      };
+
+	      container = new _container2.default(mainCanvas, mainCtx, conditionalHash);
+
+	      informationModal.style.display = 'none';
+	      modalBackdrop.style.display = 'none';
+	      gridControls.style.display = 'flex';
+
+	      handleResetEvent();
+	      populateTypeContainers();
+	      showCellTypeContainers();
+	    });
+
+	    demoButton.addEventListener('click', function () {
+	      conditionalHash = {
+	        'typeOne': {
+	          'name': 'Grass',
+	          'color': '#507F2C',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 0",
+	            'dieCon': "Math.random() * 100 < 0",
+	            'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
+	            'wanderCon': "Math.random() * 100 < 0",
+	            'reproduceCon': "Math.random() * 100 < 100"
+	          },
+	          'neighborHash': {
+	            'typeOne': false,
+	            'typeTwo': false,
+	            'typeThree': false,
+	            'typeFour': false,
+	            'false': true
+	          }
+	        },
+
+	        'typeTwo': {
+	          'name': 'Cow',
+	          'color': '#2552B2',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 0",
+	            'dieCon': "Math.random() * 100 < 100 && typeHash['typeOne'] === 0",
+	            'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
+	            'wanderCon': "Math.random() * 100 < 100",
+	            'reproduceCon': "Math.random() * 100 < 50 && typeHash['typeTwo'] > 0"
+	          },
+	          'neighborHash': {
+	            'typeOne': true,
+	            'typeTwo': false,
+	            'typeThree': false,
+	            'typeFour': false,
+	            'false': true
+	          }
+	        },
+
+	        'typeThree': {
+	          'name': 'Sheep',
+	          'color': '#FF851B',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 0",
+	            'dieCon': "Math.random() * 100 < 100 && typeHash['typeOne'] === 0",
+	            'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
+	            'wanderCon': "Math.random() * 100 < 100",
+	            'reproduceCon': "Math.random() * 100 < 50 && typeHash['typeThree'] > 0"
+	          },
+	          'neighborHash': {
+	            'typeOne': true,
+	            'typeTwo': false,
+	            'typeThree': false,
+	            'typeFour': false,
+	            'false': true
+	          }
+	        },
+
+	        'typeFour': {
+	          'name': 'Goat',
+	          'color': '#8b0000',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 0",
+	            'dieCon': "Math.random() * 100 < 100 && typeHash['typeOne'] === 0",
+	            'stayCon': "Math.random() * 100 < 100 && validNeighbors.length === 0",
+	            'wanderCon': "Math.random() * 100 < 100",
+	            'reproduceCon': "Math.random() * 100 < 50 && typeHash['typeFour'] > 0"
+	          },
+	          'neighborHash': {
+	            'typeOne': true,
+	            'typeTwo': false,
+	            'typeThree': false,
+	            'typeFour': false,
+	            'false': true
+	          }
+	        },
+
+	        'false': {
+	          'name': 'false',
+	          'color': 'rgba(255, 255, 255, 0)',
+	          'conditions': {
+	            'skipCon': "Math.random() * 100 < 100",
+	            'dieCon': "Math.random() * 100 < 0",
+	            'stayCon': "Math.random() * 100 < 0",
+	            'wanderCon': "Math.random() * 100 < 0",
+	            'reproduceCon': "Math.random() * 100 < 0"
+	          },
+	          'neighborHash': {
+	            'typeOne': false,
+	            'typeTwo': false,
+	            'typeThree': false,
+	            'typeFour': false,
+	            'false': true
+	          }
+	        }
+	      };
+
+	      container = new _container2.default(mainCanvas, mainCtx, conditionalHash);
+
+	      informationModal.style.display = 'none';
+	      modalBackdrop.style.display = 'none';
+	      gridControls.style.display = 'flex';
+
+	      handleResetEvent();
+	      populateTypeContainers();
+	      showCellTypeContainers();
+	    });
 	  };
 
 	  var handleGridControlButtons = function handleGridControlButtons() {
@@ -848,6 +1073,7 @@
 	  };
 
 	  populateTypeContainers();
+	  handleModalBehavior();
 	  handleGridControlButtons();
 	});
 

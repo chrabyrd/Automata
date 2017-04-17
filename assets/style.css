@@ -235,17 +235,30 @@ li > button {
 }
 
 #information {
+	display: flex;
+	flex-direction: column;
 	background-color: #EEE;
 	font-family: Source Code Pro;
 	padding: 1em;
 	flex: auto;
 }
 
+#information > div {
+	display: flex;
+	justify-content: space-around;
+}
+
+#explanationText {
+	flex: auto;
+	line-height: 200%;
+}
+
 #links {
 	display: flex;
-	align-self: flex-end;
-	align-items: center;
 	padding: 10px;
+	align-items: center;
+	justify-content: flex-end;
+	border-top: 2px solid #333;
 	color: grey;
 }
 
@@ -362,8 +375,19 @@ li > button {
 	width: 90%;
 }
 
-/* BUTTONS */
+/* DEMO BUTTONS */
 
+.demoTypeButtons {color:#333;background:transparent;cursor:pointer;border-width:2px;border-style: solid;border-color: #333;position:relative;margin:1em;display:inline-block;padding:0.5em 1em;transition:all 0.3s ease-in-out;text-align:center;
+font-family:BioRhyme;font-weight:bold}
+.demoTypeButtons:before, .demoTypeButtons:after {content:'';display:block;position:absolute;border-color:#333;box-sizing:border-box;border-style:solid;width:1em;height:1em;transition:all 0.3s ease-in-out}
+.demoTypeButtons:before {top:-6px;left:-6px;border-width:2px 0 0 2px;z-index:5;}
+.demoTypeButtons:after {bottom:-6px;right:-6px;border-width:0 2px 2px 0;}
+.demoTypeButtons:hover:before, .demoTypeButtons:hover:after {width:calc(100% + 12px);
+  height:calc(100% + 12px);border-color:#333}
+.demoTypeButtons:hover {color:#333;border-color:#333}
+.panel {max-width:960px;text-align:center;position:relative;margin:auto;}
+
+/* FLIPPING NEIGHBOR TOGGLES */
 .tgl {
   display: none;
 }
