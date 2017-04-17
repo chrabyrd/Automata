@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let conditionalHash = {
     'typeOne': {
-      'name': 'Type One',
+      'name': 'One',
       'color': '#FF0000',
       'conditions': {
         'skipCon': `Math.random() * 100 < 100`,
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'typeTwo': {
-      'name': 'Type Two',
+      'name': 'Two',
       'color': '#FFA500',
       'conditions': {
         'skipCon': `Math.random() * 100 < 100`,
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'typeThree': {
-      'name': 'Type Three',
+      'name': 'Three',
       'color': '#FFFF00',
       'conditions': {
         'skipCon': `Math.random() * 100 < 100`,
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     'typeFour': {
-      'name': 'Type Four',
+      'name': 'Four',
       'color': '#0000FF',
       'conditions': {
         'skipCon': `Math.random() * 100 < 100`,
@@ -147,8 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Keyboard Shortcuts
   document.body.addEventListener('keydown', e => {
-
-    if (cellLogicModal.style.display === 'flex' && e.keyCode !== 27) return;
+    if (e.target.classList.contains('cellNames')) return;
 
     switch (e.keyCode) {
       case 27: // Esc
@@ -170,14 +169,62 @@ document.addEventListener("DOMContentLoaded", () => {
       case 52: // 4
         changeCurrentCellType('typeFour');
         break;
+      case 73: // i
+        toggleInformationModal();
+        break;
       case 78: // n
         handleNextFrameEvent();
+        break;
+      case 79: // o
+        toggleCellLogicModal();
         break;
       case 82: // r
         handleResetEvent();
         break;
     }
   });
+
+  const toggleCellLogicModal = () => {
+
+    const updateModal = () => {
+      const cellTypes = Object.keys(conditionalHash);
+
+      for (let i = 0; i < cellTypes.length; i++) {
+        const currentType = cellTypes[i];
+        if (currentType === container.cellType) {
+          changeCellLogicModalType(currentType);
+        }
+      }
+    };
+
+    if (modalBackdrop.style.display === 'none') {
+      modalBackdrop.style.display = 'flex';
+      gridControls.style.display = 'none';
+      informationModal.style.display = 'none';
+      updateModal();
+      hideCellTypeContainers();
+    } else {
+      modalBackdrop.style.display = 'none';
+      gridControls.style.display = 'flex';
+      cellLogicModal.style.display = 'none';
+      showCellTypeContainers();
+    }
+  };
+
+  const toggleInformationModal = () => {
+    if (modalBackdrop.style.display === 'none') {
+      modalBackdrop.style.display = 'flex';
+      gridControls.style.display = 'none';
+      cellLogicModal.style.display = 'none';
+      informationModal.style.display = 'flex';
+      hideCellTypeContainers();
+    } else {
+      modalBackdrop.style.display = 'none';
+      gridControls.style.display = 'flex';
+      informationModal.style.display = 'none';
+      showCellTypeContainers();
+    }
+  };
 
   const showCellTypeContainers = () => {
     for (let i = 0; i < cellTypeContainers.length; i++) {
@@ -279,10 +326,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const translationHash = {
       // "&&": `AND`,
       // "||": `OR`,
-      "typeHash['typeOne']": `${conditionalHash['typeOne'].name}`,
-      "typeHash['typeTwo']": `${conditionalHash['typeTwo'].name}`,
-      "typeHash['typeThree']": `${conditionalHash['typeThree'].name}`,
-      "typeHash['typeFour']": `${conditionalHash['typeFour'].name}`,
+      "typeHash['typeOne']": `${conditionalHash['typeOne'].name} Cells`,
+      "typeHash['typeTwo']": `${conditionalHash['typeTwo'].name} Cells`,
+      "typeHash['typeThree']": `${conditionalHash['typeThree'].name} Cells`,
+      "typeHash['typeFour']": `${conditionalHash['typeFour'].name} Cells`,
       "validNeighbors.length": `Valid Cells`,
       "totalNeighbors.length": `Total Cells`,
       // ">": `is greater than`,
@@ -544,8 +591,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    removeChanceEventListeners();
-
     for (let i = 0; i < chanceSliders.length; i++) {
       const currentSlider = chanceSliders[i];
       const currentOutput = chanceOutputs[i];
@@ -554,11 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const currentHashCondition = conditionalHash[cellType]['conditions'][currentSlider.name];
       const conditionalArray = parseConditionalHashStatements(currentHashCondition);
 
-      const updateOutput = () => {
-        const originalValue = currentOutput.value;
-        const updatedCondition = conditionalHash[cellType]['conditions'][currentOutput.name]
-          .replace(`Math.random() * 100 < ${originalValue}`, `Math.random() * 100 < ${currentSlider.value}`);
-
+      const toggleConditionalStatements = () => {
         if (currentSlider.value === '0') {
           currentConditionOption.style.display = 'none';
           currentStatementContainer.style.display = 'none';
@@ -566,7 +607,14 @@ document.addEventListener("DOMContentLoaded", () => {
           currentConditionOption.style.display = 'flex';
           currentStatementContainer.style.display = 'flex';
         }
+      };
 
+      const updateOutput = () => {
+        const originalValue = currentOutput.value;
+        const updatedCondition = conditionalHash[cellType]['conditions'][currentOutput.name]
+          .replace(`Math.random() * 100 < ${originalValue}`, `Math.random() * 100 < ${currentSlider.value}`);
+
+        toggleConditionalStatements();
         conditionalHash[cellType]['conditions'][currentOutput.name] = updatedCondition;
         currentOutput.value = currentSlider.value;
       };
@@ -586,6 +634,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
+      toggleConditionalStatements();
+      removeChanceEventListeners();
       setSliderValues();
       currentSlider.addEventListener('input', updateOutput);
     }
@@ -716,7 +766,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       conditionalHash = {
         'typeOne': {
-          'name': 'Type One',
+          'name': 'One',
           'color': '#FF0000',
           'conditions': {
             'skipCon': `Math.random() * 100 < 100`,
@@ -735,7 +785,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
 
         'typeTwo': {
-          'name': 'Type Two',
+          'name': 'Two',
           'color': '#FFA500',
           'conditions': {
             'skipCon': `Math.random() * 100 < 100`,
@@ -754,7 +804,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
 
         'typeThree': {
-          'name': 'Type Three',
+          'name': 'Three',
           'color': '#FFFF00',
           'conditions': {
             'skipCon': `Math.random() * 100 < 100`,
@@ -773,7 +823,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
 
         'typeFour': {
-          'name': 'Type Four',
+          'name': 'Four',
           'color': '#0000FF',
           'conditions': {
             'skipCon': `Math.random() * 100 < 100`,
@@ -970,13 +1020,6 @@ document.addEventListener("DOMContentLoaded", () => {
       currentHeight.value = container.height;
     };
 
-    const handleInfoEvent = () => {
-      modalBackdrop.style.display = 'flex';
-      gridControls.style.display = 'none';
-      hideCellTypeContainers();
-
-      informationModal.style.display = 'flex';
-    };
 
     populateGridDimensions();
 
@@ -987,7 +1030,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
     currentWidth.addEventListener('change', handleResizeWidthEvent);
     currentHeight.addEventListener('change', handleResizeHeightEvent);
-    informationButton.addEventListener('click', handleInfoEvent);
+    informationButton.addEventListener('click', toggleInformationModal);
   };
 
   populateTypeContainers();

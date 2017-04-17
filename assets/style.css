@@ -141,6 +141,8 @@ li > button {
 	display: flex;
 	padding: 5px;
 	background-color: #FFF;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
 	color: #333;
 	transition: all .2s;
 	font-size: 1.5em;
@@ -185,7 +187,7 @@ li > button {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.6);
 }
 
 #cellLogicModal {
@@ -193,6 +195,7 @@ li > button {
 	flex-direction: column;
 	overflow: scroll;
   position: fixed;
+	border-radius: 2px;
   left: 0;
   right: 0;
   top: 0;
@@ -210,6 +213,7 @@ li > button {
   position: fixed;
 	font-family: BioRhyme;
 	color: #333;
+	border-radius: 4px;
   left: 0;
   right: 0;
   top: 0;

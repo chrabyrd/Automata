@@ -96,7 +96,7 @@
 
 	  var conditionalHash = {
 	    'typeOne': {
-	      'name': 'Type One',
+	      'name': 'One',
 	      'color': '#FF0000',
 	      'conditions': {
 	        'skipCon': "Math.random() * 100 < 100",
@@ -115,7 +115,7 @@
 	    },
 
 	    'typeTwo': {
-	      'name': 'Type Two',
+	      'name': 'Two',
 	      'color': '#FFA500',
 	      'conditions': {
 	        'skipCon': "Math.random() * 100 < 100",
@@ -134,7 +134,7 @@
 	    },
 
 	    'typeThree': {
-	      'name': 'Type Three',
+	      'name': 'Three',
 	      'color': '#FFFF00',
 	      'conditions': {
 	        'skipCon': "Math.random() * 100 < 100",
@@ -153,7 +153,7 @@
 	    },
 
 	    'typeFour': {
-	      'name': 'Type Four',
+	      'name': 'Four',
 	      'color': '#0000FF',
 	      'conditions': {
 	        'skipCon': "Math.random() * 100 < 100",
@@ -199,8 +199,7 @@
 
 	  // Keyboard Shortcuts
 	  document.body.addEventListener('keydown', function (e) {
-
-	    if (cellLogicModal.style.display === 'flex' && e.keyCode !== 27) return;
+	    if (e.target.classList.contains('cellNames')) return;
 
 	    switch (e.keyCode) {
 	      case 27:
@@ -228,9 +227,17 @@
 	        // 4
 	        changeCurrentCellType('typeFour');
 	        break;
+	      case 73:
+	        // i
+	        toggleInformationModal();
+	        break;
 	      case 78:
 	        // n
 	        handleNextFrameEvent();
+	        break;
+	      case 79:
+	        // o
+	        toggleCellLogicModal();
 	        break;
 	      case 82:
 	        // r
@@ -238,6 +245,48 @@
 	        break;
 	    }
 	  });
+
+	  var toggleCellLogicModal = function toggleCellLogicModal() {
+
+	    var updateModal = function updateModal() {
+	      var cellTypes = Object.keys(conditionalHash);
+
+	      for (var i = 0; i < cellTypes.length; i++) {
+	        var currentType = cellTypes[i];
+	        if (currentType === container.cellType) {
+	          changeCellLogicModalType(currentType);
+	        }
+	      }
+	    };
+
+	    if (modalBackdrop.style.display === 'none') {
+	      modalBackdrop.style.display = 'flex';
+	      gridControls.style.display = 'none';
+	      informationModal.style.display = 'none';
+	      updateModal();
+	      hideCellTypeContainers();
+	    } else {
+	      modalBackdrop.style.display = 'none';
+	      gridControls.style.display = 'flex';
+	      cellLogicModal.style.display = 'none';
+	      showCellTypeContainers();
+	    }
+	  };
+
+	  var toggleInformationModal = function toggleInformationModal() {
+	    if (modalBackdrop.style.display === 'none') {
+	      modalBackdrop.style.display = 'flex';
+	      gridControls.style.display = 'none';
+	      cellLogicModal.style.display = 'none';
+	      informationModal.style.display = 'flex';
+	      hideCellTypeContainers();
+	    } else {
+	      modalBackdrop.style.display = 'none';
+	      gridControls.style.display = 'flex';
+	      informationModal.style.display = 'none';
+	      showCellTypeContainers();
+	    }
+	  };
 
 	  var showCellTypeContainers = function showCellTypeContainers() {
 	    for (var i = 0; i < cellTypeContainers.length; i++) {
@@ -347,10 +396,10 @@
 	    var translationHash = {
 	      // "&&": `AND`,
 	      // "||": `OR`,
-	      "typeHash['typeOne']": "" + conditionalHash['typeOne'].name,
-	      "typeHash['typeTwo']": "" + conditionalHash['typeTwo'].name,
-	      "typeHash['typeThree']": "" + conditionalHash['typeThree'].name,
-	      "typeHash['typeFour']": "" + conditionalHash['typeFour'].name,
+	      "typeHash['typeOne']": conditionalHash['typeOne'].name + " Cells",
+	      "typeHash['typeTwo']": conditionalHash['typeTwo'].name + " Cells",
+	      "typeHash['typeThree']": conditionalHash['typeThree'].name + " Cells",
+	      "typeHash['typeFour']": conditionalHash['typeFour'].name + " Cells",
 	      "validNeighbors.length": "Valid Cells",
 	      "totalNeighbors.length": "Total Cells"
 	    };
@@ -608,8 +657,6 @@
 	      }
 	    };
 
-	    removeChanceEventListeners();
-
 	    var _loop5 = function _loop5(i) {
 	      var currentSlider = chanceSliders[i];
 	      var currentOutput = chanceOutputs[i];
@@ -618,10 +665,7 @@
 	      var currentHashCondition = conditionalHash[cellType]['conditions'][currentSlider.name];
 	      var conditionalArray = parseConditionalHashStatements(currentHashCondition);
 
-	      var updateOutput = function updateOutput() {
-	        var originalValue = currentOutput.value;
-	        var updatedCondition = conditionalHash[cellType]['conditions'][currentOutput.name].replace("Math.random() * 100 < " + originalValue, "Math.random() * 100 < " + currentSlider.value);
-
+	      var toggleConditionalStatements = function toggleConditionalStatements() {
 	        if (currentSlider.value === '0') {
 	          currentConditionOption.style.display = 'none';
 	          currentStatementContainer.style.display = 'none';
@@ -629,7 +673,13 @@
 	          currentConditionOption.style.display = 'flex';
 	          currentStatementContainer.style.display = 'flex';
 	        }
+	      };
 
+	      var updateOutput = function updateOutput() {
+	        var originalValue = currentOutput.value;
+	        var updatedCondition = conditionalHash[cellType]['conditions'][currentOutput.name].replace("Math.random() * 100 < " + originalValue, "Math.random() * 100 < " + currentSlider.value);
+
+	        toggleConditionalStatements();
 	        conditionalHash[cellType]['conditions'][currentOutput.name] = updatedCondition;
 	        currentOutput.value = currentSlider.value;
 	      };
@@ -649,6 +699,8 @@
 	        }
 	      };
 
+	      toggleConditionalStatements();
+	      removeChanceEventListeners();
 	      setSliderValues();
 	      currentSlider.addEventListener('input', updateOutput);
 	    };
@@ -796,7 +848,7 @@
 
 	      conditionalHash = {
 	        'typeOne': {
-	          'name': 'Type One',
+	          'name': 'One',
 	          'color': '#FF0000',
 	          'conditions': {
 	            'skipCon': "Math.random() * 100 < 100",
@@ -815,7 +867,7 @@
 	        },
 
 	        'typeTwo': {
-	          'name': 'Type Two',
+	          'name': 'Two',
 	          'color': '#FFA500',
 	          'conditions': {
 	            'skipCon': "Math.random() * 100 < 100",
@@ -834,7 +886,7 @@
 	        },
 
 	        'typeThree': {
-	          'name': 'Type Three',
+	          'name': 'Three',
 	          'color': '#FFFF00',
 	          'conditions': {
 	            'skipCon': "Math.random() * 100 < 100",
@@ -853,7 +905,7 @@
 	        },
 
 	        'typeFour': {
-	          'name': 'Type Four',
+	          'name': 'Four',
 	          'color': '#0000FF',
 	          'conditions': {
 	            'skipCon': "Math.random() * 100 < 100",
@@ -1052,14 +1104,6 @@
 	      currentHeight.value = container.height;
 	    };
 
-	    var handleInfoEvent = function handleInfoEvent() {
-	      modalBackdrop.style.display = 'flex';
-	      gridControls.style.display = 'none';
-	      hideCellTypeContainers();
-
-	      informationModal.style.display = 'flex';
-	    };
-
 	    populateGridDimensions();
 
 	    playPauseButton.addEventListener('click', handlePauseEvent);
@@ -1069,7 +1113,7 @@
 	    cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
 	    currentWidth.addEventListener('change', handleResizeWidthEvent);
 	    currentHeight.addEventListener('change', handleResizeHeightEvent);
-	    informationButton.addEventListener('click', handleInfoEvent);
+	    informationButton.addEventListener('click', toggleInformationModal);
 	  };
 
 	  populateTypeContainers();
