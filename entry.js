@@ -1,4 +1,5 @@
 import Container from "./scripts/container";
+import {defaultHash, demoHash} from "./scripts/hashes";
 
 document.addEventListener("DOMContentLoaded", () => {
   const mainCanvas = document.getElementById("mainCanvas");
@@ -42,103 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const demoButton = document.getElementById("demoButton");
   const newGridButton = document.getElementById("newGridButton");
 
-  let conditionalHash = {
-    'typeOne': {
-      'name': 'One',
-      'color': '#FF0000',
-      'conditions': {
-        'skipCon': `Math.random() * 100 < 100`,
-        'dieCon': `Math.random() * 100 < 0`,
-        'stayCon': `Math.random() * 100 < 0`,
-        'wanderCon': `Math.random() * 100 < 0`,
-        'reproduceCon': `Math.random() * 100 < 0`
-      },
-      'neighborHash': {
-        'typeOne': true,
-        'typeTwo': true,
-        'typeThree': true,
-        'typeFour': true,
-        'false': true
-      }
-    },
-
-    'typeTwo': {
-      'name': 'Two',
-      'color': '#FFA500',
-      'conditions': {
-        'skipCon': `Math.random() * 100 < 100`,
-        'dieCon': `Math.random() * 100 < 0`,
-        'stayCon': `Math.random() * 100 < 0`,
-        'wanderCon': `Math.random() * 100 < 0`,
-        'reproduceCon': `Math.random() * 100 < 0`
-      },
-      'neighborHash': {
-        'typeOne': true,
-        'typeTwo': true,
-        'typeThree': true,
-        'typeFour': true,
-        'false': true
-      }
-    },
-
-    'typeThree': {
-      'name': 'Three',
-      'color': '#FFFF00',
-      'conditions': {
-        'skipCon': `Math.random() * 100 < 100`,
-        'dieCon': `Math.random() * 100 < 0`,
-        'stayCon': `Math.random() * 100 < 0`,
-        'wanderCon': `Math.random() * 100 < 0`,
-        'reproduceCon': `Math.random() * 100 < 0`
-      },
-      'neighborHash': {
-        'typeOne': true,
-        'typeTwo': true,
-        'typeThree': true,
-        'typeFour': true,
-        'false': true
-      }
-    },
-
-    'typeFour': {
-      'name': 'Four',
-      'color': '#0000FF',
-      'conditions': {
-        'skipCon': `Math.random() * 100 < 100`,
-        'dieCon': `Math.random() * 100 < 0`,
-        'stayCon': `Math.random() * 100 < 0`,
-        'wanderCon': `Math.random() * 100 < 0`,
-        'reproduceCon': `Math.random() * 100 < 0`
-      },
-      'neighborHash': {
-        'typeOne': true,
-        'typeTwo': true,
-        'typeThree': true,
-        'typeFour': true,
-        'false': true
-      }
-    },
-
-    'false': {
-      'name': 'false',
-      'color': 'rgba(255, 255, 255, 0)',
-      'conditions': {
-        'skipCon': `Math.random() * 100 < 100`,
-        'dieCon': `Math.random() * 100 < 0`,
-        'stayCon': `Math.random() * 100 < 0`,
-        'wanderCon': `Math.random() * 100 < 0`,
-        'reproduceCon': `Math.random() * 100 < 0`
-      },
-      'neighborHash': {
-        'typeOne': false,
-        'typeTwo': false,
-        'typeThree': false,
-        'typeFour': false,
-        'false': true
-      }
-    }
-  };
-
+  let conditionalHash = defaultHash;
   let container = new Container(mainCanvas, mainCtx, conditionalHash);
 
   mainCanvas.addEventListener('click',(e) => (
@@ -634,8 +539,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
-      toggleConditionalStatements();
       removeChanceEventListeners();
+      toggleConditionalStatements();
       setSliderValues();
       currentSlider.addEventListener('input', updateOutput);
     }
@@ -748,6 +653,18 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const handleModalBehavior = () => {
+    const changeHash = hash => {
+      conditionalHash = hash;
+      container = new Container(mainCanvas, mainCtx, conditionalHash);
+
+      informationModal.style.display = 'none';
+      modalBackdrop.style.display = 'none';
+      gridControls.style.display = 'flex';
+
+      handleResetEvent();
+      populateTypeContainers();
+      showCellTypeContainers();
+    };
 
     modalBackdrop.addEventListener('click', e => {
       if (e.target.id !== 'modal-backdrop') return;
@@ -762,223 +679,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     newGridButton.addEventListener('click', () => {
-      if (!container.pauseEvent) handlePauseEvent();
-
-      conditionalHash = {
-        'typeOne': {
-          'name': 'One',
-          'color': '#FF0000',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 100`,
-            'dieCon': `Math.random() * 100 < 0`,
-            'stayCon': `Math.random() * 100 < 0`,
-            'wanderCon': `Math.random() * 100 < 0`,
-            'reproduceCon': `Math.random() * 100 < 0`
-          },
-          'neighborHash': {
-            'typeOne': true,
-            'typeTwo': true,
-            'typeThree': true,
-            'typeFour': true,
-            'false': true
-          }
-        },
-
-        'typeTwo': {
-          'name': 'Two',
-          'color': '#FFA500',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 100`,
-            'dieCon': `Math.random() * 100 < 0`,
-            'stayCon': `Math.random() * 100 < 0`,
-            'wanderCon': `Math.random() * 100 < 0`,
-            'reproduceCon': `Math.random() * 100 < 0`
-          },
-          'neighborHash': {
-            'typeOne': true,
-            'typeTwo': true,
-            'typeThree': true,
-            'typeFour': true,
-            'false': true
-          }
-        },
-
-        'typeThree': {
-          'name': 'Three',
-          'color': '#FFFF00',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 100`,
-            'dieCon': `Math.random() * 100 < 0`,
-            'stayCon': `Math.random() * 100 < 0`,
-            'wanderCon': `Math.random() * 100 < 0`,
-            'reproduceCon': `Math.random() * 100 < 0`
-          },
-          'neighborHash': {
-            'typeOne': true,
-            'typeTwo': true,
-            'typeThree': true,
-            'typeFour': true,
-            'false': true
-          }
-        },
-
-        'typeFour': {
-          'name': 'Four',
-          'color': '#0000FF',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 100`,
-            'dieCon': `Math.random() * 100 < 0`,
-            'stayCon': `Math.random() * 100 < 0`,
-            'wanderCon': `Math.random() * 100 < 0`,
-            'reproduceCon': `Math.random() * 100 < 0`
-          },
-          'neighborHash': {
-            'typeOne': true,
-            'typeTwo': true,
-            'typeThree': true,
-            'typeFour': true,
-            'false': true
-          }
-        },
-
-        'false': {
-          'name': 'false',
-          'color': 'rgba(255, 255, 255, 0)',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 100`,
-            'dieCon': `Math.random() * 100 < 0`,
-            'stayCon': `Math.random() * 100 < 0`,
-            'wanderCon': `Math.random() * 100 < 0`,
-            'reproduceCon': `Math.random() * 100 < 0`
-          },
-          'neighborHash': {
-            'typeOne': false,
-            'typeTwo': false,
-            'typeThree': false,
-            'typeFour': false,
-            'false': true
-          }
-        }
-      };
-
-      container = new Container(mainCanvas, mainCtx, conditionalHash);
-
-      informationModal.style.display = 'none';
-      modalBackdrop.style.display = 'none';
-      gridControls.style.display = 'flex';
-
-      handleResetEvent();
-      populateTypeContainers();
-      showCellTypeContainers();
+      changeHash(defaultHash);
     });
 
     demoButton.addEventListener('click', () => {
-      conditionalHash = {
-        'typeOne': {
-          'name': 'Grass',
-          'color': '#507F2C',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 0`,
-            'dieCon': `Math.random() * 100 < 0`,
-            'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
-            'wanderCon': `Math.random() * 100 < 0`,
-            'reproduceCon': `Math.random() * 100 < 100`
-          },
-          'neighborHash': {
-            'typeOne': false,
-            'typeTwo': false,
-            'typeThree': false,
-            'typeFour': false,
-            'false': true
-          }
-        },
-
-        'typeTwo': {
-          'name': 'Cow',
-          'color': '#2552B2',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 0`,
-            'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
-            'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
-            'wanderCon': `Math.random() * 100 < 100`,
-            'reproduceCon': `Math.random() * 100 < 50 && typeHash['typeTwo'] > 0`
-          },
-          'neighborHash': {
-            'typeOne': true,
-            'typeTwo': false,
-            'typeThree': false,
-            'typeFour': false,
-            'false': true
-          }
-        },
-
-        'typeThree': {
-          'name': 'Sheep',
-          'color': '#FF851B',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 0`,
-            'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
-            'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
-            'wanderCon': `Math.random() * 100 < 100`,
-            'reproduceCon': `Math.random() * 100 < 50 && typeHash['typeThree'] > 0`
-          },
-          'neighborHash': {
-            'typeOne': true,
-            'typeTwo': false,
-            'typeThree': false,
-            'typeFour': false,
-            'false': true
-          }
-        },
-
-        'typeFour': {
-          'name': 'Goat',
-          'color': '#8b0000',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 0`,
-            'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
-            'stayCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
-            'wanderCon': `Math.random() * 100 < 100`,
-            'reproduceCon': `Math.random() * 100 < 50 && typeHash['typeFour'] > 0`
-          },
-          'neighborHash': {
-            'typeOne': true,
-            'typeTwo': false,
-            'typeThree': false,
-            'typeFour': false,
-            'false': true
-          }
-        },
-
-        'false': {
-          'name': 'false',
-          'color': 'rgba(255, 255, 255, 0)',
-          'conditions': {
-            'skipCon': `Math.random() * 100 < 100`,
-            'dieCon': `Math.random() * 100 < 0`,
-            'stayCon': `Math.random() * 100 < 0`,
-            'wanderCon': `Math.random() * 100 < 0`,
-            'reproduceCon': `Math.random() * 100 < 0`
-          },
-          'neighborHash': {
-            'typeOne': false,
-            'typeTwo': false,
-            'typeThree': false,
-            'typeFour': false,
-            'false': true
-          }
-        }
-      };
-
-      container = new Container(mainCanvas, mainCtx, conditionalHash);
-
-      informationModal.style.display = 'none';
-      modalBackdrop.style.display = 'none';
-      gridControls.style.display = 'flex';
-
-      handleResetEvent();
-      populateTypeContainers();
-      showCellTypeContainers();
+      changeHash(demoHash);
     });
   };
 
