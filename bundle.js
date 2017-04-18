@@ -315,8 +315,8 @@
 	      "typeHash['typeTwo']": conditionalHash['typeTwo'].name + " Cells",
 	      "typeHash['typeThree']": conditionalHash['typeThree'].name + " Cells",
 	      "typeHash['typeFour']": conditionalHash['typeFour'].name + " Cells",
-	      "validNeighbors.length": "Valid Cells",
-	      "totalNeighbors.length": "Total Cells"
+	      "validNeighbors.length": "Valid Surrounding Cells",
+	      "totalNeighbors.length": "Total Surrounding Cells"
 	    };
 
 	    var filteredString = string.split(' ').map(function (str) {
