@@ -80,6 +80,7 @@ At the bottom of each cell's behavior modal is a list of cell types. If a type i
 ## Features in Production
 - Minor bug involving the chance slider and conditional operator `or` (current issue)
 - Change `Valid Cells` dropdown option to `Valid Cells (with false)` and `Valid Cells (sans false)`
+- Add ability to manipulate grid through dragging the mouse in addition to clicking
 - Add `Change` cell behavior
 - Redesign `Valid Cells` buttons
 - Add ability for cells to track state
