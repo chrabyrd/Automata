@@ -131,14 +131,15 @@ li > button {
 
 #cellLogicControls {
   display: flex;
-  position: fixed;
 	width: 100%;
+  position: fixed;
   top: 0px;
 }
 
 .cellTypeContainers {
 	opacity: 0;
 	display: flex;
+	flex: auto;
 	padding: 5px;
 	background-color: #FFF;
 	border-bottom-left-radius: 2px;
@@ -151,17 +152,18 @@ li > button {
 }
 
 .cellNames {
+	display: flex;
 	background-color: lightgrey;
-	flex: auto;
 	font-family: BioRhyme;
+	width: 50%;
+	flex: 1 1 auto;
 	font-size: 1.2em;
 	border: none;
-	width: 100%;
 }
 
 .colorPickers {
 	height: 100%;
-	width: 20%;
+	flex: 0 0 auto;
 	border: none;
 }
 
