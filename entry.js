@@ -240,13 +240,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const translationHash = {
       // "&&": `AND`,
       // "||": `OR`,
-      "typeHash['typeOne']": `${conditionalHash['typeOne'].name} Cells`,
-      "typeHash['typeTwo']": `${conditionalHash['typeTwo'].name} Cells`,
-      "typeHash['typeThree']": `${conditionalHash['typeThree'].name} Cells`,
-      "typeHash['typeFour']": `${conditionalHash['typeFour'].name} Cells`,
-      "validNeighborsWithFalse.length": `Valid Cells (+ false)`,
-      "validNeighborsWithoutFalse.length": `Valid Cells (- false)`,
-      "totalNeighbors.length": `Total Surrounding Cells`,
+      "typeHash['typeOne']": `${conditionalHash['typeOne'].name}`,
+      "typeHash['typeTwo']": `${conditionalHash['typeTwo'].name}`,
+      "typeHash['typeThree']": `${conditionalHash['typeThree'].name}`,
+      "typeHash['typeFour']": `${conditionalHash['typeFour'].name}`,
+      "validNeighborsWithFalse.length": `Valid (+ false)`,
+      "validNeighborsWithoutFalse.length": `Valid (- false)`,
+      "totalNeighbors.length": `Total (- false)`,
       // ">": `is greater than`,
       // ">=": `is greater than or equal to`,
       // "<": `is less than`,
@@ -653,12 +653,33 @@ document.addEventListener("DOMContentLoaded", () => {
       conditionalHash = hash;
       container = new Container(mainCanvas, mainCtx, conditionalHash);
 
+      const populateGridDimensions = () => {
+        const possibleDimensions = container.gridDimensions.sort((a, b) => a - b);
+
+        possibleDimensions.reverse().forEach(num => {
+          const widthOption = document.createElement('option');
+          widthOption.value = num;
+          widthOption.text = num;
+
+          const heightOption = document.createElement('option');
+          heightOption.value = num;
+          heightOption.text = num;
+
+          currentWidth.add(widthOption);
+          currentHeight.add(heightOption);
+        });
+
+        currentWidth.value = container.width;
+        currentHeight.value = container.height;
+      };
+
       informationModal.style.display = 'none';
       modalBackdrop.style.display = 'none';
       gridControls.style.display = 'flex';
 
       handleResetEvent();
       populateTypeContainers();
+      populateGridDimensions();
       showCellTypeContainers();
     };
 
@@ -700,28 +721,8 @@ document.addEventListener("DOMContentLoaded", () => {
       container.handleResizeEvent('height', parseInt(currentHeight.value));
     };
 
-    const populateGridDimensions = () => {
-      const possibleDimensions = container.gridDimensions.sort((a, b) => a - b);
-
-      possibleDimensions.reverse().forEach(num => {
-        const widthOption = document.createElement('option');
-        widthOption.value = num;
-        widthOption.text = num;
-
-        const heightOption = document.createElement('option');
-        heightOption.value = num;
-        heightOption.text = num;
-
-        currentWidth.add(widthOption);
-        currentHeight.add(heightOption);
-      });
-
-      currentWidth.value = container.width;
-      currentHeight.value = container.height;
-    };
-
-
-    populateGridDimensions();
+    mainCanvas.width = 4000;
+    mainCanvas.height = 4000;
 
     playPauseButton.addEventListener('click', handlePauseEvent);
     nextFrameButton.addEventListener('click', handleNextFrameEvent);
