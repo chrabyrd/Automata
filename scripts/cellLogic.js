@@ -55,11 +55,19 @@ class CellLogic {
     const typeHash = {};
 
     const neighborTypes = Object.keys(conditionalHash[type]['neighborHash']);
-    const validNeighborTypes = neighborTypes.filter(function(neighborType) {
+
+    const validTypesWithFalse = neighborTypes.filter(function(neighborType) {
       return conditionalHash[type]['neighborHash'][neighborType] === true;
     });
 
-    const validNeighbors = this.getValidNeighbors(validNeighborTypes);
+    const validTypesWithoutFalse = neighborTypes.filter(function(neighborType) {
+      const currentType = conditionalHash[type]['neighborHash'][neighborType];
+
+      if (currentType === true && neighborType !== 'false') return true;
+    });
+
+    const validNeighborsWithFalse = this.getValidNeighbors(validTypesWithFalse);
+    const validNeighborsWithoutFalse = this.getValidNeighbors(validTypesWithoutFalse);
 
     const totalNeighbors = this.cellNeighbors.filter((neighbor) => {
       return this.cells[neighbor].type !== 'false';
@@ -78,9 +86,9 @@ class CellLogic {
     } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
       this.stay();
     } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
-      this.reproduce(validNeighbors);
+      this.reproduce(validNeighborsWithFalse);
     } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
-      this.wander(validNeighbors);
+      this.wander(validNeighborsWithFalse);
     }
 
   }

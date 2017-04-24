@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const newGridButton = document.getElementById("newGridButton");
 
   let conditionalHash = defaultHash;
-  let container = new Container(mainCanvas, mainCtx, conditionalHash);
+  let container;
 
   mainCanvas.addEventListener('click',(e) => (
     container.handleClickEvent(e)
@@ -244,7 +244,8 @@ document.addEventListener("DOMContentLoaded", () => {
       "typeHash['typeTwo']": `${conditionalHash['typeTwo'].name} Cells`,
       "typeHash['typeThree']": `${conditionalHash['typeThree'].name} Cells`,
       "typeHash['typeFour']": `${conditionalHash['typeFour'].name} Cells`,
-      "validNeighbors.length": `Valid Surrounding Cells`,
+      "validNeighborsWithFalse.length": `Valid Cells (+ false)`,
+      "validNeighborsWithoutFalse.length": `Valid Cells (- false)`,
       "totalNeighbors.length": `Total Surrounding Cells`,
       // ">": `is greater than`,
       // ">=": `is greater than or equal to`,

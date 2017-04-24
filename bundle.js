@@ -97,7 +97,7 @@
 	  var newGridButton = document.getElementById("newGridButton");
 
 	  var conditionalHash = _hashes.defaultHash;
-	  var container = new _container2.default(mainCanvas, mainCtx, conditionalHash);
+	  var container = void 0;
 
 	  mainCanvas.addEventListener('click', function (e) {
 	    return container.handleClickEvent(e);
@@ -315,7 +315,8 @@
 	      "typeHash['typeTwo']": conditionalHash['typeTwo'].name + " Cells",
 	      "typeHash['typeThree']": conditionalHash['typeThree'].name + " Cells",
 	      "typeHash['typeFour']": conditionalHash['typeFour'].name + " Cells",
-	      "validNeighbors.length": "Valid Surrounding Cells",
+	      "validNeighborsWithFalse.length": "Valid Cells (+ false)",
+	      "validNeighborsWithoutFalse.length": "Valid Cells (- false)",
 	      "totalNeighbors.length": "Total Surrounding Cells"
 	    };
 
@@ -1291,11 +1292,19 @@
 	      var typeHash = {};
 
 	      var neighborTypes = Object.keys(conditionalHash[type]['neighborHash']);
-	      var validNeighborTypes = neighborTypes.filter(function (neighborType) {
+
+	      var validTypesWithFalse = neighborTypes.filter(function (neighborType) {
 	        return conditionalHash[type]['neighborHash'][neighborType] === true;
 	      });
 
-	      var validNeighbors = this.getValidNeighbors(validNeighborTypes);
+	      var validTypesWithoutFalse = neighborTypes.filter(function (neighborType) {
+	        var currentType = conditionalHash[type]['neighborHash'][neighborType];
+
+	        if (currentType === true && neighborType !== 'false') return true;
+	      });
+
+	      var validNeighborsWithFalse = this.getValidNeighbors(validTypesWithFalse);
+	      var validNeighborsWithoutFalse = this.getValidNeighbors(validTypesWithoutFalse);
 
 	      var totalNeighbors = this.cellNeighbors.filter(function (neighbor) {
 	        return _this.cells[neighbor].type !== 'false';
@@ -1316,9 +1325,9 @@
 	      } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
 	        this.stay();
 	      } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
-	        this.reproduce(validNeighbors);
+	        this.reproduce(validNeighborsWithFalse);
 	      } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
-	        this.wander(validNeighbors);
+	        this.wander(validNeighborsWithFalse);
 	      }
 	    }
 	  }]);
@@ -1439,7 +1448,7 @@
 	    'name': 'Grass',
 	    'color': '#507F2C',
 	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighbors.length === 0',
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
 	      'dieCon': 'Math.random() * 100 < 0',
 	      'stayCon': 'Math.random() * 100 < 0',
 	      'wanderCon': 'Math.random() * 100 < 0',
@@ -1458,7 +1467,7 @@
 	    'name': 'Sheep',
 	    'color': '#2552B2',
 	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighbors.length === 0',
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
 	      'dieCon': 'Math.random() * 100 < 100 && typeHash[\'typeOne\'] === 0',
 	      'stayCon': 'Math.random() * 100 < 33',
 	      'wanderCon': 'Math.random() * 100 < 50',
@@ -1477,11 +1486,11 @@
 	    'name': 'Human',
 	    'color': '#FF851B',
 	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighbors.length === 0',
-	      'dieCon': 'Math.random() * 100 < 100 && typeHash[\'typeOne\'] === 0',
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
+	      'dieCon': 'Math.random() * 100 < 100 && validNeighborsWithoutFalse.length === 0',
 	      'stayCon': 'Math.random() * 100 < 33',
 	      'wanderCon': 'Math.random() * 100 < 100',
-	      'reproduceCon': 'Math.random() * 100 < 25 && typeHash[\'typeThree\'] > 0 && typeHash[\'typeOne\'] > 2'
+	      'reproduceCon': 'Math.random() * 100 < 25 && typeHash[\'typeThree\'] > 0 && validNeighborsWithoutFalse.length > 2'
 	    },
 	    'neighborHash': {
 	      'typeOne': true,
@@ -1496,7 +1505,7 @@
 	    'name': 'Stone',
 	    'color': '#333333',
 	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighbors.length === 0',
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
 	      'dieCon': 'Math.random() * 100 < 0',
 	      'stayCon': 'Math.random() * 100 < 100',
 	      'wanderCon': 'Math.random() * 100 < 0',

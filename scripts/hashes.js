@@ -100,7 +100,7 @@ export const demoHash = {
     'name': 'Grass',
     'color': '#507F2C',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
       'dieCon': `Math.random() * 100 < 0`,
       'stayCon': `Math.random() * 100 < 0`,
       'wanderCon': `Math.random() * 100 < 0`,
@@ -119,7 +119,7 @@ export const demoHash = {
     'name': 'Sheep',
     'color': '#2552B2',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
       'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
       'stayCon': `Math.random() * 100 < 33`,
       'wanderCon': `Math.random() * 100 < 50`,
@@ -138,11 +138,11 @@ export const demoHash = {
     'name': 'Human',
     'color': '#FF851B',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
-      'dieCon': `Math.random() * 100 < 100 && typeHash['typeOne'] === 0`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
+      'dieCon': `Math.random() * 100 < 100 && validNeighborsWithoutFalse.length === 0`,
       'stayCon': `Math.random() * 100 < 33`,
       'wanderCon': `Math.random() * 100 < 100`,
-      'reproduceCon': `Math.random() * 100 < 25 && typeHash['typeThree'] > 0 && typeHash['typeOne'] > 2`
+      'reproduceCon': `Math.random() * 100 < 25 && typeHash['typeThree'] > 0 && validNeighborsWithoutFalse.length > 2`
     },
     'neighborHash': {
       'typeOne': true,
@@ -157,7 +157,7 @@ export const demoHash = {
     'name': 'Stone',
     'color': '#333333',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 100 && validNeighbors.length === 0`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
       'dieCon': `Math.random() * 100 < 0`,
       'stayCon': `Math.random() * 100 < 100`,
       'wanderCon': `Math.random() * 100 < 0`,
