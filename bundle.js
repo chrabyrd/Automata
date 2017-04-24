@@ -99,8 +99,24 @@
 	  var conditionalHash = _hashes.defaultHash;
 	  var container = void 0;
 
+	  var mouseStateToggle = false;
+
+	  mainCanvas.addEventListener('mousedown', function (e) {
+	    return mouseStateToggle = true;
+	  }, false);
+
+	  mainCanvas.addEventListener('mouseup', function (e) {
+	    return mouseStateToggle = false;
+	  }, false);
+
 	  mainCanvas.addEventListener('click', function (e) {
 	    return container.handleClickEvent(e);
+	  }, false);
+
+	  mainCanvas.addEventListener('mousemove', function (e) {
+	    if (mouseStateToggle === true) {
+	      container.handleClickEvent(e);
+	    }
 	  }, false);
 
 	  // Keyboard Shortcuts

@@ -46,9 +46,25 @@ document.addEventListener("DOMContentLoaded", () => {
   let conditionalHash = defaultHash;
   let container;
 
-  mainCanvas.addEventListener('click',(e) => (
+  let mouseStateToggle = false;
+
+  mainCanvas.addEventListener('mousedown',(e) => (
+    mouseStateToggle = true
+  ), false);
+
+  mainCanvas.addEventListener('mouseup',(e) => (
+    mouseStateToggle = false
+  ), false);
+
+  mainCanvas.addEventListener('click', (e) => (
     container.handleClickEvent(e)
   ), false);
+
+  mainCanvas.addEventListener('mousemove', (e) => {
+    if (mouseStateToggle === true) {
+      container.handleClickEvent(e);
+    }
+  }, false);
 
   // Keyboard Shortcuts
   document.body.addEventListener('keydown', e => {
