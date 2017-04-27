@@ -59,8 +59,9 @@
 	  var mainCtx = mainCanvas.getContext("2d");
 
 	  var informationModal = document.getElementById("informationModal");
+	  var informationModalBackdrop = document.getElementById("informationModalBackdrop");
 	  var cellLogicModal = document.getElementById("cellLogicModal");
-	  var modalBackdrop = document.getElementById("modal-backdrop");
+	  var modalBackdrop = document.getElementById("modalBackdrop");
 
 	  var cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
 	  var cellNames = document.getElementsByClassName("cellNames");
@@ -122,6 +123,7 @@
 	  // Keyboard Shortcuts
 	  document.body.addEventListener('keydown', function (e) {
 	    if (e.target.classList.contains('cellNames')) return;
+	    if (e.metaKey !== false) return;
 
 	    switch (e.keyCode) {
 	      case 27:
@@ -333,7 +335,7 @@
 	      "typeHash['typeFour']": "" + conditionalHash['typeFour'].name,
 	      "validNeighborsWithFalse.length": "Valid (+ false)",
 	      "validNeighborsWithoutFalse.length": "Valid (- false)",
-	      "totalNeighbors.length": "Total (- false)"
+	      "totalNeighbors.length": "Total"
 	    };
 
 	    var filteredString = string.split(' ').map(function (str) {
@@ -747,7 +749,80 @@
 	    }
 	  };
 
-	  var handleModalBehavior = function handleModalBehavior() {
+	  var handleInformationModalBehavior = function handleInformationModalBehavior() {
+
+	    var particleEffect = function particleEffect() {
+	      var colors = {
+	        aqua: "#00ffff",
+	        azure: "#f0ffff",
+	        beige: "#f5f5dc",
+	        blue: "#0000ff",
+	        brown: "#a52a2a",
+	        cyan: "#00ffff",
+	        darkblue: "#00008b",
+	        darkcyan: "#008b8b",
+	        darkgrey: "#a9a9a9",
+	        darkgreen: "#006400",
+	        darkkhaki: "#bdb76b",
+	        darkmagenta: "#8b008b",
+	        darkolivegreen: "#556b2f",
+	        darkorange: "#ff8c00",
+	        darkorchid: "#9932cc",
+	        darkred: "#8b0000",
+	        darksalmon: "#e9967a",
+	        darkviolet: "#9400d3",
+	        fuchsia: "#ff00ff",
+	        gold: "#ffd700",
+	        green: "#008000",
+	        indigo: "#4b0082",
+	        khaki: "#f0e68c",
+	        lightblue: "#add8e6",
+	        lightcyan: "#e0ffff",
+	        lightgreen: "#90ee90",
+	        lightpink: "#ffb6c1",
+	        lightyellow: "#ffffe0",
+	        lime: "#00ff00",
+	        magenta: "#ff00ff",
+	        maroon: "#800000",
+	        navy: "#000080",
+	        olive: "#808000",
+	        orange: "#ffa500",
+	        pink: "#ffc0cb",
+	        purple: "#800080",
+	        violet: "#800080",
+	        red: "#ff0000",
+	        silver: "#c0c0c0",
+	        yellow: "#ffff00"
+	      };
+
+	      var generateParticle = function generateParticle() {
+	        var getRandomInt = function getRandomInt(min, max) {
+	          min = Math.ceil(min);
+	          max = Math.floor(max);
+	          return Math.floor(Math.random() * (max - min)) + min;
+	        };
+
+	        var size = getRandomInt(10, 40);
+	        var randomColor = Object.values(colors)[Math.floor(Math.random() * Object.values(colors).length)];
+
+	        var box = document.createElement('div');
+
+	        box.style.width = size + "px";
+	        box.style.height = size + "px";
+	        box.style.left = getRandomInt(0, window.innerWidth) + "px";
+	        box.style.bottom = getRandomInt(0, window.innerWidth) + "px";
+	        box.classList.add("particle");
+	        box.style.backgroundColor = randomColor;
+	        informationModalBackdrop.appendChild(box);
+
+	        setTimeout(function () {
+	          box.parentNode.removeChild(box);
+	        }, 2000);
+	      };
+
+	      generateParticle();
+	    };
+
 	    var changeHash = function changeHash(hash) {
 	      conditionalHash = hash;
 	      container = new _container2.default(mainCanvas, mainCtx, conditionalHash);
@@ -775,8 +850,10 @@
 	      };
 
 	      informationModal.style.display = 'none';
-	      modalBackdrop.style.display = 'none';
+	      informationModalBackdrop.style.display = 'none';
 	      gridControls.style.display = 'flex';
+
+	      clearInterval(particleEffect, 40);
 
 	      handleResetEvent();
 	      populateTypeContainers();
@@ -784,25 +861,22 @@
 	      showCellTypeContainers();
 	    };
 
-	    modalBackdrop.addEventListener('click', function (e) {
-	      if (e.target.id !== 'modal-backdrop') return;
-	      if (container.pauseEvent) handlePauseEvent();
+	    var startTutorial = function startTutorial() {};
 
-	      cellLogicModal.style.display = 'none';
-	      informationModal.style.display = 'none';
-	      modalBackdrop.style.display = 'none';
-	      gridControls.style.display = 'flex';
-
-	      showCellTypeContainers();
-	    });
+	    setInterval(particleEffect, 40);
 
 	    newGridButton.addEventListener('click', function () {
 	      changeHash(_hashes.defaultHash);
 	    });
 
 	    demoButton.addEventListener('click', function () {
-	      changeHash(_hashes.demoHash);
+	      startTutorial();
 	    });
+
+	    // Use this pattern for later presets
+	    // demoButton.addEventListener('click', () => {
+	    //   changeHash(demoHash);
+	    // });
 	  };
 
 	  var handleGridControlButtons = function handleGridControlButtons() {
@@ -836,7 +910,7 @@
 	  };
 
 	  populateTypeContainers();
-	  handleModalBehavior();
+	  handleInformationModalBehavior();
 	  handleGridControlButtons();
 	});
 

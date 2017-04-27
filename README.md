@@ -66,7 +66,7 @@ At the bottom of each cell's behavior modal is a list of cell types. If a type i
 #### Behavior
 - Can `Wander`, `Stay` `Reproduce`, and `Die`
 - Cell behavior is extracted, evaluated and initialized from the information hash
-- A persistant chance slider is integrated into cell behavior
+- A persistent chance slider is integrated into cell behavior
 - Valid cell types are integrated into cell behavior
 - Complex logic can be built with `&&`, `||` and `Delete` buttons
 - Cell behavior can be manually changed through user interaction
@@ -79,7 +79,7 @@ At the bottom of each cell's behavior modal is a list of cell types. If a type i
 
 ## Features in Production
 - Minor bug involving the chance slider and conditional operator `or` (current issue)
-- Add ability to manipulate grid through dragging the mouse in addition to clicking
+- Add Tutorial
 - Add `Change` cell behavior
 - Add ability for cells to track state
 - Add ability for cells to perform more than one action per turn
