@@ -79,7 +79,7 @@ At the bottom of each cell's behavior modal is a list of cell types. If a type i
 
 ## Features in Production
 - Minor bug involving the chance slider and conditional operator `or` (current issue)
-- Add Tutorial
+- Bug involving not trash collecting unused grids.
 - Add `Change` cell behavior
 - Add ability for cells to track state
 - Add ability for cells to perform more than one action per turn

@@ -1450,7 +1450,7 @@
 	});
 	var defaultHash = exports.defaultHash = {
 	  'typeOne': {
-	    'name': 'typeOne',
+	    'name': 'A',
 	    'color': '#FF0000',
 	    'conditions': {
 	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
@@ -1469,7 +1469,7 @@
 	  },
 
 	  'typeTwo': {
-	    'name': 'typeTwo',
+	    'name': 'B',
 	    'color': '#FFA500',
 	    'conditions': {
 	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
@@ -1488,7 +1488,7 @@
 	  },
 
 	  'typeThree': {
-	    'name': 'typeThree',
+	    'name': 'C',
 	    'color': '#FFFF00',
 	    'conditions': {
 	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
@@ -1507,7 +1507,7 @@
 	  },
 
 	  'typeFour': {
-	    'name': 'typeFour',
+	    'name': 'D',
 	    'color': '#0000FF',
 	    'conditions': {
 	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',

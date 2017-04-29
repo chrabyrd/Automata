@@ -1,6 +1,6 @@
 export const defaultHash = {
   'typeOne': {
-    'name': 'typeOne',
+    'name': 'A',
     'color': '#FF0000',
     'conditions': {
       'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
@@ -19,7 +19,7 @@ export const defaultHash = {
   },
 
   'typeTwo': {
-    'name': 'typeTwo',
+    'name': 'B',
     'color': '#FFA500',
     'conditions': {
       'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
@@ -38,7 +38,7 @@ export const defaultHash = {
   },
 
   'typeThree': {
-    'name': 'typeThree',
+    'name': 'C',
     'color': '#FFFF00',
     'conditions': {
       'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
@@ -57,7 +57,7 @@ export const defaultHash = {
   },
 
   'typeFour': {
-    'name': 'typeFour',
+    'name': 'D',
     'color': '#0000FF',
     'conditions': {
       'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
