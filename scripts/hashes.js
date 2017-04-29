@@ -1,9 +1,9 @@
 export const defaultHash = {
   'typeOne': {
-    'name': 'One',
+    'name': 'typeOne',
     'color': '#FF0000',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 100`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
       'dieCon': `Math.random() * 100 < 0`,
       'stayCon': `Math.random() * 100 < 0`,
       'wanderCon': `Math.random() * 100 < 0`,
@@ -19,10 +19,10 @@ export const defaultHash = {
   },
 
   'typeTwo': {
-    'name': 'Two',
+    'name': 'typeTwo',
     'color': '#FFA500',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 100`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
       'dieCon': `Math.random() * 100 < 0`,
       'stayCon': `Math.random() * 100 < 0`,
       'wanderCon': `Math.random() * 100 < 0`,
@@ -38,10 +38,10 @@ export const defaultHash = {
   },
 
   'typeThree': {
-    'name': 'Three',
+    'name': 'typeThree',
     'color': '#FFFF00',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 100`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
       'dieCon': `Math.random() * 100 < 0`,
       'stayCon': `Math.random() * 100 < 0`,
       'wanderCon': `Math.random() * 100 < 0`,
@@ -57,10 +57,10 @@ export const defaultHash = {
   },
 
   'typeFour': {
-    'name': 'Four',
+    'name': 'typeFour',
     'color': '#0000FF',
     'conditions': {
-      'skipCon': `Math.random() * 100 < 100`,
+      'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
       'dieCon': `Math.random() * 100 < 0`,
       'stayCon': `Math.random() * 100 < 0`,
       'wanderCon': `Math.random() * 100 < 0`,
@@ -154,8 +154,8 @@ export const demoHash = {
   },
 
   'typeFour': {
-    'name': 'Stone',
-    'color': '#333333',
+    'name': 'Fence',
+    'color': '#654321',
     'conditions': {
       'skipCon': `Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0`,
       'dieCon': `Math.random() * 100 < 0`,

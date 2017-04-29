@@ -1,15 +1,19 @@
 import Container from "./scripts/container";
 import {defaultHash, demoHash} from "./scripts/hashes";
+import {startTutorial} from "./scripts/tutorial";
 
 document.addEventListener("DOMContentLoaded", () => {
   const mainCanvas = document.getElementById("mainCanvas");
   const mainCtx = mainCanvas.getContext("2d");
 
-  const informationModal = document.getElementById("informationModal");
-  const informationModalBackdrop = document.getElementById("informationModalBackdrop");
-  const cellLogicModal = document.getElementById("cellLogicModal");
   const modalBackdrop = document.getElementById("modalBackdrop");
+  const informationModalBackdrop = document.getElementById("informationModalBackdrop");
 
+  const informationModal = document.getElementById("informationModal");
+  const cellLogicModal = document.getElementById("cellLogicModal");
+  const tutorialModal = document.getElementById("tutorialModal");
+
+  const cellLogicControls = document.getElementById("cellLogicControls");
   const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
   const cellNames = document.getElementsByClassName("cellNames");
   const colorPickers = document.getElementsByClassName("colorPickers");
@@ -67,6 +71,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, false);
 
+  modalBackdrop.addEventListener('click', e => {
+    if (e.target.id !== 'modalBackdrop') return;
+    toggleCellLogicModal();
+  });
+
   // Keyboard Shortcuts
   document.body.addEventListener('keydown', e => {
     if (e.target.classList.contains('cellNames')) return;
@@ -108,6 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const toggleCellLogicModal = () => {
+    if (tutorialModal.style.display !== 'none') return;
+    if (container.pauseEvent) handlePauseEvent();
 
     const updateModal = () => {
       const cellTypes = Object.keys(conditionalHash);
@@ -128,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hideCellTypeContainers();
     } else {
       modalBackdrop.style.display = 'none';
+      tutorialModal.style.display = 'none';
       gridControls.style.display = 'flex';
       cellLogicModal.style.display = 'none';
       showCellTypeContainers();
@@ -137,18 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleInformationModal = () => {
     if (!container.pauseEvent) handlePauseEvent();
 
-    if (modalBackdrop.style.display === 'none') {
-      modalBackdrop.style.display = 'flex';
-      gridControls.style.display = 'none';
-      cellLogicModal.style.display = 'none';
-      informationModal.style.display = 'flex';
-      hideCellTypeContainers();
-    } else {
-      modalBackdrop.style.display = 'none';
-      gridControls.style.display = 'flex';
-      informationModal.style.display = 'none';
-      showCellTypeContainers();
-    }
+    modalBackdrop.style.display = 'none';
+    informationModalBackdrop.style.display = 'flex';
+    informationModal.style.display = 'flex';
+    cellLogicControls.style.zIndex = 0;
   };
 
   const showCellTypeContainers = () => {
@@ -646,6 +650,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const currentType = Object.keys(conditionalHash)[i];
 
       currentLogicModalButton.addEventListener('click', () => {
+        tutorialModal.style.display = 'none';
         hideCellTypeContainers();
         changeCellLogicModalType(currentType);
       });
@@ -732,7 +737,14 @@ document.addEventListener("DOMContentLoaded", () => {
         box.style.backgroundColor = randomColor;
         informationModalBackdrop.appendChild(box);
 
-        setTimeout(() => {box.parentNode.removeChild(box);}, 2000);
+        setTimeout(() => {
+          box.style.webkitAnimationName = 'boxFadeOut';
+          box.style.webkitAnimationDuration= '1s';
+        }, 1600);
+
+        setTimeout(() => {
+          box.parentNode.removeChild(box);
+        }, 2000);
       };
 
       generateParticle();
@@ -774,10 +786,6 @@ document.addEventListener("DOMContentLoaded", () => {
       showCellTypeContainers();
     };
 
-    const startTutorial = () => {
-
-    };
-
     setInterval(particleEffect, 40);
 
     newGridButton.addEventListener('click', () => {
@@ -785,6 +793,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     demoButton.addEventListener('click', () => {
+      changeHash(demoHash);
       startTutorial();
     });
 

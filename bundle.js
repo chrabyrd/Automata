@@ -52,17 +52,22 @@
 
 	var _hashes = __webpack_require__(6);
 
+	var _tutorial = __webpack_require__(7);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	document.addEventListener("DOMContentLoaded", function () {
 	  var mainCanvas = document.getElementById("mainCanvas");
 	  var mainCtx = mainCanvas.getContext("2d");
 
-	  var informationModal = document.getElementById("informationModal");
-	  var informationModalBackdrop = document.getElementById("informationModalBackdrop");
-	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var modalBackdrop = document.getElementById("modalBackdrop");
+	  var informationModalBackdrop = document.getElementById("informationModalBackdrop");
 
+	  var informationModal = document.getElementById("informationModal");
+	  var cellLogicModal = document.getElementById("cellLogicModal");
+	  var tutorialModal = document.getElementById("tutorialModal");
+
+	  var cellLogicControls = document.getElementById("cellLogicControls");
 	  var cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
 	  var cellNames = document.getElementsByClassName("cellNames");
 	  var colorPickers = document.getElementsByClassName("colorPickers");
@@ -120,6 +125,11 @@
 	    }
 	  }, false);
 
+	  modalBackdrop.addEventListener('click', function (e) {
+	    if (e.target.id !== 'modalBackdrop') return;
+	    toggleCellLogicModal();
+	  });
+
 	  // Keyboard Shortcuts
 	  document.body.addEventListener('keydown', function (e) {
 	    if (e.target.classList.contains('cellNames')) return;
@@ -171,6 +181,8 @@
 	  });
 
 	  var toggleCellLogicModal = function toggleCellLogicModal() {
+	    if (tutorialModal.style.display !== 'none') return;
+	    if (container.pauseEvent) handlePauseEvent();
 
 	    var updateModal = function updateModal() {
 	      var cellTypes = Object.keys(conditionalHash);
@@ -191,6 +203,7 @@
 	      hideCellTypeContainers();
 	    } else {
 	      modalBackdrop.style.display = 'none';
+	      tutorialModal.style.display = 'none';
 	      gridControls.style.display = 'flex';
 	      cellLogicModal.style.display = 'none';
 	      showCellTypeContainers();
@@ -200,18 +213,10 @@
 	  var toggleInformationModal = function toggleInformationModal() {
 	    if (!container.pauseEvent) handlePauseEvent();
 
-	    if (modalBackdrop.style.display === 'none') {
-	      modalBackdrop.style.display = 'flex';
-	      gridControls.style.display = 'none';
-	      cellLogicModal.style.display = 'none';
-	      informationModal.style.display = 'flex';
-	      hideCellTypeContainers();
-	    } else {
-	      modalBackdrop.style.display = 'none';
-	      gridControls.style.display = 'flex';
-	      informationModal.style.display = 'none';
-	      showCellTypeContainers();
-	    }
+	    modalBackdrop.style.display = 'none';
+	    informationModalBackdrop.style.display = 'flex';
+	    informationModal.style.display = 'flex';
+	    cellLogicControls.style.zIndex = 0;
 	  };
 
 	  var showCellTypeContainers = function showCellTypeContainers() {
@@ -725,6 +730,7 @@
 	      var currentType = Object.keys(conditionalHash)[i];
 
 	      currentLogicModalButton.addEventListener('click', function () {
+	        tutorialModal.style.display = 'none';
 	        hideCellTypeContainers();
 	        changeCellLogicModalType(currentType);
 	      });
@@ -816,6 +822,11 @@
 	        informationModalBackdrop.appendChild(box);
 
 	        setTimeout(function () {
+	          box.style.webkitAnimationName = 'boxFadeOut';
+	          box.style.webkitAnimationDuration = '1s';
+	        }, 1600);
+
+	        setTimeout(function () {
 	          box.parentNode.removeChild(box);
 	        }, 2000);
 	      };
@@ -861,8 +872,6 @@
 	      showCellTypeContainers();
 	    };
 
-	    var startTutorial = function startTutorial() {};
-
 	    setInterval(particleEffect, 40);
 
 	    newGridButton.addEventListener('click', function () {
@@ -870,7 +879,8 @@
 	    });
 
 	    demoButton.addEventListener('click', function () {
-	      startTutorial();
+	      changeHash(_hashes.demoHash);
+	      (0, _tutorial.startTutorial)();
 	    });
 
 	    // Use this pattern for later presets
@@ -1440,10 +1450,10 @@
 	});
 	var defaultHash = exports.defaultHash = {
 	  'typeOne': {
-	    'name': 'One',
+	    'name': 'typeOne',
 	    'color': '#FF0000',
 	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100',
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
 	      'dieCon': 'Math.random() * 100 < 0',
 	      'stayCon': 'Math.random() * 100 < 0',
 	      'wanderCon': 'Math.random() * 100 < 0',
@@ -1459,10 +1469,10 @@
 	  },
 
 	  'typeTwo': {
-	    'name': 'Two',
+	    'name': 'typeTwo',
 	    'color': '#FFA500',
 	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100',
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
 	      'dieCon': 'Math.random() * 100 < 0',
 	      'stayCon': 'Math.random() * 100 < 0',
 	      'wanderCon': 'Math.random() * 100 < 0',
@@ -1478,10 +1488,10 @@
 	  },
 
 	  'typeThree': {
-	    'name': 'Three',
+	    'name': 'typeThree',
 	    'color': '#FFFF00',
 	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100',
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
 	      'dieCon': 'Math.random() * 100 < 0',
 	      'stayCon': 'Math.random() * 100 < 0',
 	      'wanderCon': 'Math.random() * 100 < 0',
@@ -1497,10 +1507,10 @@
 	  },
 
 	  'typeFour': {
-	    'name': 'Four',
+	    'name': 'typeFour',
 	    'color': '#0000FF',
 	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100',
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
 	      'dieCon': 'Math.random() * 100 < 0',
 	      'stayCon': 'Math.random() * 100 < 0',
 	      'wanderCon': 'Math.random() * 100 < 0',
@@ -1594,8 +1604,8 @@
 	  },
 
 	  'typeFour': {
-	    'name': 'Stone',
-	    'color': '#333333',
+	    'name': 'Fence',
+	    'color': '#654321',
 	    'conditions': {
 	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
 	      'dieCon': 'Math.random() * 100 < 0',
@@ -1630,6 +1640,93 @@
 	      'false': true
 	    }
 	  }
+	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var startTutorial = exports.startTutorial = function startTutorial() {
+
+	  var tutorialModal = document.getElementById("tutorialModal");
+	  var modalBackdrop = document.getElementById("modalBackdrop");
+	  var informationModalBackdrop = document.getElementById("informationModalBackdrop");
+	  var informationModal = document.getElementById("informationModal");
+	  var cellLogicControls = document.getElementById('cellLogicControls');
+	  var tutorialInformation = document.getElementById("tutorialInformation");
+	  var nextSlideButton = document.getElementById("nextSlideButton");
+	  var exitTutorialButton = document.getElementById("exitTutorialButton");
+
+	  var handleTutorialShortcuts = function handleTutorialShortcuts(keyCode) {
+	    if (keyCode === 49) {
+	      cellLogicControls.style.zIndex = 1;
+	      document.body.removeEventListener('keydown', tutorialKeyOne);
+	      document.body.addEventListener('keydown', tutorialKeyTwo);
+
+	      tutorialInformation.innerText = "";
+	      tutorialInformation.innerText = "\n          This is a cell type.\n\n          From this toolbar you can change a cell's color, name, and behavior.\n\n          Please press 2.\n        ";
+	    } else if (keyCode === 50 || keyCode === 51 || keyCode === 52) {
+	      document.body.removeEventListener('keydown', tutorialKeyTwo);
+
+	      tutorialInformation.innerText = "";
+	      tutorialInformation.innerText = "\n        You just accessed a new cell type!\n\n        You can change cell types with the keys 1 - 4.\n        ";
+
+	      nextSlideButton.style.display = 'flex';
+	    }
+	  };
+
+	  var tutorialKeyOne = handleTutorialShortcuts.bind(null, 49);
+	  var tutorialKeyTwo = handleTutorialShortcuts.bind(null, 50);
+
+	  var returnToMainMenu = function returnToMainMenu() {
+	    modalBackdrop.style.display = 'none';
+	    informationModal.style.display = 'flex';
+	    informationModalBackdrop.style.display = 'flex';
+	    cellLogicControls.style.zIndex = 0;
+	  };
+
+	  var firstSlide = function firstSlide() {
+	    tutorialInformation.innerText = "";
+	    tutorialInformation.innerText = "\n      Hello, and welcome to the tutorial.\n\n      You can exit at any time by pressing the \"X\" button in the upper-left corner.\n    ";
+
+	    nextSlideButton.onclick = secondSlide;
+	  };
+
+	  var secondSlide = function secondSlide() {
+	    tutorialInformation.innerText = "";
+	    tutorialInformation.innerText = "\n      Automata is a cellular automation engine.\n\n      Cellular automation, put simply, means that every cell in a grid derives its behavior from the conditions of its surrounding cells.\n\n      Automata lets you control exactly what this cell behavior should be, and under what conditions it should change.\n    ";
+
+	    nextSlideButton.onclick = thirdSlide;
+	  };
+
+	  var thirdSlide = function thirdSlide() {
+	    tutorialInformation.innerText = "";
+	    tutorialInformation.innerText = "\n      We've loaded a pre-configured scenario: Simple Farm.\n\n      There are four different cell types: Grass, Sheep, Human, and Fence.\n\n      Please press 1.\n    ";
+
+	    document.body.addEventListener('keydown', tutorialKeyOne);
+	    nextSlideButton.style.display = 'none';
+	    nextSlideButton.onclick = fourthSlide;
+	  };
+
+	  var fourthSlide = function fourthSlide() {
+	    tutorialInformation.innerText = "";
+	    tutorialInformation.innerText = "\n      There are more key bindings and a thorough explanation in the ReadMe.\n\n      You can pause or unpause the engine with Spacebar.\n      If you want to render a single frame, press 'N'.\n\n      But for now, why not try adjusting some cell behavior?\n\n      Click the gear icon next to a cell's name.\n    ";
+
+	    nextSlideButton.style.display = 'none';
+	  };
+
+	  modalBackdrop.style.display = 'flex';
+	  tutorialModal.style.display = 'flex';
+	  nextSlideButton.style.display = 'flex';
+
+	  exitTutorialButton.addEventListener('click', returnToMainMenu);
+
+	  firstSlide();
 	};
 
 /***/ }

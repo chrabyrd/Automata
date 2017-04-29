@@ -50,12 +50,21 @@ table {
 
 /* End CSS Reset */
 
-@keyframes boxfade {
+@keyframes boxFadeIn {
 	from {
 		opacity: 0;
 	}
 	to {
 		opacity: 1;
+	}
+}
+
+@keyframes boxFadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
 	}
 }
 
@@ -188,7 +197,7 @@ li > button {
 	padding: 0 5px;
 }
 
-/* Modals */
+/* Modal Backdrops */
 
 #modalBackdrop {
 	display: none;
@@ -198,7 +207,7 @@ li > button {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	background-color: rgba(0,0,0,0.6);
+	background-color: rgba(0,0,0,0.8);
 }
 
 #informationModalBackdrop {
@@ -215,8 +224,10 @@ li > button {
 #informationModalBackdrop .particle {
   position: absolute;
   z-index: 0;
-  -webkit-animation: boxfade 1s;
+  -webkit-animation: boxFadeIn 1s;
 }
+
+/* Modals */
 
 #cellLogicModal {
   display: none;
@@ -247,13 +258,73 @@ li > button {
   bottom: 0;
   margin: auto;
 	max-height: 90%;
-  max-width: 60%;
+  max-width: 50%;
 	background-color: white;
 	z-index: 1;
 }
 
+#tutorialModal {
+  display: flex;
+	flex-direction: column;
+	overflow: auto;
+  position: fixed;
+	font-family: BioRhyme;
+	color: #333;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+	max-height: 60%;
+  max-width: 40%;
+	background-color: white;
+	z-index: 1;
+}
+
+/* Tutorial Modal Contents */
+#exitTutorialButtonContainer {
+	display: flex;
+	padding: .8em;
+	border-bottom: 2px solid #333;
+}
+
+#exitTutorialButton {
+	cursor: pointer;
+	font-size: 1.4em;
+}
+
+#tutorialInformationContainer {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	padding: .8em;
+	background-color: #EEE;
+}
+
+#tutorialInformation {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	line-height: 1.5;
+	overflow: scroll;
+}
+
+#nextSlideButtonContainer {
+	display: flex;
+	padding: .8em;
+	border-top: 2px solid #333;
+	justify-content: flex-end;
+}
+
+#nextSlideButton {
+	font-size: 1.4em;
+	cursor: pointer;
+}
+
+/* Information Modal Contents */
+
 #title {
-	font-size: 5em;
+	font-size: 4.8em;
 	padding:.2em;
 }
 
