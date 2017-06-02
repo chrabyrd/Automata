@@ -1,6 +1,7 @@
 import Container from "./scripts/container";
 import {defaultHash, demoHash} from "./scripts/hashes";
 import {startTutorial} from "./scripts/tutorial";
+import {handleGridControlButtons} from "./scripts/gridControls";
 
 document.addEventListener("DOMContentLoaded", () => {
   const mainCanvas = document.getElementById("mainCanvas");
@@ -36,15 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const gridControls = document.getElementById("gridControls");
   const playPauseButton = document.getElementById("playPauseButton");
-  const nextFrameButton = document.getElementById("nextFrameButton");
-  const resetButton = document.getElementById("resetButton");
 
-  const speedSlider = document.getElementById("speedSlider");
-  const cellSizeDropdown = document.getElementById("cellSizeDropdown");
   const currentWidth = document.getElementById("currentWidth");
   const currentHeight = document.getElementById("currentHeight");
 
-  const informationButton = document.getElementById("informationButton");
   const demoButton = document.getElementById("demoButton");
   const newGridButton = document.getElementById("newGridButton");
 
@@ -803,37 +799,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // });
   };
 
-  const handleGridControlButtons = () => {
-    const handleSpeedChangeEvent = () => {
-      container.handleSpeedChangeEvent(300 - speedSlider.value);
-    };
-
-    const handleCellResizeEvent = () => {
-      container.handleCellResizeEvent(cellSizeDropdown.value);
-    };
-
-    const handleResizeWidthEvent = () => {
-      container.handleResizeEvent('width', parseInt(currentWidth.value));
-    };
-
-    const handleResizeHeightEvent = () => {
-      container.handleResizeEvent('height', parseInt(currentHeight.value));
-    };
-
-    mainCanvas.width = 4000;
-    mainCanvas.height = 4000;
-
-    playPauseButton.addEventListener('click', handlePauseEvent);
-    nextFrameButton.addEventListener('click', handleNextFrameEvent);
-    resetButton.addEventListener('click', handleResetEvent);
-    speedSlider.addEventListener('change', handleSpeedChangeEvent);
-    cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
-    currentWidth.addEventListener('change', handleResizeWidthEvent);
-    currentHeight.addEventListener('change', handleResizeHeightEvent);
-    informationButton.addEventListener('click', toggleInformationModal);
-  };
-
   populateTypeContainers();
   handleInformationModalBehavior();
-  handleGridControlButtons();
+  handleGridControlButtons(container);
 });

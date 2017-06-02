@@ -54,6 +54,8 @@
 
 	var _tutorial = __webpack_require__(7);
 
+	var _gridControls = __webpack_require__(8);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -90,15 +92,10 @@
 
 	  var gridControls = document.getElementById("gridControls");
 	  var playPauseButton = document.getElementById("playPauseButton");
-	  var nextFrameButton = document.getElementById("nextFrameButton");
-	  var resetButton = document.getElementById("resetButton");
 
-	  var speedSlider = document.getElementById("speedSlider");
-	  var cellSizeDropdown = document.getElementById("cellSizeDropdown");
 	  var currentWidth = document.getElementById("currentWidth");
 	  var currentHeight = document.getElementById("currentHeight");
 
-	  var informationButton = document.getElementById("informationButton");
 	  var demoButton = document.getElementById("demoButton");
 	  var newGridButton = document.getElementById("newGridButton");
 
@@ -889,39 +886,9 @@
 	    // });
 	  };
 
-	  var handleGridControlButtons = function handleGridControlButtons() {
-	    var handleSpeedChangeEvent = function handleSpeedChangeEvent() {
-	      container.handleSpeedChangeEvent(300 - speedSlider.value);
-	    };
-
-	    var handleCellResizeEvent = function handleCellResizeEvent() {
-	      container.handleCellResizeEvent(cellSizeDropdown.value);
-	    };
-
-	    var handleResizeWidthEvent = function handleResizeWidthEvent() {
-	      container.handleResizeEvent('width', parseInt(currentWidth.value));
-	    };
-
-	    var handleResizeHeightEvent = function handleResizeHeightEvent() {
-	      container.handleResizeEvent('height', parseInt(currentHeight.value));
-	    };
-
-	    mainCanvas.width = 4000;
-	    mainCanvas.height = 4000;
-
-	    playPauseButton.addEventListener('click', handlePauseEvent);
-	    nextFrameButton.addEventListener('click', handleNextFrameEvent);
-	    resetButton.addEventListener('click', handleResetEvent);
-	    speedSlider.addEventListener('change', handleSpeedChangeEvent);
-	    cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
-	    currentWidth.addEventListener('change', handleResizeWidthEvent);
-	    currentHeight.addEventListener('change', handleResizeHeightEvent);
-	    informationButton.addEventListener('click', toggleInformationModal);
-	  };
-
 	  populateTypeContainers();
 	  handleInformationModalBehavior();
-	  handleGridControlButtons();
+	  (0, _gridControls.handleGridControlButtons)(container);
 	});
 
 /***/ },
@@ -1727,6 +1694,91 @@
 	  exitTutorialButton.addEventListener('click', returnToMainMenu);
 
 	  firstSlide();
+	};
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var handleGridControlButtons = exports.handleGridControlButtons = function handleGridControlButtons(container) {
+	  var mainCanvas = document.getElementById("mainCanvas");
+
+	  var cellLogicControls = document.getElementById("cellLogicControls");
+
+	  var modalBackdrop = document.getElementById("modalBackdrop");
+	  var informationModalBackdrop = document.getElementById("informationModalBackdrop");
+	  var informationModal = document.getElementById("informationModal");
+
+	  var playPauseButton = document.getElementById("playPauseButton");
+	  var nextFrameButton = document.getElementById("nextFrameButton");
+	  var resetButton = document.getElementById("resetButton");
+
+	  var speedSlider = document.getElementById("speedSlider");
+	  var cellSizeDropdown = document.getElementById("cellSizeDropdown");
+	  var currentWidth = document.getElementById("currentWidth");
+	  var currentHeight = document.getElementById("currentHeight");
+
+	  var informationButton = document.getElementById("informationButton");
+
+	  var handlePauseEvent = function handlePauseEvent() {
+	    playPauseButton.classList.toggle("fa-pause");
+	    playPauseButton.classList.add("fa-play");
+	    container.handlePauseEvent();
+	  };
+
+	  var handleNextFrameEvent = function handleNextFrameEvent() {
+	    if (playPauseButton.classList.contains("fa-pause")) {
+	      playPauseButton.classList.toggle("fa-pause");
+	      playPauseButton.classList.add("fa-play");
+	    }
+	    container.handleNextFrameEvent();
+	  };
+
+	  var handleResetEvent = function handleResetEvent() {
+	    container.handleResetEvent();
+	  };
+
+	  var toggleInformationModal = function toggleInformationModal() {
+	    if (!container.pauseEvent) handlePauseEvent();
+
+	    modalBackdrop.style.display = 'none';
+	    informationModalBackdrop.style.display = 'flex';
+	    informationModal.style.display = 'flex';
+	    cellLogicControls.style.zIndex = 0;
+	  };
+
+	  var handleSpeedChangeEvent = function handleSpeedChangeEvent() {
+	    container.handleSpeedChangeEvent(300 - speedSlider.value);
+	  };
+
+	  var handleCellResizeEvent = function handleCellResizeEvent() {
+	    container.handleCellResizeEvent(cellSizeDropdown.value);
+	  };
+
+	  var handleResizeWidthEvent = function handleResizeWidthEvent() {
+	    container.handleResizeEvent('width', parseInt(currentWidth.value));
+	  };
+
+	  var handleResizeHeightEvent = function handleResizeHeightEvent() {
+	    container.handleResizeEvent('height', parseInt(currentHeight.value));
+	  };
+
+	  mainCanvas.width = 4000;
+	  mainCanvas.height = 4000;
+
+	  playPauseButton.addEventListener('click', handlePauseEvent);
+	  nextFrameButton.addEventListener('click', handleNextFrameEvent);
+	  resetButton.addEventListener('click', handleResetEvent);
+	  speedSlider.addEventListener('change', handleSpeedChangeEvent);
+	  cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
+	  currentWidth.addEventListener('change', handleResizeWidthEvent);
+	  currentHeight.addEventListener('change', handleResizeHeightEvent);
+	  informationButton.addEventListener('click', toggleInformationModal);
 	};
 
 /***/ }
