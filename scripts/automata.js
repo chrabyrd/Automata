@@ -3,6 +3,9 @@ import CellLogic from './cellLogic';
 class Automata {
   constructor (board) {
     this.board = board;
+    this.livingCells = {};
+    this.changingCells = {};
+    this.dyingCells = [];
   }
 
   random(array) {
@@ -20,19 +23,35 @@ class Automata {
   }
 
   cellLogic (conditionalHash) {
-    let changingCells = {};
-    const cells = this.board.cells;
-    const shuffledCells = this.shuffle(cells.map(cell => cell.id));
 
-    shuffledCells.forEach(id => {
-      let cellLogic = new CellLogic(cells, changingCells, id);
+    this.shuffle(this.dyingCells).forEach(cell => {
+      let cellLogic = new CellLogic(this.changingCells, this.board.cells, cell);
+      cellLogic.live(conditionalHash);
+
+      cell.neighbors.forEach(id => {
+        if (this.livingCells[id]) return;
+        this.livingCells[id] = this.board.cells[id];
+      })
+    });
+
+    this.dyingCells = [];
+
+    this.shuffle(Object.values(this.livingCells)).forEach(cell => {
+      if (this.changingCells[cell.id]) return;
+      let cellLogic = new CellLogic(this.changingCells, this.board.cells, cell);
       cellLogic.live(conditionalHash);
     });
 
-    Object.keys(changingCells).forEach(key => {
-      cells[key].changeState(changingCells[key],
-        conditionalHash[changingCells[key]].color);
+    this.livingCells = {};
+    // console.log(this.changingCells);
+    Object.keys(this.changingCells).forEach(key => {
+      this.board.cells[key].changeState(this.changingCells[key],
+        conditionalHash[this.changingCells[key]].color);
+
+      this.dyingCells.push(this.board.cells[key]);
     });
+
+    this.changingCells = {};
   }
 }
 

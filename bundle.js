@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -338,6 +338,21 @@
 	      "validNeighborsWithFalse.length": "Valid (+ false)",
 	      "validNeighborsWithoutFalse.length": "Valid (- false)",
 	      "totalNeighbors.length": "Total"
+	      // ">": `is greater than`,
+	      // ">=": `is greater than or equal to`,
+	      // "<": `is less than`,
+	      // "<=": `is less than or equal to`,
+	      // "===": `is equal to`,
+	      // "!==": `is not equal to`,
+	      // "0": `zero`,
+	      // "1": `one`,
+	      // "2": `two`,
+	      // "3": `three`,
+	      // "4": `four`,
+	      // "5": `five`,
+	      // "6": `six`,
+	      // "7": `seven`,
+	      // "8": `eight`,
 	    };
 
 	    var filteredString = string.split(' ').map(function (str) {
@@ -885,15 +900,15 @@
 	    //   changeHash(demoHash);
 	    // });
 	  };
-
+	  console.log(container);
 	  populateTypeContainers();
 	  handleInformationModalBehavior();
 	  (0, _gridControls.handleGridControlButtons)(container);
 	});
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -967,7 +982,9 @@
 	    key: "handleClickEvent",
 	    value: function handleClickEvent(e) {
 	      var color = this.conditionalHash[this.cellType].color;
-	      this.board.toggleCell(e, this.cellType, color);
+	      var selectedCell = this.board.toggleCell(e, this.cellType, color);
+
+	      this.automata.dyingCells.push(selectedCell);
 	    }
 	  }, {
 	    key: "handlePlayEvent",
@@ -1036,9 +1053,9 @@
 
 	exports.default = Container;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -1077,6 +1094,7 @@
 	      });
 
 	      clickedCell.changeState(type, color);
+	      return clickedCell;
 	    }
 	  }, {
 	    key: "populateGrid",
@@ -1105,9 +1123,9 @@
 
 	exports.default = Board;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -1210,9 +1228,9 @@
 
 	exports.default = Cell;
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -1235,6 +1253,9 @@
 	    _classCallCheck(this, Automata);
 
 	    this.board = board;
+	    this.livingCells = {};
+	    this.changingCells = {};
+	    this.dyingCells = [];
 	  }
 
 	  _createClass(Automata, [{
@@ -1256,20 +1277,35 @@
 	  }, {
 	    key: 'cellLogic',
 	    value: function cellLogic(conditionalHash) {
-	      var changingCells = {};
-	      var cells = this.board.cells;
-	      var shuffledCells = this.shuffle(cells.map(function (cell) {
-	        return cell.id;
-	      }));
+	      var _this = this;
 
-	      shuffledCells.forEach(function (id) {
-	        var cellLogic = new _cellLogic2.default(cells, changingCells, id);
+	      this.shuffle(this.dyingCells).forEach(function (cell) {
+	        var cellLogic = new _cellLogic2.default(_this.changingCells, _this.board.cells, cell);
+	        cellLogic.live(conditionalHash);
+
+	        cell.neighbors.forEach(function (id) {
+	          if (_this.livingCells[id]) return;
+	          _this.livingCells[id] = _this.board.cells[id];
+	        });
+	      });
+
+	      this.dyingCells = [];
+
+	      this.shuffle(Object.values(this.livingCells)).forEach(function (cell) {
+	        if (_this.changingCells[cell.id]) return;
+	        var cellLogic = new _cellLogic2.default(_this.changingCells, _this.board.cells, cell);
 	        cellLogic.live(conditionalHash);
 	      });
 
-	      Object.keys(changingCells).forEach(function (key) {
-	        cells[key].changeState(changingCells[key], conditionalHash[changingCells[key]].color);
+	      this.livingCells = {};
+	      // console.log(this.changingCells);
+	      Object.keys(this.changingCells).forEach(function (key) {
+	        _this.board.cells[key].changeState(_this.changingCells[key], conditionalHash[_this.changingCells[key]].color);
+
+	        _this.dyingCells.push(_this.board.cells[key]);
 	      });
+
+	      this.changingCells = {};
 	    }
 	  }]);
 
@@ -1278,9 +1314,9 @@
 
 	exports.default = Automata;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -1293,14 +1329,12 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var CellLogic = function () {
-	  function CellLogic(cellList, changingCells, id) {
+	  function CellLogic(changingCells, cellList, cell) {
 	    _classCallCheck(this, CellLogic);
 
-	    this.id = id;
+	    this.cell = cell;
+	    this.cellList = cellList;
 	    this.changingCells = changingCells;
-	    this.cells = cellList;
-	    this.cellNeighbors = this.cells[id].neighbors;
-	    this.type = this.cells[id].type;
 	  }
 
 	  _createClass(CellLogic, [{
@@ -1311,14 +1345,15 @@
 	  }, {
 	    key: 'getValidNeighbors',
 	    value: function getValidNeighbors(cellTypeArray) {
-	      var validNeighbors = this.cellNeighbors;
+	      var _this = this;
+
+	      var validNeighbors = this.cell.neighbors;
 	      var changingCells = this.changingCells;
-	      var cells = this.cells;
 
 	      validNeighbors = validNeighbors.filter(function (neighbor) {
 	        var isValid = false;
 	        cellTypeArray.forEach(function (type) {
-	          if (cells[neighbor].type === type && !changingCells[neighbor]) {
+	          if (_this.cellList[neighbor].type === type && !changingCells[neighbor]) {
 	            isValid = true;
 	          }
 	        });
@@ -1331,33 +1366,34 @@
 	    key: 'wander',
 	    value: function wander(array) {
 	      var nextCell = this.random(array);
-	      this.changingCells[nextCell] = this.type;
-	      this.changingCells[this.id] = 'false';
+	      this.changingCells[nextCell] = this.cell.type;
+	      this.changingCells[this.cell.id] = 'false';
 	    }
 	  }, {
 	    key: 'stay',
 	    value: function stay() {
-	      this.changingCells[this.id] = this.type;
+	      this.changingCells[this.id] = this.cell.type;
 	    }
 	  }, {
 	    key: 'reproduce',
 	    value: function reproduce(array) {
+	      // console.log(array);
 	      var nextCell = this.random(array);
-	      this.changingCells[nextCell] = this.type;
+	      this.changingCells[nextCell] = this.cell.type;
 	    }
 	  }, {
 	    key: 'die',
 	    value: function die() {
-	      this.changingCells[this.id] = 'false';
+	      this.changingCells[this.cell.id] = 'false';
 	    }
 	  }, {
 	    key: 'live',
 	    value: function live(conditionalHash) {
-	      var _this = this;
+	      var _this2 = this;
 
-	      if (this.changingCells[this.id]) return;
+	      if (this.changingCells[this.cell.id]) return;
 
-	      var type = this.type;
+	      var type = this.cell.type;
 	      var typeHash = {};
 
 	      var neighborTypes = Object.keys(conditionalHash[type]['neighborHash']);
@@ -1375,16 +1411,16 @@
 	      var validNeighborsWithFalse = this.getValidNeighbors(validTypesWithFalse);
 	      var validNeighborsWithoutFalse = this.getValidNeighbors(validTypesWithoutFalse);
 
-	      var totalNeighbors = this.cellNeighbors.filter(function (neighbor) {
-	        return _this.cells[neighbor].type !== 'false';
+	      var totalNeighbors = this.cell.neighbors.filter(function (id) {
+	        return _this2.cellList[id].type !== 'false';
 	      });
 
 	      neighborTypes.forEach(function (neighborType) {
 	        typeHash[neighborType] = 0;
 	      });
 
-	      this.cellNeighbors.forEach(function (num) {
-	        typeHash[_this.cells[num].type]++;
+	      this.cell.neighbors.forEach(function (num) {
+	        typeHash[_this2.cellList[num].type]++;
 	      });
 
 	      if (eval(conditionalHash[type]['conditions']['skipCon'])) {
@@ -1406,9 +1442,9 @@
 
 	exports.default = CellLogic;
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -1609,9 +1645,9 @@
 	  }
 	};
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -1696,9 +1732,9 @@
 	  firstSlide();
 	};
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -1724,6 +1760,8 @@
 	  var currentHeight = document.getElementById("currentHeight");
 
 	  var informationButton = document.getElementById("informationButton");
+
+	  console.log(container);
 
 	  var handlePauseEvent = function handlePauseEvent() {
 	    playPauseButton.classList.toggle("fa-pause");
@@ -1781,5 +1819,5 @@
 	  informationButton.addEventListener('click', toggleInformationModal);
 	};
 
-/***/ }
+/***/ })
 /******/ ]);

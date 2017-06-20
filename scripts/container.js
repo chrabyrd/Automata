@@ -47,7 +47,9 @@ class Container {
 
   handleClickEvent (e) {
     const color = this.conditionalHash[this.cellType].color;
-    this.board.toggleCell(e, this.cellType, color);
+    const selectedCell = this.board.toggleCell(e, this.cellType, color);
+
+    this.automata.dyingCells.push(selectedCell);
   }
 
   handlePlayEvent () {

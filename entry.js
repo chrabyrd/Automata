@@ -798,7 +798,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //   changeHash(demoHash);
     // });
   };
-
+  console.log(container);
   populateTypeContainers();
   handleInformationModalBehavior();
   handleGridControlButtons(container);

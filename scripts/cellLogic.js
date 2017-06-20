@@ -1,10 +1,8 @@
 class CellLogic {
-  constructor (cellList, changingCells, id) {
-    this.id = id;
+  constructor (changingCells, cellList, cell) {
+    this.cell = cell;
+    this.cellList = cellList;
     this.changingCells = changingCells;
-    this.cells = cellList;
-    this.cellNeighbors = this.cells[id].neighbors;
-    this.type = this.cells[id].type;
   }
 
   random(array) {
@@ -12,14 +10,13 @@ class CellLogic {
   }
 
   getValidNeighbors (cellTypeArray) {
-    let validNeighbors = this.cellNeighbors;
+    let validNeighbors = this.cell.neighbors;
     let changingCells = this.changingCells;
-    let cells = this.cells;
 
-    validNeighbors = validNeighbors.filter(function(neighbor) {
+    validNeighbors = validNeighbors.filter(neighbor => {
       let isValid = false;
       cellTypeArray.forEach(type => {
-        if (cells[neighbor].type === type && !changingCells[neighbor]) {
+        if (this.cellList[neighbor].type === type && !changingCells[neighbor]) {
           isValid = true;
         }
       });
@@ -31,27 +28,28 @@ class CellLogic {
 
   wander (array) {
     const nextCell = this.random(array);
-    this.changingCells[nextCell] = this.type;
-    this.changingCells[this.id] = 'false';
+    this.changingCells[nextCell] = this.cell.type;
+    this.changingCells[this.cell.id] = 'false';
   }
 
   stay () {
-    this.changingCells[this.id] = this.type;
+    this.changingCells[this.id] = this.cell.type;
   }
 
   reproduce (array) {
+    // console.log(array);
     const nextCell = this.random(array);
-    this.changingCells[nextCell] = this.type;
+    this.changingCells[nextCell] = this.cell.type;
   }
 
   die () {
-    this.changingCells[this.id] = 'false';
+    this.changingCells[this.cell.id] = 'false';
   }
 
   live (conditionalHash) {
-    if (this.changingCells[this.id]) return;
+    if (this.changingCells[this.cell.id]) return;
 
-    const type = this.type;
+    const type = this.cell.type;
     const typeHash = {};
 
     const neighborTypes = Object.keys(conditionalHash[type]['neighborHash']);
@@ -69,15 +67,15 @@ class CellLogic {
     const validNeighborsWithFalse = this.getValidNeighbors(validTypesWithFalse);
     const validNeighborsWithoutFalse = this.getValidNeighbors(validTypesWithoutFalse);
 
-    const totalNeighbors = this.cellNeighbors.filter((neighbor) => {
-      return this.cells[neighbor].type !== 'false';
+    const totalNeighbors = this.cell.neighbors.filter(id => {
+      return this.cellList[id].type !== 'false';
     });
 
     neighborTypes.forEach(function(neighborType) {
       typeHash[neighborType] = 0;
     });
 
-    this.cellNeighbors.forEach(num => {typeHash[this.cells[num].type]++;});
+    this.cell.neighbors.forEach(num => {typeHash[this.cellList[num].type]++;});
 
     if (eval(conditionalHash[type]['conditions']['skipCon'])) {
       return;

@@ -18,6 +18,8 @@ export const handleGridControlButtons = container => {
 
   const informationButton = document.getElementById("informationButton");
 
+  console.log(container);
+
   const handlePauseEvent = () => {
     playPauseButton.classList.toggle("fa-pause");
     playPauseButton.classList.add("fa-play");
