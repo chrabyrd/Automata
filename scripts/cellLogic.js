@@ -33,7 +33,7 @@ class CellLogic {
   }
 
   stay () {
-    this.changingCells[this.id] = this.cell.type;
+    this.changingCells[this.cell.id] = this.cell.type;
   }
 
   reproduce (array) {
@@ -81,10 +81,10 @@ class CellLogic {
       return;
     } else if (eval(conditionalHash[type]['conditions']['dieCon'])) {
       this.die();
-    } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
-      this.stay();
     } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
       this.reproduce(validNeighborsWithFalse);
+    } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
+      this.stay();
     } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
       this.wander(validNeighborsWithFalse);
     }

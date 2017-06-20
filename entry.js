@@ -786,10 +786,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     newGridButton.addEventListener('click', () => {
       changeHash(defaultHash);
+      handleGridControlButtons(container);
     });
 
     demoButton.addEventListener('click', () => {
       changeHash(demoHash);
+      handleGridControlButtons(container);
       startTutorial();
     });
 
@@ -798,8 +800,6 @@ document.addEventListener("DOMContentLoaded", () => {
     //   changeHash(demoHash);
     // });
   };
-  console.log(container);
   populateTypeContainers();
   handleInformationModalBehavior();
-  handleGridControlButtons(container);
 });

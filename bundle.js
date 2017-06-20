@@ -888,10 +888,12 @@
 
 	    newGridButton.addEventListener('click', function () {
 	      changeHash(_hashes.defaultHash);
+	      (0, _gridControls.handleGridControlButtons)(container);
 	    });
 
 	    demoButton.addEventListener('click', function () {
 	      changeHash(_hashes.demoHash);
+	      (0, _gridControls.handleGridControlButtons)(container);
 	      (0, _tutorial.startTutorial)();
 	    });
 
@@ -900,10 +902,8 @@
 	    //   changeHash(demoHash);
 	    // });
 	  };
-	  console.log(container);
 	  populateTypeContainers();
 	  handleInformationModalBehavior();
-	  (0, _gridControls.handleGridControlButtons)(container);
 	});
 
 /***/ }),
@@ -1298,7 +1298,6 @@
 	      });
 
 	      this.livingCells = {};
-	      // console.log(this.changingCells);
 	      Object.keys(this.changingCells).forEach(function (key) {
 	        _this.board.cells[key].changeState(_this.changingCells[key], conditionalHash[_this.changingCells[key]].color);
 
@@ -1372,7 +1371,7 @@
 	  }, {
 	    key: 'stay',
 	    value: function stay() {
-	      this.changingCells[this.id] = this.cell.type;
+	      this.changingCells[this.cell.id] = this.cell.type;
 	    }
 	  }, {
 	    key: 'reproduce',
@@ -1427,10 +1426,10 @@
 	        return;
 	      } else if (eval(conditionalHash[type]['conditions']['dieCon'])) {
 	        this.die();
-	      } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
-	        this.stay();
 	      } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
 	        this.reproduce(validNeighborsWithFalse);
+	      } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
+	        this.stay();
 	      } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
 	        this.wander(validNeighborsWithFalse);
 	      }
@@ -1761,8 +1760,6 @@
 
 	  var informationButton = document.getElementById("informationButton");
 
-	  console.log(container);
-
 	  var handlePauseEvent = function handlePauseEvent() {
 	    playPauseButton.classList.toggle("fa-pause");
 	    playPauseButton.classList.add("fa-play");
@@ -1805,9 +1802,6 @@
 	  var handleResizeHeightEvent = function handleResizeHeightEvent() {
 	    container.handleResizeEvent('height', parseInt(currentHeight.value));
 	  };
-
-	  mainCanvas.width = 4000;
-	  mainCanvas.height = 4000;
 
 	  playPauseButton.addEventListener('click', handlePauseEvent);
 	  nextFrameButton.addEventListener('click', handleNextFrameEvent);

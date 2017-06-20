@@ -18,8 +18,6 @@ export const handleGridControlButtons = container => {
 
   const informationButton = document.getElementById("informationButton");
 
-  console.log(container);
-
   const handlePauseEvent = () => {
     playPauseButton.classList.toggle("fa-pause");
     playPauseButton.classList.add("fa-play");
@@ -62,9 +60,6 @@ export const handleGridControlButtons = container => {
   const handleResizeHeightEvent = () => {
     container.handleResizeEvent('height', parseInt(currentHeight.value));
   };
-
-  mainCanvas.width = 4000;
-  mainCanvas.height = 4000;
 
   playPauseButton.addEventListener('click', handlePauseEvent);
   nextFrameButton.addEventListener('click', handleNextFrameEvent);
