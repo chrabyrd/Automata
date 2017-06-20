@@ -1298,6 +1298,7 @@
 	      });
 
 	      this.livingCells = {};
+
 	      Object.keys(this.changingCells).forEach(function (key) {
 	        _this.board.cells[key].changeState(_this.changingCells[key], conditionalHash[_this.changingCells[key]].color);
 
@@ -1428,10 +1429,10 @@
 	        this.die();
 	      } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
 	        this.reproduce(validNeighborsWithFalse);
-	      } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
-	        this.stay();
 	      } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
 	        this.wander(validNeighborsWithFalse);
+	      } else {
+	        this.stay();
 	      }
 	    }
 	  }]);

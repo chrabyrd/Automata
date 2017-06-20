@@ -43,6 +43,7 @@ class Automata {
     });
 
     this.livingCells = {};
+    
     Object.keys(this.changingCells).forEach(key => {
       this.board.cells[key].changeState(this.changingCells[key],
         conditionalHash[this.changingCells[key]].color);

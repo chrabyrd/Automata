@@ -83,10 +83,10 @@ class CellLogic {
       this.die();
     } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
       this.reproduce(validNeighborsWithFalse);
-    } else if (eval(conditionalHash[type]['conditions']['stayCon'])) {
-      this.stay();
     } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
       this.wander(validNeighborsWithFalse);
+    } else {
+      this.stay();
     }
 
   }
