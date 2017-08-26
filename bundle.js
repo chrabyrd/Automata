@@ -1433,26 +1433,18 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var CellLogicModal = function () {
-	  function CellLogicModal(container) {
+	  function CellLogicModal(container, conditionalHash) {
 	    var _this = this;
 
 	    _classCallCheck(this, CellLogicModal);
 
 	    this.container = container;
+	    this.conditionalHash = conditionalHash;
+
 	    this.modalBackdrop = document.getElementById("modalBackdrop");
 	    this.cellLogicModal = document.getElementById("cellLogicModal");
 
 	    this.cellName = document.getElementById("cellName");
-
-	    this.chanceSliders = document.getElementsByClassName("chanceSliders");
-	    this.chanceOutputs = document.getElementsByClassName("chanceOutputs");
-	    this.conditionOptions = document.getElementsByClassName("conditionOptions");
-	    this.neighborTypes = document.getElementsByClassName("neighborTypes");
-	    this.comparators = document.getElementsByClassName("comparators");
-	    this.comparisonValues = document.getElementsByClassName("comparisonValues");
-	    this.conditionalStatements = document.getElementsByClassName("conditionalStatements");
-	    this.conditionalStatementContainers = document.getElementsByClassName("conditionalStatementContainers");
-	    this.conditionalSubmitButtons = document.getElementsByClassName("conditionalSubmitButtons");
 
 	    this.neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
 	    this.validNeighborBoxes = document.getElementsByClassName("validNeighborBox");
@@ -1496,418 +1488,61 @@
 	      //   }
 	    }
 	  }, {
-	    key: "translateStatement",
-	    value: function translateStatement(string) {
-	      var translationHash = {
-	        // "&&": `AND`,
-	        // "||": `OR`,
-	        "typeHash['typeOne']": "" + conditionalHash['typeOne'].name,
-	        "typeHash['typeTwo']": "" + conditionalHash['typeTwo'].name,
-	        "typeHash['typeThree']": "" + conditionalHash['typeThree'].name,
-	        "typeHash['typeFour']": "" + conditionalHash['typeFour'].name,
-	        "validNeighborsWithFalse.length": "Valid (+ false)",
-	        "validNeighborsWithoutFalse.length": "Valid (- false)",
-	        "totalNeighbors.length": "Total"
-	        // ">": `is greater than`,
-	        // ">=": `is greater than or equal to`,
-	        // "<": `is less than`,
-	        // "<=": `is less than or equal to`,
-	        // "===": `is equal to`,
-	        // "!==": `is not equal to`,
-	        // "0": `zero`,
-	        // "1": `one`,
-	        // "2": `two`,
-	        // "3": `three`,
-	        // "4": `four`,
-	        // "5": `five`,
-	        // "6": `six`,
-	        // "7": `seven`,
-	        // "8": `eight`,
-	      };
-
-	      var filteredString = string.split(' ').map(function (str) {
-	        if (Object.keys(translationHash).includes(str)) {
-	          str = translationHash[str];
-	        }
-	        return str;
-	      });
-
-	      var valueArray = parseConditionalHashStatements(filteredString.join(' '));
-
-	      var filteredArray = valueArray.filter(function (statement) {
-	        if (!statement.startsWith('Math') && !statement.startsWith('true')) {
-	          return statement;
-	        }
-	      });
-
-	      return filteredArray.join(' ');
-	    }
-	  }, {
-	    key: "populateConditionalDropdowns",
-	    value: function populateConditionalDropdowns() {
-
-	      var populateDropdown = function populateDropdown(arr) {
-	        for (var i = 0; i < arr.length; i++) {
-	          var currentType = arr[i];
-
-	          for (var j = 0; j < currentType.options.length; j++) {
-	            var currentOption = currentType.options[j];
-	            currentOption.innerText = translateStatement(currentOption.value);
-	          }
-	        }
-	      };
-
-	      populateDropdown(neighborTypes);
-	      populateDropdown(comparators);
-	      populateDropdown(comparisonValues);
-	    }
-	  }, {
-	    key: "parseConditionalHashStatements",
-	    value: function parseConditionalHashStatements(condition) {
-
-	      var flatten = function flatten(arr) {
-	        return arr.reduce(function (acc, val) {
-	          return acc.concat(Array.isArray(val) ? flatten(val) : val);
-	        }, []);
-	      };
-
-	      var parseConditionalValues = function parseConditionalValues(value, operator) {
-	        var valueArray = value.split(" " + operator + " ");
-	        var returnArray = [];
-	        for (var j = 0; j < valueArray.length - 1; j++) {
-	          returnArray.push(valueArray[j].concat(" " + operator));
-	        }
-	        returnArray.push(valueArray[valueArray.length - 1]);
-	        return returnArray;
-	      };
-
-	      var andOperator = parseConditionalValues(condition, '&&');
-
-	      var bothOperators = andOperator.map(function (value) {
-	        return parseConditionalValues(value, '||');
-	      });
-
-	      return flatten(bothOperators);
-	    }
-	  }, {
 	    key: "changeModalCellName",
 	    value: function changeModalCellName(cellType) {
-	      cellName.innerText = conditionalHash[cellType].name + " Cell Behavior";
-	    }
-	  }, {
-	    key: "refreshConditionalStatements",
-	    value: function refreshConditionalStatements(cellType) {
-	      for (var i = 0; i < conditionalStatements.length; i++) {
-	        conditionalStatements[i].innerHTML = "";
-	      }
-	      populateConditionalStatements(cellType);
-	    }
-	  }, {
-	    key: "populateConditionalStatements",
-	    value: function populateConditionalStatements(cellType) {
-	      var _loop = function _loop(i) {
-	        var currentStatement = conditionalStatements[i];
-	        var conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
-	        var conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
-
-	        var _loop2 = function _loop2(j) {
-	          var li = document.createElement("li");
-	          var andButton = document.createElement("button");
-	          var orButton = document.createElement("button");
-	          var deleteButton = document.createElement("button");
-	          var statement = conditionalStatementArray[j];
-
-	          var mapButtonBehavior = function mapButtonBehavior(button, symbol) {
-	            var statementArray = statement.split(' ');
-	            var conditionalArray = conditionalHash[cellType]['conditions'][currentStatement.id].split(' ');
-
-	            var removeStatementFromConditionalHash = function removeStatementFromConditionalHash(conditionalHashStatement) {
-	              var currentCondition = conditionalHash[cellType]['conditions'][currentStatement.id];
-	              var returnCondition = currentCondition.replace("" + conditionalHashStatement, '');
-
-	              returnCondition = returnCondition.trim();
-
-	              if (returnCondition.endsWith('&&') || returnCondition.endsWith('||')) {
-	                returnCondition = returnCondition.slice(0, returnCondition.length - 3);
-	              }
-
-	              conditionalHash[cellType]['conditions'][currentStatement.id] = returnCondition;
-	            };
-
-	            var mapButtonSymbol = function mapButtonSymbol() {
-	              if (symbol === 'Delete') {
-	                button.classList.add('deleteButtons');
-	                button.classList.add('fa');
-	                button.classList.add('fa-times');
-	              } else {
-	                button.innerText = "" + symbol;
-	              }
-	            };
-
-	            mapButtonSymbol();
-
-	            button.addEventListener('click', function () {
-	              for (var k = 0; k < conditionalArray.length; k++) {
-	                var conditionalSlice = conditionalArray.slice(k, k + statementArray.length);
-	                var conditionalSliceStatement = conditionalSlice.join(' ');
-	                var operatorIndex = k + conditionalSlice.length - 1;
-
-	                if (conditionalSlice.join(' ') === statement) {
-
-	                  if (symbol === 'Delete') {
-	                    removeStatementFromConditionalHash(conditionalSliceStatement);
-	                  } else {
-
-	                    if (symbol === '&&') {
-	                      conditionalArray[operatorIndex] = "||";
-	                    } else if (symbol === '||') {
-	                      conditionalArray[operatorIndex] = "&&";
-	                    }
-	                    conditionalHash[cellType]['conditions'][currentStatement.id] = conditionalArray.join(' ');
-	                  }
-
-	                  refreshConditionalStatements(cellType);
-	                }
-	              }
-	            });
-	          };
-
-	          var simplifyStatement = function simplifyStatement(string) {
-	            var filteredString = string.split(' ').filter(function (str) {
-	              return str !== '||' && str !== '&&';
-	            });
-
-	            return filteredString.join(' ');
-	          };
-
-	          var translatedStatement = translateStatement(statement);
-	          var simplifiedStatement = simplifyStatement(translatedStatement);
-
-	          mapButtonBehavior(andButton, '&&');
-	          mapButtonBehavior(orButton, '||');
-	          mapButtonBehavior(deleteButton, 'Delete');
-
-	          if (!simplifiedStatement) return "continue";
-
-	          li.appendChild(document.createTextNode(simplifiedStatement));
-
-	          if (translatedStatement.endsWith('&&')) {
-	            li.appendChild(andButton);
-	          } else if (translatedStatement.endsWith('||')) {
-	            li.appendChild(orButton);
-	          }
-
-	          li.appendChild(deleteButton);
-
-	          currentStatement.appendChild(li);
-	        };
-
-	        for (var j = 0; j < conditionalStatementArray.length; j++) {
-	          var _ret2 = _loop2(j);
-
-	          if (_ret2 === "continue") continue;
-	        }
-	      };
-
-	      for (var i = 0; i < conditionalStatements.length; i++) {
-	        _loop(i);
-	      }
-	    }
-	  }, {
-	    key: "addStatementToConditionalHash",
-	    value: function addStatementToConditionalHash(cellType, button) {
-	      var currentCondition = conditionalHash[cellType]['conditions'][button.name];
-	      var returnString = "";
-
-	      var addValueToReturnString = function addValueToReturnString(nodeArr, buttonType) {
-	        for (var j = 0; j < nodeArr.length; j++) {
-	          var currentItem = nodeArr[j];
-
-	          if (currentItem.name === buttonType) {
-	            returnString += " " + currentItem.value;
-	          }
-	        }
-	      };
-
-	      var addReturnStringToConditionalHash = function addReturnStringToConditionalHash() {
-	        addValueToReturnString(neighborTypes, button.name);
-	        addValueToReturnString(comparators, button.name);
-	        addValueToReturnString(comparisonValues, button.name);
-
-	        returnString = returnString.trim();
-
-	        if (!returnString) return;
-
-	        conditionalHash[cellType]['conditions'][button.name] += " && " + returnString;
-	      };
-
-	      addReturnStringToConditionalHash();
-	    }
-	  }, {
-	    key: "resetMenuValues",
-	    value: function resetMenuValues() {
-	      var button = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-	      var resetMenuValue = void 0;
-
-	      if (!button) {
-	        resetMenuValue = function resetMenuValue(menuName) {
-	          for (var j = 0; j < menuName.length; j++) {
-	            menuName[j].value = "";
-	          }
-	        };
-	      } else {
-	        resetMenuValue = function resetMenuValue(menuName) {
-	          for (var j = 0; j < menuName.length; j++) {
-	            if (menuName[j].name === button.name) {
-	              menuName[j].value = "";
-	            }
-	          }
-	        };
-	      }
-
-	      resetMenuValue(neighborTypes);
-	      resetMenuValue(comparators);
-	      resetMenuValue(comparisonValues);
-	    }
-	  }, {
-	    key: "handleChanceSliders",
-	    value: function handleChanceSliders(cellType) {
-	      var _loop3 = function _loop3(i) {
-	        var currentSlider = chanceSliders[i];
-	        var currentOutput = chanceOutputs[i];
-	        var currentConditionOption = conditionOptions[i];
-	        var currentStatementContainer = conditionalStatementContainers[i];
-	        var currentHashCondition = conditionalHash[cellType]['conditions'][currentSlider.name];
-	        var conditionalArray = parseConditionalHashStatements(currentHashCondition);
-
-	        var toggleConditionalStatements = function toggleConditionalStatements() {
-	          if (currentSlider.value === '0') {
-	            currentConditionOption.style.display = 'none';
-	            currentStatementContainer.style.display = 'none';
-	          } else {
-	            currentConditionOption.style.display = 'flex';
-	            currentStatementContainer.style.display = 'flex';
-	          }
-	        };
-
-	        var updateOutput = function updateOutput() {
-	          var originalValue = currentOutput.value;
-	          var updatedCondition = conditionalHash[cellType]['conditions'][currentOutput.name].replace("Math.random() * 100 < " + originalValue, "Math.random() * 100 < " + currentSlider.value);
-
-	          toggleConditionalStatements();
-	          conditionalHash[cellType]['conditions'][currentOutput.name] = updatedCondition;
-	          currentOutput.value = currentSlider.value;
-	        };
-
-	        var setSliderValues = function setSliderValues() {
-	          conditionalArray.forEach(function (statement) {
-	            if (statement.substring(0, 4) === 'Math') {
-	              var percentage = statement.match(/\d+/g)[1];
-	              currentSlider.value = percentage;
-	              currentOutput.value = percentage;
-	            }
-	          });
-
-	          if (currentSlider.value === '0') {
-	            currentConditionOption.style.display = 'none';
-	            currentStatementContainer.style.display = 'none';
-	          }
-	        };
-
-	        toggleConditionalStatements();
-	        setSliderValues();
-	        currentSlider.oninput = updateOutput;
-	      };
-
-	      for (var i = 0; i < chanceSliders.length; i++) {
-	        _loop3(i);
-	      }
-	    }
-	  }, {
-	    key: "handleSubmitEventListeners",
-	    value: function handleSubmitEventListeners(cellType) {
-
-	      var clearSubmitEventListeners = function clearSubmitEventListeners() {
-	        for (var i = 0; i < conditionalSubmitButtons.length; i++) {
-	          var currentButton = conditionalSubmitButtons[i];
-	          var clone = currentButton.cloneNode();
-
-	          while (currentButton.firstChild) {
-	            clone.appendChild(currentButton.lastChild);
-	          }
-	          currentButton.parentNode.replaceChild(clone, currentButton);
-	        }
-	      };
-
-	      var populateSubmitEventListeners = function populateSubmitEventListeners() {
-	        var _loop4 = function _loop4(i) {
-	          var currentButton = conditionalSubmitButtons[i];
-
-	          currentButton.addEventListener('click', function () {
-	            addStatementToConditionalHash(cellType, currentButton);
-	            refreshConditionalStatements(cellType);
-	            resetMenuValues(currentButton);
-	          });
-	        };
-
-	        for (var i = 0; i < conditionalSubmitButtons.length; i++) {
-	          _loop4(i);
-	        }
-	      };
-
-	      clearSubmitEventListeners();
-	      populateSubmitEventListeners();
+	      this.cellName.innerText = this.conditionalHash[cellType].name + " Cell Behavior";
 	    }
 	  }, {
 	    key: "populateValidNeighborBoxes",
 	    value: function populateValidNeighborBoxes(cellType) {
+	      var _this2 = this;
+
 	      var resetNeighborBoxes = function resetNeighborBoxes() {
-	        for (var i = 0; i < validNeighborBoxes.length; i++) {
-	          var currentBox = validNeighborBoxes[i];
+	        for (var i = 0; i < _this2.validNeighborBoxes.length; i++) {
+	          var currentBox = _this2.validNeighborBoxes[i];
 	          currentBox.checked = false;
 	        }
 	      };
 
 	      resetNeighborBoxes();
 
-	      var _loop5 = function _loop5(i) {
-	        var currentBox = validNeighborBoxes[i];
-	        var currentName = neighborTypeNames[i];
+	      var _loop = function _loop(i) {
+	        var currentBox = _this2.validNeighborBoxes[i];
+	        var currentName = _this2.neighborTypeNames[i];
 
 	        var getType = function getType() {
-	          conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
+	          this.conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
 	        };
 
-	        currentName.setAttribute("name", conditionalHash[currentBox.value].name);
+	        currentName.setAttribute("name", _this2.conditionalHash[currentBox.value].name);
 
-	        currentBox.checked = conditionalHash[cellType]['neighborHash'][currentBox.value];
+	        currentBox.checked = _this2.conditionalHash[cellType]['neighborHash'][currentBox.value];
 	        currentBox.onclick = function () {
 	          return getType();
 	        };
 	      };
 
-	      for (var i = 0; i < validNeighborBoxes.length; i++) {
-	        _loop5(i);
+	      for (var i = 0; i < this.validNeighborBoxes.length; i++) {
+	        _loop(i);
 	      }
 	    }
 	  }, {
 	    key: "changeCellLogicModalType",
 	    value: function changeCellLogicModalType(cellType) {
 
-	      if (!container.pauseEvent) handlePauseEvent();
+	      if (!this.container.pauseEvent) this.container.handlePauseEvent();
 
-	      cellLogicModal.style.display = 'flex';
-	      modalBackdrop.style.display = 'flex';
-	      gridControls.style.display = 'none';
-
-	      changeModalCellName(cellType);
-	      populateConditionalDropdowns();
-	      refreshConditionalStatements(cellType);
-	      resetMenuValues();
-	      handleChanceSliders(cellType);
-	      handleSubmitEventListeners(cellType);
-	      populateValidNeighborBoxes(cellType);
+	      // cellLogicModal.style.display = 'flex';
+	      // modalBackdrop.style.display = 'flex';
+	      // gridControls.style.display = 'none';
+	      //
+	      // changeModalCellName(cellType);
+	      // populateConditionalDropdowns();
+	      // refreshConditionalStatements(cellType);
+	      // resetMenuValues();
+	      // handleChanceSliders(cellType);
+	      // handleSubmitEventListeners(cellType);
+	      // populateValidNeighborBoxes(cellType);
 	    }
 	  }]);
 
