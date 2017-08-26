@@ -1043,78 +1043,105 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var handleGridControlButtons = exports.handleGridControlButtons = function handleGridControlButtons(container) {
-	  var mainCanvas = document.getElementById("mainCanvas");
 
-	  var cellLogicControls = document.getElementById("cellLogicControls");
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	  var modalBackdrop = document.getElementById("modalBackdrop");
-	  var informationModalBackdrop = document.getElementById("informationModalBackdrop");
-	  var informationModal = document.getElementById("informationModal");
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	  var playPauseButton = document.getElementById("playPauseButton");
-	  var nextFrameButton = document.getElementById("nextFrameButton");
-	  var resetButton = document.getElementById("resetButton");
+	var GridControlBar = function () {
+	  function GridControlBar(container) {
+	    _classCallCheck(this, GridControlBar);
 
-	  var speedSlider = document.getElementById("speedSlider");
-	  var cellSizeDropdown = document.getElementById("cellSizeDropdown");
-	  var currentWidth = document.getElementById("currentWidth");
-	  var currentHeight = document.getElementById("currentHeight");
+	    this.container = container;
+	    this.mainCanvas = document.getElementById("mainCanvas");
 
-	  var informationButton = document.getElementById("informationButton");
+	    this.cellLogicControls = document.getElementById("cellLogicControls");
 
-	  var handlePauseEvent = function handlePauseEvent() {
-	    playPauseButton.classList.toggle("fa-pause");
-	    playPauseButton.classList.add("fa-play");
-	    container.handlePauseEvent();
-	  };
+	    this.modalBackdrop = document.getElementById("modalBackdrop");
+	    this.informationModalBackdrop = document.getElementById("informationModalBackdrop");
+	    this.informationModal = document.getElementById("informationModal");
 
-	  var handleNextFrameEvent = function handleNextFrameEvent() {
-	    if (playPauseButton.classList.contains("fa-pause")) {
-	      playPauseButton.classList.toggle("fa-pause");
-	      playPauseButton.classList.add("fa-play");
+	    this.playPauseButton = document.getElementById("playPauseButton");
+	    this.nextFrameButton = document.getElementById("nextFrameButton");
+	    this.resetButton = document.getElementById("resetButton");
+
+	    this.speedSlider = document.getElementById("speedSlider");
+	    this.cellSizeDropdown = document.getElementById("cellSizeDropdown");
+	    this.currentWidth = document.getElementById("currentWidth");
+	    this.currentHeight = document.getElementById("currentHeight");
+
+	    this.informationButton = document.getElementById("informationButton");
+	  }
+
+	  _createClass(GridControlBar, [{
+	    key: "handlePauseEvent",
+	    value: function handlePauseEvent() {
+	      this.playPauseButton.classList.toggle("fa-pause");
+	      this.playPauseButton.classList.add("fa-play");
+	      this.container.handlePauseEvent();
 	    }
-	    container.handleNextFrameEvent();
-	  };
+	  }, {
+	    key: "handleNextFrameEvent",
+	    value: function handleNextFrameEvent() {
+	      if (this.playPauseButton.classList.contains("fa-pause")) {
+	        this.playPauseButton.classList.toggle("fa-pause");
+	        this.playPauseButton.classList.add("fa-play");
+	      }
+	      this.container.handleNextFrameEvent();
+	    }
+	  }, {
+	    key: "handleResetEvent",
+	    value: function handleResetEvent() {
+	      this.container.handleResetEvent();
+	    }
+	  }, {
+	    key: "toggleInformationModal",
+	    value: function toggleInformationModal() {
+	      if (!this.container.pauseEvent) this.handlePauseEvent();
 
-	  var handleResetEvent = function handleResetEvent() {
-	    container.handleResetEvent();
-	  };
+	      this.modalBackdrop.style.display = 'none';
+	      this.informationModalBackdrop.style.display = 'flex';
+	      this.informationModal.style.display = 'flex';
+	      this.cellLogicControls.style.zIndex = 0;
+	    }
+	  }, {
+	    key: "handleSpeedChangeEvent",
+	    value: function handleSpeedChangeEvent() {
+	      this.container.handleSpeedChangeEvent(300 - this.speedSlider.value);
+	    }
+	  }, {
+	    key: "handleCellResizeEvent",
+	    value: function handleCellResizeEvent() {
+	      this.container.handleCellResizeEvent(this.cellSizeDropdown.value);
+	    }
+	  }, {
+	    key: "handleResizeWidthEvent",
+	    value: function handleResizeWidthEvent() {
+	      this.container.handleResizeEvent('width', parseInt(this.currentWidth.value));
+	    }
+	  }, {
+	    key: "handleResizeHeightEvent",
+	    value: function handleResizeHeightEvent() {
+	      this.container.handleResizeEvent('height', parseInt(this.currentHeight.value));
+	    }
+	  }, {
+	    key: "addListeners",
+	    value: function addListeners() {
+	      this.playPauseButton.addEventListener('click', this.handlePauseEvent);
+	      this.nextFrameButton.addEventListener('click', this.handleNextFrameEvent);
+	      this.resetButton.addEventListener('click', this.handleResetEvent);
+	      this.speedSlider.addEventListener('change', this.handleSpeedChangeEvent);
+	      this.cellSizeDropdown.addEventListener('change', this.handleCellResizeEvent);
+	      this.currentWidth.addEventListener('change', this.handleResizeWidthEvent);
+	      this.currentHeight.addEventListener('change', this.handleResizeHeightEvent);
+	      this.informationButton.addEventListener('click', this.toggleInformationModal);
+	    }
+	  }]);
 
-	  var toggleInformationModal = function toggleInformationModal() {
-	    if (!container.pauseEvent) handlePauseEvent();
+	  return GridControlBar;
+	}();
 
-	    modalBackdrop.style.display = 'none';
-	    informationModalBackdrop.style.display = 'flex';
-	    informationModal.style.display = 'flex';
-	    cellLogicControls.style.zIndex = 0;
-	  };
-
-	  var handleSpeedChangeEvent = function handleSpeedChangeEvent() {
-	    container.handleSpeedChangeEvent(300 - speedSlider.value);
-	  };
-
-	  var handleCellResizeEvent = function handleCellResizeEvent() {
-	    container.handleCellResizeEvent(cellSizeDropdown.value);
-	  };
-
-	  var handleResizeWidthEvent = function handleResizeWidthEvent() {
-	    container.handleResizeEvent('width', parseInt(currentWidth.value));
-	  };
-
-	  var handleResizeHeightEvent = function handleResizeHeightEvent() {
-	    container.handleResizeEvent('height', parseInt(currentHeight.value));
-	  };
-
-	  playPauseButton.addEventListener('click', handlePauseEvent);
-	  nextFrameButton.addEventListener('click', handleNextFrameEvent);
-	  resetButton.addEventListener('click', handleResetEvent);
-	  speedSlider.addEventListener('change', handleSpeedChangeEvent);
-	  cellSizeDropdown.addEventListener('change', handleCellResizeEvent);
-	  currentWidth.addEventListener('change', handleResizeWidthEvent);
-	  currentHeight.addEventListener('change', handleResizeHeightEvent);
-	  informationButton.addEventListener('click', toggleInformationModal);
-	};
+	exports.default = GridControlBar;
 
 /***/ }),
 /* 9 */,

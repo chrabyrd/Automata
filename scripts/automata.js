@@ -31,7 +31,7 @@ class Automata {
       cell.neighbors.forEach(id => {
         if (this.livingCells[id]) return;
         this.livingCells[id] = this.board.cells[id];
-      })
+      });
     });
 
     this.dyingCells = [];
@@ -43,7 +43,7 @@ class Automata {
     });
 
     this.livingCells = {};
-    
+
     Object.keys(this.changingCells).forEach(key => {
       this.board.cells[key].changeState(this.changingCells[key],
         conditionalHash[this.changingCells[key]].color);

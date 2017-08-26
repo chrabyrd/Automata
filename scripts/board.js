@@ -18,7 +18,7 @@ class Board {
     });
 
     clickedCell.changeState(type, color);
-    return clickedCell
+    return clickedCell;
   }
 
   populateGrid (cellSize, gridWidth, gridHeight) {

@@ -1,4 +1,4 @@
-class CellLogic {
+export default class CellLogic {
   constructor (changingCells, cellList, cell) {
     this.cell = cell;
     this.cellList = cellList;
@@ -92,5 +92,3 @@ class CellLogic {
   }
 
 }
-
-export default CellLogic;
