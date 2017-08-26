@@ -56,6 +56,10 @@
 
 	var _gridControls = __webpack_require__(8);
 
+	var _cellControlBar = __webpack_require__(10);
+
+	var _cellControlBar2 = _interopRequireDefault(_cellControlBar);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -68,12 +72,6 @@
 	  var informationModal = document.getElementById("informationModal");
 	  var cellLogicModal = document.getElementById("cellLogicModal");
 	  var tutorialModal = document.getElementById("tutorialModal");
-
-	  var cellLogicControls = document.getElementById("cellLogicControls");
-	  var cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
-	  var cellNames = document.getElementsByClassName("cellNames");
-	  var colorPickers = document.getElementsByClassName("colorPickers");
-	  var logicModalButtons = document.getElementsByClassName("logicModalButtons");
 
 	  var cellName = document.getElementById("cellName");
 
@@ -101,6 +99,8 @@
 
 	  var conditionalHash = _hashes.defaultHash;
 	  var container = void 0;
+
+	  var cellControlBar = new _cellControlBar2.default(container, _hashes.defaultHash);
 
 	  var mouseStateToggle = false;
 
@@ -144,19 +144,19 @@
 	        break;
 	      case 49:
 	        // 1
-	        changeCurrentCellType('typeOne');
+	        cellControlBar.changeCurrentCellType('typeOne');
 	        break;
 	      case 50:
 	        // 2
-	        changeCurrentCellType('typeTwo');
+	        cellControlBar.changeCurrentCellType('typeTwo');
 	        break;
 	      case 51:
 	        // 3
-	        changeCurrentCellType('typeThree');
+	        cellControlBar.changeCurrentCellType('typeThree');
 	        break;
 	      case 52:
 	        // 4
-	        changeCurrentCellType('typeFour');
+	        cellControlBar.changeCurrentCellType('typeFour');
 	        break;
 	      case 73:
 	        // i
@@ -197,13 +197,13 @@
 	      gridControls.style.display = 'none';
 	      informationModal.style.display = 'none';
 	      updateModal();
-	      hideCellTypeContainers();
+	      // hideCellTypeContainers();
 	    } else {
 	      modalBackdrop.style.display = 'none';
 	      tutorialModal.style.display = 'none';
 	      gridControls.style.display = 'flex';
 	      cellLogicModal.style.display = 'none';
-	      showCellTypeContainers();
+	      // showCellTypeContainers();
 	    }
 	  };
 
@@ -213,26 +213,7 @@
 	    modalBackdrop.style.display = 'none';
 	    informationModalBackdrop.style.display = 'flex';
 	    informationModal.style.display = 'flex';
-	    cellLogicControls.style.zIndex = 0;
-	  };
-
-	  var showCellTypeContainers = function showCellTypeContainers() {
-	    for (var i = 0; i < cellTypeContainers.length; i++) {
-	      var currentType = Object.keys(conditionalHash)[i];
-
-	      cellTypeContainers[i].style.display = 'flex';
-	      cellTypeContainers[i].style.opacity = '0';
-
-	      if (currentType === container.cellType) {
-	        cellTypeContainers[i].style.opacity = '1';
-	      }
-	    }
-	  };
-
-	  var hideCellTypeContainers = function hideCellTypeContainers() {
-	    for (var i = 0; i < cellTypeContainers.length; i++) {
-	      cellTypeContainers[i].style.display = 'none';
-	    }
+	    // cellLogicControls.style.zIndex = 0;
 	  };
 
 	  var toggleUI = function toggleUI() {
@@ -241,25 +222,25 @@
 	    modalBackdrop.style.display = 'none';
 	    gridControls.style.display = 'flex';
 
-	    showCellTypeContainers();
+	    // showCellTypeContainers();
 
-	    if (gridControls.style.opacity === '0') {
-	      gridControls.style.opacity = '1';
-
-	      for (var i = 0; i < cellTypeContainers.length; i++) {
-	        var currentType = Object.keys(conditionalHash)[i];
-
-	        if (currentType === container.cellType) {
-	          cellTypeContainers[i].style.opacity = '1';
-	        }
-	      }
-	    } else {
-	      gridControls.style.opacity = '0';
-
-	      for (var _i = 0; _i < cellTypeContainers.length; _i++) {
-	        cellTypeContainers[_i].style.opacity = '0';
-	      }
-	    }
+	    // if (gridControls.style.opacity === '0') {
+	    //   gridControls.style.opacity = '1';
+	    //
+	    //   for (let i = 0; i < cellTypeContainers.length; i++) {
+	    //     const currentType = Object.keys(conditionalHash)[i];
+	    //
+	    //     if (currentType === container.cellType) {
+	    //       cellTypeContainers[i].style.opacity = '1';
+	    //     }
+	    //   }
+	    // } else {
+	    //   gridControls.style.opacity = '0';
+	    //
+	    //   for (let i = 0; i < cellTypeContainers.length; i++) {
+	    //     cellTypeContainers[i].style.opacity = '0';
+	    //   }
+	    // }
 	  };
 
 	  var handlePauseEvent = function handlePauseEvent() {
@@ -278,53 +259,6 @@
 
 	  var handleResetEvent = function handleResetEvent() {
 	    container.handleResetEvent();
-	  };
-
-	  var changeCurrentCellType = function changeCurrentCellType(type) {
-	    for (var i = 0; i < cellNames.length; i++) {
-	      var currentName = cellNames[i];
-	      var currentTypeContainer = cellTypeContainers[i];
-
-	      currentTypeContainer.style.opacity = 0;
-
-	      if (currentName.id === type) {
-	        currentTypeContainer.style.opacity = 1;
-	      }
-	    }
-
-	    container.cellType = type;
-	  };
-
-	  var handleCellNames = function handleCellNames(cellType) {
-	    var _loop = function _loop(i) {
-	      var currentName = cellNames[i];
-
-	      currentName.value = conditionalHash[currentName.id].name;
-
-	      currentName.addEventListener('input', function () {
-	        conditionalHash[currentName.id].name = currentName.value;
-	      });
-	    };
-
-	    for (var i = 0; i < cellNames.length; i++) {
-	      _loop(i);
-	    }
-	  };
-
-	  var populateColorPickers = function populateColorPickers() {
-	    var _loop2 = function _loop2(i) {
-	      var currentColorPicker = colorPickers[i];
-	      var currentType = Object.keys(conditionalHash)[i];
-
-	      currentColorPicker.value = conditionalHash[currentType].color;
-	      currentColorPicker.addEventListener('change', function (e) {
-	        conditionalHash[currentType].color = e.target.value;
-	      });
-	    };
-
-	    for (var i = 0; i < colorPickers.length; i++) {
-	      _loop2(i);
-	    }
 	  };
 
 	  var translateStatement = function translateStatement(string) {
@@ -377,10 +311,10 @@
 
 	    var populateDropdown = function populateDropdown(arr) {
 	      for (var i = 0; i < arr.length; i++) {
-	        var _currentType = arr[i];
+	        var currentType = arr[i];
 
-	        for (var j = 0; j < _currentType.options.length; j++) {
-	          var currentOption = _currentType.options[j];
+	        for (var j = 0; j < currentType.options.length; j++) {
+	          var currentOption = currentType.options[j];
 	          currentOption.innerText = translateStatement(currentOption.value);
 	        }
 	      }
@@ -430,12 +364,12 @@
 	  };
 
 	  var populateConditionalStatements = function populateConditionalStatements(cellType) {
-	    var _loop3 = function _loop3(i) {
+	    var _loop = function _loop(i) {
 	      var currentStatement = conditionalStatements[i];
 	      var conditionalStatement = conditionalHash[cellType]['conditions'][currentStatement.id];
 	      var conditionalStatementArray = parseConditionalHashStatements(conditionalStatement);
 
-	      var _loop4 = function _loop4(j) {
+	      var _loop2 = function _loop2(j) {
 	        var li = document.createElement("li");
 	        var andButton = document.createElement("button");
 	        var orButton = document.createElement("button");
@@ -528,14 +462,14 @@
 	      };
 
 	      for (var j = 0; j < conditionalStatementArray.length; j++) {
-	        var _ret4 = _loop4(j);
+	        var _ret2 = _loop2(j);
 
-	        if (_ret4 === "continue") continue;
+	        if (_ret2 === "continue") continue;
 	      }
 	    };
 
 	    for (var i = 0; i < conditionalStatements.length; i++) {
-	      _loop3(i);
+	      _loop(i);
 	    }
 	  };
 
@@ -595,7 +529,7 @@
 	  };
 
 	  var handleChanceSliders = function handleChanceSliders(cellType) {
-	    var _loop5 = function _loop5(i) {
+	    var _loop3 = function _loop3(i) {
 	      var currentSlider = chanceSliders[i];
 	      var currentOutput = chanceOutputs[i];
 	      var currentConditionOption = conditionOptions[i];
@@ -643,7 +577,7 @@
 	    };
 
 	    for (var i = 0; i < chanceSliders.length; i++) {
-	      _loop5(i);
+	      _loop3(i);
 	    }
 	  };
 
@@ -662,7 +596,7 @@
 	    };
 
 	    var populateSubmitEventListeners = function populateSubmitEventListeners() {
-	      var _loop6 = function _loop6(i) {
+	      var _loop4 = function _loop4(i) {
 	        var currentButton = conditionalSubmitButtons[i];
 
 	        currentButton.addEventListener('click', function () {
@@ -673,7 +607,7 @@
 	      };
 
 	      for (var i = 0; i < conditionalSubmitButtons.length; i++) {
-	        _loop6(i);
+	        _loop4(i);
 	      }
 	    };
 
@@ -691,7 +625,7 @@
 
 	    resetNeighborBoxes();
 
-	    var _loop7 = function _loop7(i) {
+	    var _loop5 = function _loop5(i) {
 	      var currentBox = validNeighborBoxes[i];
 	      var currentName = neighborTypeNames[i];
 
@@ -708,7 +642,7 @@
 	    };
 
 	    for (var i = 0; i < validNeighborBoxes.length; i++) {
-	      _loop7(i);
+	      _loop5(i);
 	    }
 	  };
 
@@ -727,44 +661,6 @@
 	    handleChanceSliders(cellType);
 	    handleSubmitEventListeners(cellType);
 	    populateValidNeighborBoxes(cellType);
-	  };
-
-	  var populateTypeContainers = function populateTypeContainers() {
-	    handleCellNames();
-	    populateColorPickers();
-	    hideCellTypeContainers();
-
-	    cellTypeContainers[0].style.opacity = '1';
-
-	    var _loop8 = function _loop8(i) {
-	      var currentTypeContainer = cellTypeContainers[i];
-	      var currentLogicModalButton = logicModalButtons[i];
-	      var currentType = Object.keys(conditionalHash)[i];
-
-	      currentLogicModalButton.addEventListener('click', function () {
-	        tutorialModal.style.display = 'none';
-	        hideCellTypeContainers();
-	        changeCellLogicModalType(currentType);
-	      });
-
-	      currentTypeContainer.addEventListener('click', function () {
-	        changeCurrentCellType(currentType);
-	      });
-
-	      currentTypeContainer.addEventListener('mouseover', function () {
-	        currentTypeContainer.style.opacity = '1';
-	      });
-
-	      currentTypeContainer.addEventListener('mouseleave', function () {
-	        if (currentType !== container.cellType) {
-	          currentTypeContainer.style.opacity = '0';
-	        }
-	      });
-	    };
-
-	    for (var i = 0; i < cellTypeContainers.length; i++) {
-	      _loop8(i);
-	    }
 	  };
 
 	  var handleInformationModalBehavior = function handleInformationModalBehavior() {
@@ -879,9 +775,9 @@
 	      clearInterval(particleEffect, 40);
 
 	      handleResetEvent();
-	      populateTypeContainers();
+	      cellControlBar.populateTypeContainers();
 	      populateGridDimensions();
-	      showCellTypeContainers();
+	      cellControlBar.showCellTypeContainers();
 	    };
 
 	    setInterval(particleEffect, 40);
@@ -902,7 +798,8 @@
 	    //   changeHash(demoHash);
 	    // });
 	  };
-	  populateTypeContainers();
+
+	  cellControlBar.populateTypeContainers();
 	  handleInformationModalBehavior();
 	});
 
@@ -1813,6 +1710,160 @@
 	  currentHeight.addEventListener('change', handleResizeHeightEvent);
 	  informationButton.addEventListener('click', toggleInformationModal);
 	};
+
+/***/ }),
+/* 9 */,
+/* 10 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var CellControlBar = function () {
+	  function CellControlBar(container, conditionalHash) {
+	    _classCallCheck(this, CellControlBar);
+
+	    this.container = container;
+	    this.conditionalHash = conditionalHash;
+
+	    this.cellLogicControls = document.getElementById("cellLogicControls");
+	    this.cellNames = document.getElementsByClassName("cellNames");
+	    this.colorPickers = document.getElementsByClassName("colorPickers");
+
+	    this.cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
+
+	    this.logicModalButtons = document.getElementsByClassName("logicModalButtons");
+	  }
+
+	  _createClass(CellControlBar, [{
+	    key: "populateTypeContainers",
+	    value: function populateTypeContainers() {
+	      var _this = this;
+
+	      this.handleCellNames();
+	      this.populateColorPickers();
+	      this.hideCellTypeContainers();
+
+	      this.cellTypeContainers[0].style.opacity = '1';
+
+	      var _loop = function _loop(i) {
+	        var currentTypeContainer = _this.cellTypeContainers[i];
+	        var currentLogicModalButton = _this.logicModalButtons[i];
+	        var currentType = Object.keys(_this.conditionalHash)[i];
+
+	        currentLogicModalButton.addEventListener('click', function () {
+	          // tutorialModal.style.display = 'none';
+	          _this.hideCellTypeContainers();
+	          // changeCellLogicModalType(currentType);
+	        });
+
+	        currentTypeContainer.addEventListener('click', function () {
+	          _this.changeCurrentCellType(currentType);
+	        });
+
+	        currentTypeContainer.addEventListener('mouseover', function () {
+	          currentTypeContainer.style.opacity = '1';
+	        });
+
+	        currentTypeContainer.addEventListener('mouseleave', function () {
+	          if (currentType !== _this.container.cellType) {
+	            currentTypeContainer.style.opacity = '0';
+	          }
+	        });
+	      };
+
+	      for (var i = 0; i < this.cellTypeContainers.length; i++) {
+	        _loop(i);
+	      }
+	    }
+	  }, {
+	    key: "showCellTypeContainers",
+	    value: function showCellTypeContainers() {
+	      for (var i = 0; i < this.cellTypeContainers.length; i++) {
+	        var _currentType = Object.keys(this.conditionalHash)[i];
+
+	        this.cellTypeContainers[i].style.display = 'flex';
+	        this.cellTypeContainers[i].style.opacity = '0';
+
+	        if (_currentType === this.cellType) {
+	          this.cellTypeContainers[i].style.opacity = '1';
+	        }
+	      }
+	    }
+	  }, {
+	    key: "hideCellTypeContainers",
+	    value: function hideCellTypeContainers() {
+	      for (var i = 0; i < this.cellTypeContainers.length; i++) {
+	        this.cellTypeContainers[i].style.display = 'none';
+	      }
+	    }
+	  }, {
+	    key: "changeCurrentCellType",
+	    value: function changeCurrentCellType(type) {
+	      for (var i = 0; i < this.cellNames.length; i++) {
+	        var currentName = this.cellNames[i];
+	        var _currentTypeContainer = this.cellTypeContainers[i];
+
+	        _currentTypeContainer.style.opacity = 0;
+
+	        if (currentName.id === type) {
+	          _currentTypeContainer.style.opacity = 1;
+	        }
+	      }
+
+	      this.cellType = type;
+	    }
+	  }, {
+	    key: "handleCellNames",
+	    value: function handleCellNames(cellType) {
+	      var _this2 = this;
+
+	      var _loop2 = function _loop2(i) {
+	        var currentName = _this2.cellNames[i];
+
+	        currentName.value = _this2.conditionalHash[currentName.id].name;
+
+	        currentName.addEventListener('input', function () {
+	          _this2.conditionalHash[currentName.id].name = currentName.value;
+	        });
+	      };
+
+	      for (var i = 0; i < this.cellNames.length; i++) {
+	        _loop2(i);
+	      }
+	    }
+	  }, {
+	    key: "populateColorPickers",
+	    value: function populateColorPickers() {
+	      var _this3 = this;
+
+	      var _loop3 = function _loop3(i) {
+	        var currentColorPicker = _this3.colorPickers[i];
+	        var currentType = Object.keys(_this3.conditionalHash)[i];
+
+	        currentColorPicker.value = _this3.conditionalHash[currentType].color;
+	        currentColorPicker.addEventListener('change', function (e) {
+	          _this3.conditionalHash[currentType].color = e.target.value;
+	        });
+	      };
+
+	      for (var i = 0; i < this.colorPickers.length; i++) {
+	        _loop3(i);
+	      }
+	    }
+	  }]);
+
+	  return CellControlBar;
+	}();
+
+	exports.default = CellControlBar;
 
 /***/ })
 /******/ ]);

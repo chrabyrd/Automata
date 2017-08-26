@@ -8,12 +8,45 @@ export default class CellControlBar {
     this.colorPickers = document.getElementsByClassName("colorPickers");
 
     this.cellTypeContainers =
-    document.getElementsByClassName("cellTypeContainers");
+      document.getElementsByClassName("cellTypeContainers");
+
     this.logicModalButtons =
       document.getElementsByClassName("logicModalButtons");
   }
 
+  populateTypeContainers() {
+    this.handleCellNames();
+    this.populateColorPickers();
+    this.hideCellTypeContainers();
 
+    this.cellTypeContainers[0].style.opacity = '1';
+
+    for (let i = 0; i < this.cellTypeContainers.length; i++) {
+      const currentTypeContainer = this.cellTypeContainers[i];
+      const currentLogicModalButton = this.logicModalButtons[i];
+      const currentType = Object.keys(this.conditionalHash)[i];
+
+      currentLogicModalButton.addEventListener('click', () => {
+        // tutorialModal.style.display = 'none';
+        this.hideCellTypeContainers();
+        // changeCellLogicModalType(currentType);
+      });
+
+      currentTypeContainer.addEventListener('click', () => {
+        this.changeCurrentCellType(currentType);
+      });
+
+      currentTypeContainer.addEventListener('mouseover', () => {
+        currentTypeContainer.style.opacity = '1';
+      });
+
+      currentTypeContainer.addEventListener('mouseleave', () => {
+        if (currentType !== this.container.cellType) {
+          currentTypeContainer.style.opacity = '0';
+        }
+      });
+    }
+  }
 
   showCellTypeContainers() {
     for (let i = 0; i < this.cellTypeContainers.length; i++) {

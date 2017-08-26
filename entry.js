@@ -1,7 +1,8 @@
 import Container from "./scripts/container";
-import {defaultHash, demoHash} from "./scripts/hashes";
-import {startTutorial} from "./scripts/tutorial";
-import {handleGridControlButtons} from "./scripts/gridControls";
+import { defaultHash, demoHash } from "./scripts/hashes";
+import { startTutorial } from "./scripts/tutorial";
+import { handleGridControlButtons } from "./scripts/gridControls";
+import CellControlBar from "./scripts/cellControlBar";
 
 document.addEventListener("DOMContentLoaded", () => {
   const mainCanvas = document.getElementById("mainCanvas");
@@ -13,12 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const informationModal = document.getElementById("informationModal");
   const cellLogicModal = document.getElementById("cellLogicModal");
   const tutorialModal = document.getElementById("tutorialModal");
-
-  const cellLogicControls = document.getElementById("cellLogicControls");
-  const cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
-  const cellNames = document.getElementsByClassName("cellNames");
-  const colorPickers = document.getElementsByClassName("colorPickers");
-  const logicModalButtons = document.getElementsByClassName("logicModalButtons");
 
   const cellName = document.getElementById("cellName");
 
@@ -46,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let conditionalHash = defaultHash;
   let container;
+
+  const cellControlBar = new CellControlBar(container, defaultHash);
 
   let mouseStateToggle = false;
 
@@ -86,16 +83,16 @@ document.addEventListener("DOMContentLoaded", () => {
         handlePauseEvent();
         break;
       case 49: // 1
-        changeCurrentCellType('typeOne');
+        cellControlBar.changeCurrentCellType('typeOne');
         break;
       case 50: // 2
-        changeCurrentCellType('typeTwo');
+        cellControlBar.changeCurrentCellType('typeTwo');
         break;
       case 51: // 3
-        changeCurrentCellType('typeThree');
+        cellControlBar.changeCurrentCellType('typeThree');
         break;
       case 52: // 4
-        changeCurrentCellType('typeFour');
+        cellControlBar.changeCurrentCellType('typeFour');
         break;
       case 73: // i
         toggleInformationModal();
@@ -132,13 +129,13 @@ document.addEventListener("DOMContentLoaded", () => {
       gridControls.style.display = 'none';
       informationModal.style.display = 'none';
       updateModal();
-      hideCellTypeContainers();
+      // hideCellTypeContainers();
     } else {
       modalBackdrop.style.display = 'none';
       tutorialModal.style.display = 'none';
       gridControls.style.display = 'flex';
       cellLogicModal.style.display = 'none';
-      showCellTypeContainers();
+      // showCellTypeContainers();
     }
   };
 
@@ -148,26 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBackdrop.style.display = 'none';
     informationModalBackdrop.style.display = 'flex';
     informationModal.style.display = 'flex';
-    cellLogicControls.style.zIndex = 0;
-  };
-
-  const showCellTypeContainers = () => {
-    for (let i = 0; i < cellTypeContainers.length; i++) {
-      const currentType = Object.keys(conditionalHash)[i];
-
-      cellTypeContainers[i].style.display = 'flex';
-      cellTypeContainers[i].style.opacity = '0';
-
-      if (currentType === container.cellType) {
-        cellTypeContainers[i].style.opacity = '1';
-      }
-    }
-  };
-
-  const hideCellTypeContainers = () => {
-    for (let i = 0; i < cellTypeContainers.length; i++) {
-      cellTypeContainers[i].style.display = 'none';
-    }
+    // cellLogicControls.style.zIndex = 0;
   };
 
   const toggleUI = () => {
@@ -176,25 +154,25 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBackdrop.style.display = 'none';
     gridControls.style.display = 'flex';
 
-    showCellTypeContainers();
+    // showCellTypeContainers();
 
-    if (gridControls.style.opacity === '0') {
-      gridControls.style.opacity = '1';
-
-      for (let i = 0; i < cellTypeContainers.length; i++) {
-        const currentType = Object.keys(conditionalHash)[i];
-
-        if (currentType === container.cellType) {
-          cellTypeContainers[i].style.opacity = '1';
-        }
-      }
-    } else {
-      gridControls.style.opacity = '0';
-
-      for (let i = 0; i < cellTypeContainers.length; i++) {
-        cellTypeContainers[i].style.opacity = '0';
-      }
-    }
+    // if (gridControls.style.opacity === '0') {
+    //   gridControls.style.opacity = '1';
+    //
+    //   for (let i = 0; i < cellTypeContainers.length; i++) {
+    //     const currentType = Object.keys(conditionalHash)[i];
+    //
+    //     if (currentType === container.cellType) {
+    //       cellTypeContainers[i].style.opacity = '1';
+    //     }
+    //   }
+    // } else {
+    //   gridControls.style.opacity = '0';
+    //
+    //   for (let i = 0; i < cellTypeContainers.length; i++) {
+    //     cellTypeContainers[i].style.opacity = '0';
+    //   }
+    // }
   };
 
   const handlePauseEvent = () => {
@@ -213,45 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const handleResetEvent = () => {
     container.handleResetEvent();
-  };
-
-  const changeCurrentCellType = type => {
-    for (let i = 0; i < cellNames.length; i++) {
-      const currentName = cellNames[i];
-      const currentTypeContainer = cellTypeContainers[i];
-
-      currentTypeContainer.style.opacity = 0;
-
-      if (currentName.id === type) {
-        currentTypeContainer.style.opacity = 1;
-      }
-    }
-
-    container.cellType = type;
-  };
-
-  const handleCellNames = cellType => {
-    for (let i = 0; i < cellNames.length; i++) {
-      const currentName = cellNames[i];
-
-      currentName.value = conditionalHash[currentName.id].name;
-
-      currentName.addEventListener('input', () => {
-        conditionalHash[currentName.id].name = currentName.value;
-      });
-    }
-  };
-
-  const populateColorPickers = () => {
-    for (let i = 0; i < colorPickers.length; i++) {
-      const currentColorPicker = colorPickers[i];
-      const currentType = Object.keys(conditionalHash)[i];
-
-      currentColorPicker.value = conditionalHash[currentType].color;
-      currentColorPicker.addEventListener('change', e => {
-        conditionalHash[currentType].color = e.target.value;
-      });
-    }
   };
 
   const translateStatement = string => {
@@ -633,40 +572,6 @@ document.addEventListener("DOMContentLoaded", () => {
     populateValidNeighborBoxes(cellType);
   };
 
-  const populateTypeContainers = () => {
-    handleCellNames();
-    populateColorPickers();
-    hideCellTypeContainers();
-
-    cellTypeContainers[0].style.opacity = '1';
-
-    for (let i = 0; i < cellTypeContainers.length; i++) {
-      const currentTypeContainer = cellTypeContainers[i];
-      const currentLogicModalButton = logicModalButtons[i];
-      const currentType = Object.keys(conditionalHash)[i];
-
-      currentLogicModalButton.addEventListener('click', () => {
-        tutorialModal.style.display = 'none';
-        hideCellTypeContainers();
-        changeCellLogicModalType(currentType);
-      });
-
-      currentTypeContainer.addEventListener('click', () => {
-        changeCurrentCellType(currentType);
-      });
-
-      currentTypeContainer.addEventListener('mouseover', () => {
-        currentTypeContainer.style.opacity = '1';
-      });
-
-      currentTypeContainer.addEventListener('mouseleave', () => {
-        if (currentType !== container.cellType) {
-          currentTypeContainer.style.opacity = '0';
-        }
-      });
-    }
-  };
-
   const handleInformationModalBehavior = () => {
 
     const particleEffect = () => {
@@ -777,9 +682,9 @@ document.addEventListener("DOMContentLoaded", () => {
       clearInterval(particleEffect, 40);
 
       handleResetEvent();
-      populateTypeContainers();
+      cellControlBar.populateTypeContainers();
       populateGridDimensions();
-      showCellTypeContainers();
+      cellControlBar.showCellTypeContainers();
     };
 
     setInterval(particleEffect, 40);
@@ -800,6 +705,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //   changeHash(demoHash);
     // });
   };
-  populateTypeContainers();
+
+  cellControlBar.populateTypeContainers();
   handleInformationModalBehavior();
 });
