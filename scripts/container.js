@@ -1,7 +1,7 @@
 import Board from "./board";
 import Automata from "./automata";
 
-class Container {
+export default class Container {
   constructor (mainCanvas, mainCtx, conditionalHash) {
     this.mainCanvas = mainCanvas;
     this.mainCtx = mainCtx;
@@ -103,5 +103,3 @@ class Container {
     this.handleResetEvent();
   }
 }
-
-export default Container;
