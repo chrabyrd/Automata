@@ -1,3 +1,5 @@
+import CellLogicModal from "../modals/CellLogicModal";
+
 export default class CellControlBar {
   constructor(container, conditionalHash) {
     this.container = container;
@@ -17,6 +19,8 @@ export default class CellControlBar {
     this.populateTypeContainers = this.populateTypeContainers.bind(this);
     this.populateColorPickers = this.populateColorPickers.bind(this);
     this.handleCellNames = this.handleCellNames.bind(this);
+    this.hideCellTypeContainers = this.hideCellTypeContainers.bind(this);
+    this.changeCurrentCellType = this.changeCurrentCellType.bind(this);
 
     this.populateTypeContainers();
   }
@@ -24,7 +28,6 @@ export default class CellControlBar {
   populateTypeContainers() {
     this.handleCellNames();
     this.populateColorPickers();
-    // this.hideCellTypeContainers();
 
     this.cellTypeContainers[0].style.opacity = '1';
 
@@ -36,7 +39,8 @@ export default class CellControlBar {
       currentLogicModalButton.addEventListener('click', () => {
         // tutorialModal.style.display = 'none';
         this.hideCellTypeContainers();
-        // changeCellLogicModalType(currentType);
+        const cellLogicModal = new CellLogicModal(currentType, this.container, this.conditionalHash);
+        cellLogicModal.show();
       });
 
       currentTypeContainer.addEventListener('click', () => {
@@ -86,7 +90,7 @@ export default class CellControlBar {
       }
     }
 
-    this.cellType = type;
+    this.container.cellType = type;
   }
 
   handleCellNames(cellType) {

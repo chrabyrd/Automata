@@ -17,9 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellLogicModal = new CellLogicModal(container);
   const gridControlBar = new GridControlBar(container);
 
-  // cellControlBar.populateTypeContainers();
-  // informationModal.handleInformationModalBehavior();
-
   let mouseStateToggle = false;
 
   mainCanvas.addEventListener('mousedown',(e) => (

@@ -1,81 +1,79 @@
+import NeighborTypeBox from './NeighborTypeBox';
+
 export default class CellLogicModal {
-  constructor(container, conditionalHash) {
+  constructor(cellType, container, conditionalHash) {
+    this.cellType = cellType;
     this.container = container;
     this.conditionalHash = conditionalHash;
 
     this.modalBackdrop = document.getElementById("modalBackdrop");
     this.cellLogicModal = document.getElementById("cellLogicModal");
 
-    this.cellName = document.getElementById("cellName");
-
     this.neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
-    this.validNeighborBoxes = document.getElementsByClassName("validNeighborBox");
 
-    this.modalBackdrop.addEventListener('click', e => {
-      if (e.target.id !== 'modalBackdrop') return;
-      this.toggleCellLogicModal();
+    this.changeCellName = this.changeCellName.bind(this);
+    this.populateValidNeighborBoxes = this.populateValidNeighborBoxes.bind(this);
+  }
+
+  show() {
+    this.changeCellName();
+    this.populateValidNeighborBoxes();
+    this.modalBackdrop.style.display = 'flex';
+    this.cellLogicModal.style.display = 'flex';
+  }
+
+  hide() {
+    this.modalBackdrop.style.display = 'none';
+    this.cellLogicModal.style.display = 'none';
+  }
+
+  changeCellName() {
+    const cellName = document.querySelector("#cellName");
+    cellName.innerText =
+      `${this.conditionalHash[this.cellType].name} Cell Behavior`;
+  }
+
+  populateValidNeighborBoxes() {
+    const validNeighborsContainer =
+      document.querySelector("#validNeighborsContainer");
+
+    const neighborHash = this.conditionalHash[this.cellType]['neighborHash'];
+
+    validNeighborsContainer.addEventListener('click', e => {
+      const cellType = e.target.value;
+      neighborHash[cellType] = e.target.checked;
     });
-  }
 
-  toggleCellLogicModal() {
-//     // if (tutorialModal.style.display !== 'none') return;
-//     if (container.pauseEvent) handlePauseEvent();
-//
-//     const updateModal = () => {
-//       const cellTypes = Object.keys(conditionalHash);
-//
-//       for (let i = 0; i < cellTypes.length; i++) {
-//         const currentType = cellTypes[i];
-//         if (currentType === container.cellType) {
-//           changeCellLogicModalType(currentType);
-//         }
-//       }
-//     };
-//
-//     if (modalBackdrop.style.display === 'none') {
-//       modalBackdrop.style.display = 'flex';
-//       gridControls.style.display = 'none';
-//       informationModal.style.display = 'none';
-//       updateModal();
-//       cellControlBar.hideCellTypeContainers();
-//     } else {
-//       modalBackdrop.style.display = 'none';
-//       tutorialModal.style.display = 'none';
-//       gridControls.style.display = 'flex';
-//       cellLogicModal.style.display = 'none';
-//       cellControlBar.showCellTypeContainers();
-//     }
-//   }
-  }
+    Object.keys(neighborHash).forEach(cellType => {
+      const cellName = this.conditionalHash[cellType]['name'];
+      const neighborTypeBox =
+        new NeighborTypeBox(cellType, cellName, neighborHash[cellType]);
 
-  changeModalCellName(cellType) {
-    this.cellName.innerText = `${this.conditionalHash[cellType].name} Cell Behavior`;
-  }
+      validNeighborsContainer.appendChild(neighborTypeBox.createElement());
+    });
 
-
-  populateValidNeighborBoxes(cellType) {
-    const resetNeighborBoxes = () => {
-      for (let i = 0; i < this.validNeighborBoxes.length; i++) {
-        const currentBox = this.validNeighborBoxes[i];
-        currentBox.checked = false;
-      }
-    };
-
-    resetNeighborBoxes();
-
-    for (let i = 0; i < this.validNeighborBoxes.length; i++) {
-      const currentBox = this.validNeighborBoxes[i];
-      const currentName = this.neighborTypeNames[i];
-
-      const getType = function () {
-        this.conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
-      };
-
-      currentName.setAttribute("name", this.conditionalHash[currentBox.value].name);
-
-      currentBox.checked = this.conditionalHash[cellType]['neighborHash'][currentBox.value];
-      currentBox.onclick = () => getType();
-    }
+    // const resetNeighborBoxes = () => {
+    //   for (let i = 0; i < this.validNeighborBoxes.length; i++) {
+    //     const currentBox = this.validNeighborBoxes[i];
+    //     currentBox.checked = false;
+    //   }
+    // };
+    //
+    // resetNeighborBoxes();
+    //
+    // for (let i = 0; i < this.validNeighborBoxes.length; i++) {
+    //   const currentBox = this.validNeighborBoxes[i];
+    //   const currentName = this.neighborTypeNames[i];
+    //
+    //   const getType = function () {
+    //     this.conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
+    //   };
+    //
+    //   currentName.setAttribute("name", this.conditionalHash[currentBox.value].name);
+    //
+    //   currentBox.checked = this.conditionalHash[cellType]['neighborHash'][currentBox.value];
+    //   currentBox.onclick = () => getType();
+    // }
   }
 
   changeCellLogicModalType(cellType) {

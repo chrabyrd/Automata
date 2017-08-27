@@ -85,9 +85,6 @@
 	  var cellLogicModal = new _CellLogicModal2.default(container);
 	  var gridControlBar = new _GridControlBar2.default(container);
 
-	  // cellControlBar.populateTypeContainers();
-	  // informationModal.handleInformationModalBehavior();
-
 	  var mouseStateToggle = false;
 
 	  mainCanvas.addEventListener('mousedown', function (e) {
@@ -423,7 +420,7 @@
 /* 8 */,
 /* 9 */,
 /* 10 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -433,101 +430,94 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _NeighborTypeBox = __webpack_require__(22);
+
+	var _NeighborTypeBox2 = _interopRequireDefault(_NeighborTypeBox);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var CellLogicModal = function () {
-	  function CellLogicModal(container, conditionalHash) {
-	    var _this = this;
-
+	  function CellLogicModal(cellType, container, conditionalHash) {
 	    _classCallCheck(this, CellLogicModal);
 
+	    this.cellType = cellType;
 	    this.container = container;
 	    this.conditionalHash = conditionalHash;
 
 	    this.modalBackdrop = document.getElementById("modalBackdrop");
 	    this.cellLogicModal = document.getElementById("cellLogicModal");
 
-	    this.cellName = document.getElementById("cellName");
-
 	    this.neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
-	    this.validNeighborBoxes = document.getElementsByClassName("validNeighborBox");
 
-	    this.modalBackdrop.addEventListener('click', function (e) {
-	      if (e.target.id !== 'modalBackdrop') return;
-	      _this.toggleCellLogicModal();
-	    });
+	    this.changeCellName = this.changeCellName.bind(this);
+	    this.populateValidNeighborBoxes = this.populateValidNeighborBoxes.bind(this);
 	  }
 
 	  _createClass(CellLogicModal, [{
-	    key: "toggleCellLogicModal",
-	    value: function toggleCellLogicModal() {
-	      //     // if (tutorialModal.style.display !== 'none') return;
-	      //     if (container.pauseEvent) handlePauseEvent();
-	      //
-	      //     const updateModal = () => {
-	      //       const cellTypes = Object.keys(conditionalHash);
-	      //
-	      //       for (let i = 0; i < cellTypes.length; i++) {
-	      //         const currentType = cellTypes[i];
-	      //         if (currentType === container.cellType) {
-	      //           changeCellLogicModalType(currentType);
-	      //         }
-	      //       }
-	      //     };
-	      //
-	      //     if (modalBackdrop.style.display === 'none') {
-	      //       modalBackdrop.style.display = 'flex';
-	      //       gridControls.style.display = 'none';
-	      //       informationModal.style.display = 'none';
-	      //       updateModal();
-	      //       cellControlBar.hideCellTypeContainers();
-	      //     } else {
-	      //       modalBackdrop.style.display = 'none';
-	      //       tutorialModal.style.display = 'none';
-	      //       gridControls.style.display = 'flex';
-	      //       cellLogicModal.style.display = 'none';
-	      //       cellControlBar.showCellTypeContainers();
-	      //     }
-	      //   }
+	    key: "show",
+	    value: function show() {
+	      this.changeCellName();
+	      this.populateValidNeighborBoxes();
+	      this.modalBackdrop.style.display = 'flex';
+	      this.cellLogicModal.style.display = 'flex';
 	    }
 	  }, {
-	    key: "changeModalCellName",
-	    value: function changeModalCellName(cellType) {
-	      this.cellName.innerText = this.conditionalHash[cellType].name + " Cell Behavior";
+	    key: "hide",
+	    value: function hide() {
+	      this.modalBackdrop.style.display = 'none';
+	      this.cellLogicModal.style.display = 'none';
+	    }
+	  }, {
+	    key: "changeCellName",
+	    value: function changeCellName() {
+	      var cellName = document.querySelector("#cellName");
+	      cellName.innerText = this.conditionalHash[this.cellType].name + " Cell Behavior";
 	    }
 	  }, {
 	    key: "populateValidNeighborBoxes",
-	    value: function populateValidNeighborBoxes(cellType) {
-	      var _this2 = this;
+	    value: function populateValidNeighborBoxes() {
+	      var _this = this;
 
-	      var resetNeighborBoxes = function resetNeighborBoxes() {
-	        for (var i = 0; i < _this2.validNeighborBoxes.length; i++) {
-	          var currentBox = _this2.validNeighborBoxes[i];
-	          currentBox.checked = false;
-	        }
-	      };
+	      var validNeighborsContainer = document.querySelector("#validNeighborsContainer");
 
-	      resetNeighborBoxes();
+	      var neighborHash = this.conditionalHash[this.cellType]['neighborHash'];
 
-	      var _loop = function _loop(i) {
-	        var currentBox = _this2.validNeighborBoxes[i];
-	        var currentName = _this2.neighborTypeNames[i];
+	      validNeighborsContainer.addEventListener('click', function (e) {
+	        var cellType = e.target.value;
+	        neighborHash[cellType] = e.target.checked;
+	      });
 
-	        var getType = function getType() {
-	          this.conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
-	        };
+	      Object.keys(neighborHash).forEach(function (cellType) {
+	        var cellName = _this.conditionalHash[cellType]['name'];
+	        var neighborTypeBox = new _NeighborTypeBox2.default(cellType, cellName, neighborHash[cellType]);
 
-	        currentName.setAttribute("name", _this2.conditionalHash[currentBox.value].name);
+	        validNeighborsContainer.appendChild(neighborTypeBox.createElement());
+	      });
 
-	        currentBox.checked = _this2.conditionalHash[cellType]['neighborHash'][currentBox.value];
-	        currentBox.onclick = function () {
-	          return getType();
-	        };
-	      };
-
-	      for (var i = 0; i < this.validNeighborBoxes.length; i++) {
-	        _loop(i);
-	      }
+	      // const resetNeighborBoxes = () => {
+	      //   for (let i = 0; i < this.validNeighborBoxes.length; i++) {
+	      //     const currentBox = this.validNeighborBoxes[i];
+	      //     currentBox.checked = false;
+	      //   }
+	      // };
+	      //
+	      // resetNeighborBoxes();
+	      //
+	      // for (let i = 0; i < this.validNeighborBoxes.length; i++) {
+	      //   const currentBox = this.validNeighborBoxes[i];
+	      //   const currentName = this.neighborTypeNames[i];
+	      //
+	      //   const getType = function () {
+	      //     this.conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
+	      //   };
+	      //
+	      //   currentName.setAttribute("name", this.conditionalHash[currentBox.value].name);
+	      //
+	      //   currentBox.checked = this.conditionalHash[cellType]['neighborHash'][currentBox.value];
+	      //   currentBox.onclick = () => getType();
+	      // }
 	    }
 	  }, {
 	    key: "changeCellLogicModalType",
@@ -824,7 +814,7 @@
 
 /***/ }),
 /* 13 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -833,6 +823,12 @@
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _CellLogicModal = __webpack_require__(10);
+
+	var _CellLogicModal2 = _interopRequireDefault(_CellLogicModal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -854,6 +850,8 @@
 	    this.populateTypeContainers = this.populateTypeContainers.bind(this);
 	    this.populateColorPickers = this.populateColorPickers.bind(this);
 	    this.handleCellNames = this.handleCellNames.bind(this);
+	    this.hideCellTypeContainers = this.hideCellTypeContainers.bind(this);
+	    this.changeCurrentCellType = this.changeCurrentCellType.bind(this);
 
 	    this.populateTypeContainers();
 	  }
@@ -865,7 +863,6 @@
 
 	      this.handleCellNames();
 	      this.populateColorPickers();
-	      // this.hideCellTypeContainers();
 
 	      this.cellTypeContainers[0].style.opacity = '1';
 
@@ -877,7 +874,8 @@
 	        currentLogicModalButton.addEventListener('click', function () {
 	          // tutorialModal.style.display = 'none';
 	          _this.hideCellTypeContainers();
-	          // changeCellLogicModalType(currentType);
+	          var cellLogicModal = new _CellLogicModal2.default(currentType, _this.container, _this.conditionalHash);
+	          cellLogicModal.show();
 	        });
 
 	        currentTypeContainer.addEventListener('click', function () {
@@ -934,7 +932,7 @@
 	        }
 	      }
 
-	      this.cellType = type;
+	      this.container.cellType = type;
 	    }
 	  }, {
 	    key: "handleCellNames",
@@ -1480,6 +1478,46 @@
 	}();
 
 	exports.default = Engine;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var NeighborTypeBox = function () {
+	  function NeighborTypeBox(cellType, cellName, activeBoolean) {
+	    _classCallCheck(this, NeighborTypeBox);
+
+	    this.cellType = cellType;
+	    this.cellName = cellName;
+	    this.checked = activeBoolean;
+	  }
+
+	  _createClass(NeighborTypeBox, [{
+	    key: 'createElement',
+	    value: function createElement() {
+	      var neighborButton = document.createElement('div');
+
+	      neighborButton.classList.add('neighborTypeContainers');
+	      neighborButton.innerHTML = '\n      <label class="neighborTypeNames" value=' + this.cellType + '>\n        ' + this.cellName + '\n        <input\n          class="validNeighborBox"\n          value=' + this.cellType + '\n          type="checkbox"\n          ' + (this.checked ? 'checked' : '') + '\n        />\n      </label>\n      ';
+
+	      return neighborButton;
+	    }
+	  }]);
+
+	  return NeighborTypeBox;
+	}();
+
+	exports.default = NeighborTypeBox;
 
 /***/ })
 /******/ ]);
