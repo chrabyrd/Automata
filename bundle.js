@@ -1543,6 +1543,7 @@
 	      this.addTitleBox(box);
 	      this.addConditionOptions(box);
 	      this.addConditionalStatementContainers(box);
+	      this.addEventListeners();
 
 	      return box;
 	    }
@@ -1593,7 +1594,12 @@
 	    }
 	  }, {
 	    key: "addEventListeners",
-	    value: function addEventListeners() {}
+	    value: function addEventListeners() {
+	      var chanceSlider = document.querySelector("#" + this.conditionName + "Slider");
+
+	      console.log(chanceSlider);
+	      console.log("#" + this.conditionName + "Slider");
+	    }
 	  }, {
 	    key: "translate",
 	    value: function translate(statement) {

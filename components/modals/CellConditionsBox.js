@@ -12,6 +12,7 @@ export default class CellConditionsBox {
     this.addTitleBox(box);
     this.addConditionOptions(box);
     this.addConditionalStatementContainers(box);
+    this.addEventListeners();
 
     return box;
   }
@@ -125,7 +126,10 @@ export default class CellConditionsBox {
   }
 
   addEventListeners() {
-    
+    const chanceSlider = document.querySelector(`#${this.conditionName}Slider`);
+
+    console.log(chanceSlider);
+    console.log(`#${this.conditionName}Slider`);
   }
 
   translate(statement) {
