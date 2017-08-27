@@ -118,7 +118,7 @@ li > button {
 /* Controls */
 
 #gridControls {
-	display: none;
+	display: flex;
 	opacity: 1;
 	transition: all .4s;
   background-color: #FFF;
@@ -155,7 +155,6 @@ li > button {
 }
 
 .cellTypeContainers {
-	opacity: 0;
 	display: flex;
 	flex: auto;
 	padding: 5px;
@@ -211,7 +210,7 @@ li > button {
 }
 
 #informationModalBackdrop {
-  display: flex;
+  display: none;
   position: fixed;
   left: 0;
   top: 0;

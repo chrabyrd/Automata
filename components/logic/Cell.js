@@ -1,4 +1,4 @@
-class Cell {
+export default class Cell {
   constructor (ctx, gridWidth, gridHeight, cellSize, id, x, y) {
     this.id = id;
     this.xmin = x + 1;
@@ -50,7 +50,7 @@ class Cell {
 
   hexToRgbA(hex){
     let c;
-    
+
     if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
         c = hex.substring(1).split('');
         if(c.length === 3){
@@ -73,5 +73,3 @@ class Cell {
     this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
   }
 }
-
-export default Cell;

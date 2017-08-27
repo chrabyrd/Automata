@@ -1,6 +1,6 @@
 import CellLogic from './cellLogic';
 
-class Automata {
+export default class Engine {
   constructor (board) {
     this.board = board;
     this.livingCells = {};
@@ -54,5 +54,3 @@ class Automata {
     this.changingCells = {};
   }
 }
-
-export default Automata;

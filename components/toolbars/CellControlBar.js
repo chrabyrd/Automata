@@ -12,12 +12,19 @@ export default class CellControlBar {
 
     this.logicModalButtons =
       document.getElementsByClassName("logicModalButtons");
+
+
+    this.populateTypeContainers = this.populateTypeContainers.bind(this);
+    this.populateColorPickers = this.populateColorPickers.bind(this);
+    this.handleCellNames = this.handleCellNames.bind(this);
+
+    this.populateTypeContainers();
   }
 
   populateTypeContainers() {
     this.handleCellNames();
     this.populateColorPickers();
-    this.hideCellTypeContainers();
+    // this.hideCellTypeContainers();
 
     this.cellTypeContainers[0].style.opacity = '1';
 

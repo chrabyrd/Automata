@@ -1,8 +1,8 @@
 import Container from "./components/Container";
-import { defaultHash, demoHash } from "./components/hashes";
+import demoHash from "./components/hashes/demoHash";
 import { startTutorial } from "./components/modals/tutorial";
-import GridControlBar from "./components/GridControlBar";
-import CellControlBar from "./components/CellControlBar";
+import GridControlBar from "./components/toolbars/GridControlBar";
+import CellControlBar from "./components/toolbars/CellControlBar";
 import CellLogicModal from "./components/modals/CellLogicModal";
 import InformationModal from "./components/modals/InformationModal";
 
@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainCtx = mainCanvas.getContext("2d");
 
   const container = new Container(mainCanvas, mainCtx, demoHash);
+
   const informationModal = new InformationModal(container);
   const cellControlBar = new CellControlBar(container, demoHash);
   const cellLogicModal = new CellLogicModal(container);

@@ -1,6 +1,6 @@
-import Cell from "./cell";
+import Cell from "./Cell";
 
-class Board {
+export default class Grid {
 
   constructor (ctx, cellSize, gridWidth, gridHeight) {
     this.ctx = ctx;
@@ -42,5 +42,3 @@ class Board {
     }
   }
 }
-
-export default Board;

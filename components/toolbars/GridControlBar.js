@@ -13,9 +13,6 @@ export default class GridControlBar {
     this.currentHeight = document.getElementById("currentHeight");
 
     this.informationButton = document.getElementById("informationButton");
-
-    this.gridControls = document.querySelector("#gridControls");
-    this.gridControls.style.display = 'flex';
   }
 
   handlePauseEvent() {

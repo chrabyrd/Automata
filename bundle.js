@@ -50,15 +50,17 @@
 
 	var _Container2 = _interopRequireDefault(_Container);
 
-	var _hashes = __webpack_require__(6);
+	var _demoHash = __webpack_require__(16);
+
+	var _demoHash2 = _interopRequireDefault(_demoHash);
 
 	var _tutorial = __webpack_require__(7);
 
-	var _GridControlBar = __webpack_require__(8);
+	var _GridControlBar = __webpack_require__(12);
 
 	var _GridControlBar2 = _interopRequireDefault(_GridControlBar);
 
-	var _CellControlBar = __webpack_require__(9);
+	var _CellControlBar = __webpack_require__(13);
 
 	var _CellControlBar2 = _interopRequireDefault(_CellControlBar);
 
@@ -76,9 +78,10 @@
 	  var mainCanvas = document.getElementById("mainCanvas");
 	  var mainCtx = mainCanvas.getContext("2d");
 
-	  var container = new _Container2.default(mainCanvas, mainCtx, _hashes.demoHash);
+	  var container = new _Container2.default(mainCanvas, mainCtx, _demoHash2.default);
+
 	  var informationModal = new _InformationModal2.default(container);
-	  var cellControlBar = new _CellControlBar2.default(container, _hashes.demoHash);
+	  var cellControlBar = new _CellControlBar2.default(container, _demoHash2.default);
 	  var cellLogicModal = new _CellLogicModal2.default(container);
 	  var gridControlBar = new _GridControlBar2.default(container);
 
@@ -168,13 +171,13 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _board = __webpack_require__(2);
+	var _Grid = __webpack_require__(20);
 
-	var _board2 = _interopRequireDefault(_board);
+	var _Grid2 = _interopRequireDefault(_Grid);
 
-	var _automata = __webpack_require__(4);
+	var _Engine = __webpack_require__(21);
 
-	var _automata2 = _interopRequireDefault(_automata);
+	var _Engine2 = _interopRequireDefault(_Engine);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -197,8 +200,8 @@
 	    this.cellType = 'typeOne';
 	    this.start = null;
 	    this.getGridSize();
-	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	    this.automata = new _automata2.default(this.board);
+	    this.board = new _Grid2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	    this.automata = new _Engine2.default(this.board);
 	    this.handlePlayEvent();
 	  }
 
@@ -266,8 +269,8 @@
 	    key: "handleResetEvent",
 	    value: function handleResetEvent() {
 	      this.handlePauseEvent();
-	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	      this.automata = new _automata2.default(this.board);
+	      this.board = new _Grid2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	      this.automata = new _Engine2.default(this.board);
 	      this.handlePauseEvent();
 	    }
 	  }, {
@@ -325,598 +328,11 @@
 	exports.default = Container;
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _cell = __webpack_require__(3);
-
-	var _cell2 = _interopRequireDefault(_cell);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Board = function () {
-	  function Board(ctx, cellSize, gridWidth, gridHeight) {
-	    _classCallCheck(this, Board);
-
-	    this.ctx = ctx;
-	    this.cells = [];
-	    this.populateGrid(cellSize, gridWidth, gridHeight);
-	  }
-
-	  _createClass(Board, [{
-	    key: "toggleCell",
-	    value: function toggleCell(e, type, color) {
-	      var clickedCell = this.cells.find(function (cell) {
-	        if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
-	          if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
-	            return cell;
-	          }
-	        }
-	      });
-
-	      clickedCell.changeState(type, color);
-	      return clickedCell;
-	    }
-	  }, {
-	    key: "populateGrid",
-	    value: function populateGrid(cellSize, gridWidth, gridHeight) {
-	      var maxWidthCellCount = gridWidth / Math.pow(cellSize, 2);
-	      var maxHeightCellCount = gridHeight / Math.pow(cellSize, 2);
-	      var y = 0;
-	      var id = 0;
-
-	      for (var i = 0; i < cellSize * maxHeightCellCount; i++) {
-	        var x = 0;
-
-	        for (var j = 0; j < cellSize * maxWidthCellCount; j++) {
-	          this.cells.push(new _cell2.default(this.ctx, gridWidth, gridHeight, cellSize, id, x, y));
-	          x += cellSize;
-	          id++;
-	        }
-
-	        y += cellSize;
-	      }
-	    }
-	  }]);
-
-	  return Board;
-	}();
-
-	exports.default = Board;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Cell = function () {
-	  function Cell(ctx, gridWidth, gridHeight, cellSize, id, x, y) {
-	    _classCallCheck(this, Cell);
-
-	    this.id = id;
-	    this.xmin = x + 1;
-	    this.xmax = x + cellSize;
-	    this.ymin = y + 1;
-	    this.ymax = y + cellSize;
-	    this.neighbors = [];
-
-	    this.ctx = ctx;
-	    this.cellSize = cellSize;
-	    this.gridWidth = gridWidth;
-	    this.x = x;
-	    this.y = y;
-
-	    this.type = 'false';
-	    this.color = 'rgba(255, 255, 255, 0)';
-
-	    this.getNeighbors(gridWidth, gridHeight, cellSize);
-	    this.render();
-	  }
-
-	  _createClass(Cell, [{
-	    key: 'changeState',
-	    value: function changeState(type, color) {
-	      this.type = type;
-	      this.color = color;
-	      this.render();
-	    }
-	  }, {
-	    key: 'getNeighbors',
-	    value: function getNeighbors(gridWidth, gridHeight, cellSize) {
-	      var _this = this;
-
-	      var offsetValue = gridWidth / cellSize;
-	      var maxWidthCount = gridWidth / Math.pow(cellSize, 2);
-	      var maxHeightCount = gridHeight / Math.pow(cellSize, 2);
-	      var maxCellId = Math.pow(cellSize, 2) * maxWidthCount * maxHeightCount;
-	      var top = this.id - offsetValue;
-	      var bottom = this.id + offsetValue;
-	      var left = this.id - 1;
-	      var right = this.id + 1;
-	      var topLeft = this.id - (offsetValue + 1);
-	      var bottomLeft = this.id + (offsetValue - 1);
-	      var topRight = this.id - (offsetValue - 1);
-	      var bottomRight = this.id + (offsetValue + 1);
-
-	      var neighborArray = [top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft];
-
-	      neighborArray.forEach(function (num) {
-	        if (num >= 0 && num <= maxCellId - 1) {
-	          _this.neighbors.push(num);
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'hexToRgbA',
-	    value: function hexToRgbA(hex) {
-	      var c = void 0;
-
-	      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-	        c = hex.substring(1).split('');
-	        if (c.length === 3) {
-	          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-	        }
-	        c = '0x' + c.join('');
-	        return 'rgba(' + [c >> 16 & 255, c >> 8 & 255, c & 255].join(',') + ', .9)';
-	      }
-	      throw new Error('Bad Hex');
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      this.ctx.clearRect(this.x, this.y, this.cellSize, this.cellSize);
-
-	      if (this.type === 'false') return;
-
-	      // Converting Hex to RGBA in case of future opacity tweaking
-	      this.ctx.fillStyle = this.hexToRgbA(this.color);
-
-	      this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
-	    }
-	  }]);
-
-	  return Cell;
-	}();
-
-	exports.default = Cell;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _cellLogic = __webpack_require__(5);
-
-	var _cellLogic2 = _interopRequireDefault(_cellLogic);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Automata = function () {
-	  function Automata(board) {
-	    _classCallCheck(this, Automata);
-
-	    this.board = board;
-	    this.livingCells = {};
-	    this.changingCells = {};
-	    this.dyingCells = [];
-	  }
-
-	  _createClass(Automata, [{
-	    key: 'random',
-	    value: function random(array) {
-	      return array[Math.floor(Math.random() * array.length)];
-	    }
-	  }, {
-	    key: 'shuffle',
-	    value: function shuffle(array) {
-	      for (var i = array.length - 1; i > 0; i--) {
-	        var j = Math.floor(Math.random() * (i + 1));
-	        var temp = array[i];
-	        array[i] = array[j];
-	        array[j] = temp;
-	      }
-	      return array;
-	    }
-	  }, {
-	    key: 'cellLogic',
-	    value: function cellLogic(conditionalHash) {
-	      var _this = this;
-
-	      this.shuffle(this.dyingCells).forEach(function (cell) {
-	        var cellLogic = new _cellLogic2.default(_this.changingCells, _this.board.cells, cell);
-	        cellLogic.live(conditionalHash);
-
-	        cell.neighbors.forEach(function (id) {
-	          if (_this.livingCells[id]) return;
-	          _this.livingCells[id] = _this.board.cells[id];
-	        });
-	      });
-
-	      this.dyingCells = [];
-
-	      this.shuffle(Object.values(this.livingCells)).forEach(function (cell) {
-	        if (_this.changingCells[cell.id]) return;
-	        var cellLogic = new _cellLogic2.default(_this.changingCells, _this.board.cells, cell);
-	        cellLogic.live(conditionalHash);
-	      });
-
-	      this.livingCells = {};
-
-	      Object.keys(this.changingCells).forEach(function (key) {
-	        _this.board.cells[key].changeState(_this.changingCells[key], conditionalHash[_this.changingCells[key]].color);
-
-	        _this.dyingCells.push(_this.board.cells[key]);
-	      });
-
-	      this.changingCells = {};
-	    }
-	  }]);
-
-	  return Automata;
-	}();
-
-	exports.default = Automata;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var CellLogic = function () {
-	  function CellLogic(changingCells, cellList, cell) {
-	    _classCallCheck(this, CellLogic);
-
-	    this.cell = cell;
-	    this.cellList = cellList;
-	    this.changingCells = changingCells;
-	  }
-
-	  _createClass(CellLogic, [{
-	    key: 'random',
-	    value: function random(array) {
-	      return array[Math.floor(Math.random() * array.length)];
-	    }
-	  }, {
-	    key: 'getValidNeighbors',
-	    value: function getValidNeighbors(cellTypeArray) {
-	      var _this = this;
-
-	      var validNeighbors = this.cell.neighbors;
-	      var changingCells = this.changingCells;
-
-	      validNeighbors = validNeighbors.filter(function (neighbor) {
-	        var isValid = false;
-	        cellTypeArray.forEach(function (type) {
-	          if (_this.cellList[neighbor].type === type && !changingCells[neighbor]) {
-	            isValid = true;
-	          }
-	        });
-	        return isValid;
-	      });
-
-	      return validNeighbors;
-	    }
-	  }, {
-	    key: 'wander',
-	    value: function wander(array) {
-	      var nextCell = this.random(array);
-	      this.changingCells[nextCell] = this.cell.type;
-	      this.changingCells[this.cell.id] = 'false';
-	    }
-	  }, {
-	    key: 'stay',
-	    value: function stay() {
-	      this.changingCells[this.cell.id] = this.cell.type;
-	    }
-	  }, {
-	    key: 'reproduce',
-	    value: function reproduce(array) {
-	      // console.log(array);
-	      var nextCell = this.random(array);
-	      this.changingCells[nextCell] = this.cell.type;
-	    }
-	  }, {
-	    key: 'die',
-	    value: function die() {
-	      this.changingCells[this.cell.id] = 'false';
-	    }
-	  }, {
-	    key: 'live',
-	    value: function live(conditionalHash) {
-	      var _this2 = this;
-
-	      if (this.changingCells[this.cell.id]) return;
-
-	      var type = this.cell.type;
-	      var typeHash = {};
-
-	      var neighborTypes = Object.keys(conditionalHash[type]['neighborHash']);
-
-	      var validTypesWithFalse = neighborTypes.filter(function (neighborType) {
-	        return conditionalHash[type]['neighborHash'][neighborType] === true;
-	      });
-
-	      var validTypesWithoutFalse = neighborTypes.filter(function (neighborType) {
-	        var currentType = conditionalHash[type]['neighborHash'][neighborType];
-
-	        if (currentType === true && neighborType !== 'false') return true;
-	      });
-
-	      var validNeighborsWithFalse = this.getValidNeighbors(validTypesWithFalse);
-	      var validNeighborsWithoutFalse = this.getValidNeighbors(validTypesWithoutFalse);
-
-	      var totalNeighbors = this.cell.neighbors.filter(function (id) {
-	        return _this2.cellList[id].type !== 'false';
-	      });
-
-	      neighborTypes.forEach(function (neighborType) {
-	        typeHash[neighborType] = 0;
-	      });
-
-	      this.cell.neighbors.forEach(function (num) {
-	        typeHash[_this2.cellList[num].type]++;
-	      });
-
-	      if (eval(conditionalHash[type]['conditions']['skipCon'])) {
-	        return;
-	      } else if (eval(conditionalHash[type]['conditions']['dieCon'])) {
-	        this.die();
-	      } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
-	        this.reproduce(validNeighborsWithFalse);
-	      } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
-	        this.wander(validNeighborsWithFalse);
-	      } else {
-	        this.stay();
-	      }
-	    }
-	  }]);
-
-	  return CellLogic;
-	}();
-
-	exports.default = CellLogic;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var defaultHash = exports.defaultHash = {
-	  'typeOne': {
-	    'name': 'A',
-	    'color': '#FF0000',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
-	      'dieCon': 'Math.random() * 100 < 0',
-	      'stayCon': 'Math.random() * 100 < 0',
-	      'wanderCon': 'Math.random() * 100 < 0',
-	      'reproduceCon': 'Math.random() * 100 < 0'
-	    },
-	    'neighborHash': {
-	      'typeOne': true,
-	      'typeTwo': true,
-	      'typeThree': true,
-	      'typeFour': true,
-	      'false': true
-	    }
-	  },
-
-	  'typeTwo': {
-	    'name': 'B',
-	    'color': '#FFA500',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
-	      'dieCon': 'Math.random() * 100 < 0',
-	      'stayCon': 'Math.random() * 100 < 0',
-	      'wanderCon': 'Math.random() * 100 < 0',
-	      'reproduceCon': 'Math.random() * 100 < 0'
-	    },
-	    'neighborHash': {
-	      'typeOne': true,
-	      'typeTwo': true,
-	      'typeThree': true,
-	      'typeFour': true,
-	      'false': true
-	    }
-	  },
-
-	  'typeThree': {
-	    'name': 'C',
-	    'color': '#FFFF00',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
-	      'dieCon': 'Math.random() * 100 < 0',
-	      'stayCon': 'Math.random() * 100 < 0',
-	      'wanderCon': 'Math.random() * 100 < 0',
-	      'reproduceCon': 'Math.random() * 100 < 0'
-	    },
-	    'neighborHash': {
-	      'typeOne': true,
-	      'typeTwo': true,
-	      'typeThree': true,
-	      'typeFour': true,
-	      'false': true
-	    }
-	  },
-
-	  'typeFour': {
-	    'name': 'D',
-	    'color': '#0000FF',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
-	      'dieCon': 'Math.random() * 100 < 0',
-	      'stayCon': 'Math.random() * 100 < 0',
-	      'wanderCon': 'Math.random() * 100 < 0',
-	      'reproduceCon': 'Math.random() * 100 < 0'
-	    },
-	    'neighborHash': {
-	      'typeOne': true,
-	      'typeTwo': true,
-	      'typeThree': true,
-	      'typeFour': true,
-	      'false': true
-	    }
-	  },
-
-	  'false': {
-	    'name': 'false',
-	    'color': 'rgba(255, 255, 255, 0)',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100',
-	      'dieCon': 'Math.random() * 100 < 0',
-	      'stayCon': 'Math.random() * 100 < 0',
-	      'wanderCon': 'Math.random() * 100 < 0',
-	      'reproduceCon': 'Math.random() * 100 < 0'
-	    },
-	    'neighborHash': {
-	      'typeOne': false,
-	      'typeTwo': false,
-	      'typeThree': false,
-	      'typeFour': false,
-	      'false': true
-	    }
-	  }
-	};
-
-	var demoHash = exports.demoHash = {
-	  'typeOne': {
-	    'name': 'Grass',
-	    'color': '#507F2C',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
-	      'dieCon': 'Math.random() * 100 < 0',
-	      'stayCon': 'Math.random() * 100 < 0',
-	      'wanderCon': 'Math.random() * 100 < 0',
-	      'reproduceCon': 'Math.random() * 100 < 100'
-	    },
-	    'neighborHash': {
-	      'typeOne': false,
-	      'typeTwo': false,
-	      'typeThree': false,
-	      'typeFour': false,
-	      'false': true
-	    }
-	  },
-
-	  'typeTwo': {
-	    'name': 'Sheep',
-	    'color': '#2552B2',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
-	      'dieCon': 'Math.random() * 100 < 100 && typeHash[\'typeOne\'] === 0',
-	      'stayCon': 'Math.random() * 100 < 33',
-	      'wanderCon': 'Math.random() * 100 < 50',
-	      'reproduceCon': 'Math.random() * 100 < 25 && typeHash[\'typeTwo\'] > 0 && typeHash[\'typeOne\'] > 2'
-	    },
-	    'neighborHash': {
-	      'typeOne': true,
-	      'typeTwo': false,
-	      'typeThree': false,
-	      'typeFour': false,
-	      'false': true
-	    }
-	  },
-
-	  'typeThree': {
-	    'name': 'Human',
-	    'color': '#FF851B',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
-	      'dieCon': 'Math.random() * 100 < 100 && validNeighborsWithoutFalse.length === 0',
-	      'stayCon': 'Math.random() * 100 < 33',
-	      'wanderCon': 'Math.random() * 100 < 100',
-	      'reproduceCon': 'Math.random() * 100 < 25 && typeHash[\'typeThree\'] > 0 && validNeighborsWithoutFalse.length > 2'
-	    },
-	    'neighborHash': {
-	      'typeOne': true,
-	      'typeTwo': true,
-	      'typeThree': false,
-	      'typeFour': false,
-	      'false': true
-	    }
-	  },
-
-	  'typeFour': {
-	    'name': 'Fence',
-	    'color': '#654321',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
-	      'dieCon': 'Math.random() * 100 < 0',
-	      'stayCon': 'Math.random() * 100 < 100',
-	      'wanderCon': 'Math.random() * 100 < 0',
-	      'reproduceCon': 'Math.random() * 100 < 0'
-	    },
-	    'neighborHash': {
-	      'typeOne': true,
-	      'typeTwo': false,
-	      'typeThree': false,
-	      'typeFour': false,
-	      'false': true
-	    }
-	  },
-
-	  'false': {
-	    'name': 'false',
-	    'color': 'rgba(255, 255, 255, 0)',
-	    'conditions': {
-	      'skipCon': 'Math.random() * 100 < 100',
-	      'dieCon': 'Math.random() * 100 < 0',
-	      'stayCon': 'Math.random() * 100 < 0',
-	      'wanderCon': 'Math.random() * 100 < 0',
-	      'reproduceCon': 'Math.random() * 100 < 0'
-	    },
-	    'neighborHash': {
-	      'typeOne': false,
-	      'typeTwo': false,
-	      'typeThree': false,
-	      'typeFour': false,
-	      'false': true
-	    }
-	  }
-	};
-
-/***/ }),
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */,
 /* 7 */
 /***/ (function(module, exports) {
 
@@ -1004,265 +420,8 @@
 	};
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var GridControlBar = function () {
-	  function GridControlBar(container) {
-	    _classCallCheck(this, GridControlBar);
-
-	    this.container = container;
-	    this.mainCanvas = document.getElementById("mainCanvas");
-
-	    this.playPauseButton = document.getElementById("playPauseButton");
-	    this.nextFrameButton = document.getElementById("nextFrameButton");
-	    this.resetButton = document.getElementById("resetButton");
-
-	    this.speedSlider = document.getElementById("speedSlider");
-	    this.cellSizeDropdown = document.getElementById("cellSizeDropdown");
-	    this.currentWidth = document.getElementById("currentWidth");
-	    this.currentHeight = document.getElementById("currentHeight");
-
-	    this.informationButton = document.getElementById("informationButton");
-
-	    this.gridControls = document.querySelector("#gridControls");
-	    this.gridControls.style.display = 'flex';
-	  }
-
-	  _createClass(GridControlBar, [{
-	    key: "handlePauseEvent",
-	    value: function handlePauseEvent() {
-	      this.playPauseButton.classList.toggle("fa-pause");
-	      this.playPauseButton.classList.add("fa-play");
-	      this.container.handlePauseEvent();
-	    }
-	  }, {
-	    key: "handleNextFrameEvent",
-	    value: function handleNextFrameEvent() {
-	      if (this.playPauseButton.classList.contains("fa-pause")) {
-	        this.playPauseButton.classList.toggle("fa-pause");
-	        this.playPauseButton.classList.add("fa-play");
-	      }
-	      this.container.handleNextFrameEvent();
-	    }
-	  }, {
-	    key: "handleResetEvent",
-	    value: function handleResetEvent() {
-	      this.container.handleResetEvent();
-	    }
-	  }, {
-	    key: "toggleInformationModal",
-	    value: function toggleInformationModal() {
-	      if (!this.container.pauseEvent) this.handlePauseEvent();
-
-	      this.modalBackdrop.style.display = 'none';
-	      this.informationModalBackdrop.style.display = 'flex';
-	      this.informationModal.style.display = 'flex';
-	      // this.cellLogicControls.style.zIndex = 0;
-	    }
-	  }, {
-	    key: "handleSpeedChangeEvent",
-	    value: function handleSpeedChangeEvent() {
-	      this.container.handleSpeedChangeEvent(300 - this.speedSlider.value);
-	    }
-	  }, {
-	    key: "handleCellResizeEvent",
-	    value: function handleCellResizeEvent() {
-	      this.container.handleCellResizeEvent(this.cellSizeDropdown.value);
-	    }
-	  }, {
-	    key: "handleResizeWidthEvent",
-	    value: function handleResizeWidthEvent() {
-	      this.container.handleResizeEvent('width', parseInt(this.currentWidth.value));
-	    }
-	  }, {
-	    key: "handleResizeHeightEvent",
-	    value: function handleResizeHeightEvent() {
-	      this.container.handleResizeEvent('height', parseInt(this.currentHeight.value));
-	    }
-	  }, {
-	    key: "addListeners",
-	    value: function addListeners() {
-	      this.playPauseButton.addEventListener('click', this.handlePauseEvent);
-	      this.nextFrameButton.addEventListener('click', this.handleNextFrameEvent);
-	      this.resetButton.addEventListener('click', this.handleResetEvent);
-	      this.speedSlider.addEventListener('change', this.handleSpeedChangeEvent);
-	      this.cellSizeDropdown.addEventListener('change', this.handleCellResizeEvent);
-	      this.currentWidth.addEventListener('change', this.handleResizeWidthEvent);
-	      this.currentHeight.addEventListener('change', this.handleResizeHeightEvent);
-	      this.informationButton.addEventListener('click', this.toggleInformationModal);
-	    }
-	  }]);
-
-	  return GridControlBar;
-	}();
-
-	exports.default = GridControlBar;
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var CellControlBar = function () {
-	  function CellControlBar(container, conditionalHash) {
-	    _classCallCheck(this, CellControlBar);
-
-	    this.container = container;
-	    this.conditionalHash = conditionalHash;
-
-	    this.cellLogicControls = document.getElementById("cellLogicControls");
-	    this.cellNames = document.getElementsByClassName("cellNames");
-	    this.colorPickers = document.getElementsByClassName("colorPickers");
-
-	    this.cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
-
-	    this.logicModalButtons = document.getElementsByClassName("logicModalButtons");
-	  }
-
-	  _createClass(CellControlBar, [{
-	    key: "populateTypeContainers",
-	    value: function populateTypeContainers() {
-	      var _this = this;
-
-	      this.handleCellNames();
-	      this.populateColorPickers();
-	      this.hideCellTypeContainers();
-
-	      this.cellTypeContainers[0].style.opacity = '1';
-
-	      var _loop = function _loop(i) {
-	        var currentTypeContainer = _this.cellTypeContainers[i];
-	        var currentLogicModalButton = _this.logicModalButtons[i];
-	        var currentType = Object.keys(_this.conditionalHash)[i];
-
-	        currentLogicModalButton.addEventListener('click', function () {
-	          // tutorialModal.style.display = 'none';
-	          _this.hideCellTypeContainers();
-	          // changeCellLogicModalType(currentType);
-	        });
-
-	        currentTypeContainer.addEventListener('click', function () {
-	          _this.changeCurrentCellType(currentType);
-	        });
-
-	        currentTypeContainer.addEventListener('mouseover', function () {
-	          currentTypeContainer.style.opacity = '1';
-	        });
-
-	        currentTypeContainer.addEventListener('mouseleave', function () {
-	          if (currentType !== _this.container.cellType) {
-	            currentTypeContainer.style.opacity = '0';
-	          }
-	        });
-	      };
-
-	      for (var i = 0; i < this.cellTypeContainers.length; i++) {
-	        _loop(i);
-	      }
-	    }
-	  }, {
-	    key: "showCellTypeContainers",
-	    value: function showCellTypeContainers() {
-	      for (var i = 0; i < this.cellTypeContainers.length; i++) {
-	        var _currentType = Object.keys(this.conditionalHash)[i];
-
-	        this.cellTypeContainers[i].style.display = 'flex';
-	        this.cellTypeContainers[i].style.opacity = '0';
-
-	        if (_currentType === this.cellType) {
-	          this.cellTypeContainers[i].style.opacity = '1';
-	        }
-	      }
-	    }
-	  }, {
-	    key: "hideCellTypeContainers",
-	    value: function hideCellTypeContainers() {
-	      for (var i = 0; i < this.cellTypeContainers.length; i++) {
-	        this.cellTypeContainers[i].style.display = 'none';
-	      }
-	    }
-	  }, {
-	    key: "changeCurrentCellType",
-	    value: function changeCurrentCellType(type) {
-	      for (var i = 0; i < this.cellNames.length; i++) {
-	        var currentName = this.cellNames[i];
-	        var _currentTypeContainer = this.cellTypeContainers[i];
-
-	        _currentTypeContainer.style.opacity = 0;
-
-	        if (currentName.id === type) {
-	          _currentTypeContainer.style.opacity = 1;
-	        }
-	      }
-
-	      this.cellType = type;
-	    }
-	  }, {
-	    key: "handleCellNames",
-	    value: function handleCellNames(cellType) {
-	      var _this2 = this;
-
-	      var _loop2 = function _loop2(i) {
-	        var currentName = _this2.cellNames[i];
-
-	        currentName.value = _this2.conditionalHash[currentName.id].name;
-
-	        currentName.addEventListener('input', function () {
-	          _this2.conditionalHash[currentName.id].name = currentName.value;
-	        });
-	      };
-
-	      for (var i = 0; i < this.cellNames.length; i++) {
-	        _loop2(i);
-	      }
-	    }
-	  }, {
-	    key: "populateColorPickers",
-	    value: function populateColorPickers() {
-	      var _this3 = this;
-
-	      var _loop3 = function _loop3(i) {
-	        var currentColorPicker = _this3.colorPickers[i];
-	        var currentType = Object.keys(_this3.conditionalHash)[i];
-
-	        currentColorPicker.value = _this3.conditionalHash[currentType].color;
-	        currentColorPicker.addEventListener('change', function (e) {
-	          _this3.conditionalHash[currentType].color = e.target.value;
-	        });
-	      };
-
-	      for (var i = 0; i < this.colorPickers.length; i++) {
-	        _loop3(i);
-	      }
-	    }
-	  }]);
-
-	  return CellControlBar;
-	}();
-
-	exports.default = CellControlBar;
-
-/***/ }),
+/* 8 */,
+/* 9 */,
 /* 10 */
 /***/ (function(module, exports) {
 
@@ -1559,6 +718,768 @@
 	}();
 
 	exports.default = InformationModal;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var GridControlBar = function () {
+	  function GridControlBar(container) {
+	    _classCallCheck(this, GridControlBar);
+
+	    this.container = container;
+	    this.mainCanvas = document.getElementById("mainCanvas");
+
+	    this.playPauseButton = document.getElementById("playPauseButton");
+	    this.nextFrameButton = document.getElementById("nextFrameButton");
+	    this.resetButton = document.getElementById("resetButton");
+
+	    this.speedSlider = document.getElementById("speedSlider");
+	    this.cellSizeDropdown = document.getElementById("cellSizeDropdown");
+	    this.currentWidth = document.getElementById("currentWidth");
+	    this.currentHeight = document.getElementById("currentHeight");
+
+	    this.informationButton = document.getElementById("informationButton");
+	  }
+
+	  _createClass(GridControlBar, [{
+	    key: "handlePauseEvent",
+	    value: function handlePauseEvent() {
+	      this.playPauseButton.classList.toggle("fa-pause");
+	      this.playPauseButton.classList.add("fa-play");
+	      this.container.handlePauseEvent();
+	    }
+	  }, {
+	    key: "handleNextFrameEvent",
+	    value: function handleNextFrameEvent() {
+	      if (this.playPauseButton.classList.contains("fa-pause")) {
+	        this.playPauseButton.classList.toggle("fa-pause");
+	        this.playPauseButton.classList.add("fa-play");
+	      }
+	      this.container.handleNextFrameEvent();
+	    }
+	  }, {
+	    key: "handleResetEvent",
+	    value: function handleResetEvent() {
+	      this.container.handleResetEvent();
+	    }
+	  }, {
+	    key: "toggleInformationModal",
+	    value: function toggleInformationModal() {
+	      if (!this.container.pauseEvent) this.handlePauseEvent();
+
+	      this.modalBackdrop.style.display = 'none';
+	      this.informationModalBackdrop.style.display = 'flex';
+	      this.informationModal.style.display = 'flex';
+	      // this.cellLogicControls.style.zIndex = 0;
+	    }
+	  }, {
+	    key: "handleSpeedChangeEvent",
+	    value: function handleSpeedChangeEvent() {
+	      this.container.handleSpeedChangeEvent(300 - this.speedSlider.value);
+	    }
+	  }, {
+	    key: "handleCellResizeEvent",
+	    value: function handleCellResizeEvent() {
+	      this.container.handleCellResizeEvent(this.cellSizeDropdown.value);
+	    }
+	  }, {
+	    key: "handleResizeWidthEvent",
+	    value: function handleResizeWidthEvent() {
+	      this.container.handleResizeEvent('width', parseInt(this.currentWidth.value));
+	    }
+	  }, {
+	    key: "handleResizeHeightEvent",
+	    value: function handleResizeHeightEvent() {
+	      this.container.handleResizeEvent('height', parseInt(this.currentHeight.value));
+	    }
+	  }, {
+	    key: "addListeners",
+	    value: function addListeners() {
+	      this.playPauseButton.addEventListener('click', this.handlePauseEvent);
+	      this.nextFrameButton.addEventListener('click', this.handleNextFrameEvent);
+	      this.resetButton.addEventListener('click', this.handleResetEvent);
+	      this.speedSlider.addEventListener('change', this.handleSpeedChangeEvent);
+	      this.cellSizeDropdown.addEventListener('change', this.handleCellResizeEvent);
+	      this.currentWidth.addEventListener('change', this.handleResizeWidthEvent);
+	      this.currentHeight.addEventListener('change', this.handleResizeHeightEvent);
+	      this.informationButton.addEventListener('click', this.toggleInformationModal);
+	    }
+	  }]);
+
+	  return GridControlBar;
+	}();
+
+	exports.default = GridControlBar;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var CellControlBar = function () {
+	  function CellControlBar(container, conditionalHash) {
+	    _classCallCheck(this, CellControlBar);
+
+	    this.container = container;
+	    this.conditionalHash = conditionalHash;
+
+	    this.cellLogicControls = document.getElementById("cellLogicControls");
+	    this.cellNames = document.getElementsByClassName("cellNames");
+	    this.colorPickers = document.getElementsByClassName("colorPickers");
+
+	    this.cellTypeContainers = document.getElementsByClassName("cellTypeContainers");
+
+	    this.logicModalButtons = document.getElementsByClassName("logicModalButtons");
+
+	    this.populateTypeContainers = this.populateTypeContainers.bind(this);
+	    this.populateColorPickers = this.populateColorPickers.bind(this);
+	    this.handleCellNames = this.handleCellNames.bind(this);
+
+	    this.populateTypeContainers();
+	  }
+
+	  _createClass(CellControlBar, [{
+	    key: "populateTypeContainers",
+	    value: function populateTypeContainers() {
+	      var _this = this;
+
+	      this.handleCellNames();
+	      this.populateColorPickers();
+	      // this.hideCellTypeContainers();
+
+	      this.cellTypeContainers[0].style.opacity = '1';
+
+	      var _loop = function _loop(i) {
+	        var currentTypeContainer = _this.cellTypeContainers[i];
+	        var currentLogicModalButton = _this.logicModalButtons[i];
+	        var currentType = Object.keys(_this.conditionalHash)[i];
+
+	        currentLogicModalButton.addEventListener('click', function () {
+	          // tutorialModal.style.display = 'none';
+	          _this.hideCellTypeContainers();
+	          // changeCellLogicModalType(currentType);
+	        });
+
+	        currentTypeContainer.addEventListener('click', function () {
+	          _this.changeCurrentCellType(currentType);
+	        });
+
+	        currentTypeContainer.addEventListener('mouseover', function () {
+	          currentTypeContainer.style.opacity = '1';
+	        });
+
+	        currentTypeContainer.addEventListener('mouseleave', function () {
+	          if (currentType !== _this.container.cellType) {
+	            currentTypeContainer.style.opacity = '0';
+	          }
+	        });
+	      };
+
+	      for (var i = 0; i < this.cellTypeContainers.length; i++) {
+	        _loop(i);
+	      }
+	    }
+	  }, {
+	    key: "showCellTypeContainers",
+	    value: function showCellTypeContainers() {
+	      for (var i = 0; i < this.cellTypeContainers.length; i++) {
+	        var _currentType = Object.keys(this.conditionalHash)[i];
+
+	        this.cellTypeContainers[i].style.display = 'flex';
+	        this.cellTypeContainers[i].style.opacity = '0';
+
+	        if (_currentType === this.cellType) {
+	          this.cellTypeContainers[i].style.opacity = '1';
+	        }
+	      }
+	    }
+	  }, {
+	    key: "hideCellTypeContainers",
+	    value: function hideCellTypeContainers() {
+	      for (var i = 0; i < this.cellTypeContainers.length; i++) {
+	        this.cellTypeContainers[i].style.display = 'none';
+	      }
+	    }
+	  }, {
+	    key: "changeCurrentCellType",
+	    value: function changeCurrentCellType(type) {
+	      for (var i = 0; i < this.cellNames.length; i++) {
+	        var currentName = this.cellNames[i];
+	        var _currentTypeContainer = this.cellTypeContainers[i];
+
+	        _currentTypeContainer.style.opacity = 0;
+
+	        if (currentName.id === type) {
+	          _currentTypeContainer.style.opacity = 1;
+	        }
+	      }
+
+	      this.cellType = type;
+	    }
+	  }, {
+	    key: "handleCellNames",
+	    value: function handleCellNames(cellType) {
+	      var _this2 = this;
+
+	      var _loop2 = function _loop2(i) {
+	        var currentName = _this2.cellNames[i];
+
+	        currentName.value = _this2.conditionalHash[currentName.id].name;
+
+	        currentName.addEventListener('input', function () {
+	          _this2.conditionalHash[currentName.id].name = currentName.value;
+	        });
+	      };
+
+	      for (var i = 0; i < this.cellNames.length; i++) {
+	        _loop2(i);
+	      }
+	    }
+	  }, {
+	    key: "populateColorPickers",
+	    value: function populateColorPickers() {
+	      var _this3 = this;
+
+	      var _loop3 = function _loop3(i) {
+	        var currentColorPicker = _this3.colorPickers[i];
+	        var currentType = Object.keys(_this3.conditionalHash)[i];
+
+	        currentColorPicker.value = _this3.conditionalHash[currentType].color;
+	        currentColorPicker.addEventListener('change', function (e) {
+	          _this3.conditionalHash[currentType].color = e.target.value;
+	        });
+	      };
+
+	      for (var i = 0; i < this.colorPickers.length; i++) {
+	        _loop3(i);
+	      }
+	    }
+	  }]);
+
+	  return CellControlBar;
+	}();
+
+	exports.default = CellControlBar;
+
+/***/ }),
+/* 14 */,
+/* 15 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var CellLogic = function () {
+	  function CellLogic(changingCells, cellList, cell) {
+	    _classCallCheck(this, CellLogic);
+
+	    this.cell = cell;
+	    this.cellList = cellList;
+	    this.changingCells = changingCells;
+	  }
+
+	  _createClass(CellLogic, [{
+	    key: 'random',
+	    value: function random(array) {
+	      return array[Math.floor(Math.random() * array.length)];
+	    }
+	  }, {
+	    key: 'getValidNeighbors',
+	    value: function getValidNeighbors(cellTypeArray) {
+	      var _this = this;
+
+	      var validNeighbors = this.cell.neighbors;
+	      var changingCells = this.changingCells;
+
+	      validNeighbors = validNeighbors.filter(function (neighbor) {
+	        var isValid = false;
+	        cellTypeArray.forEach(function (type) {
+	          if (_this.cellList[neighbor].type === type && !changingCells[neighbor]) {
+	            isValid = true;
+	          }
+	        });
+	        return isValid;
+	      });
+
+	      return validNeighbors;
+	    }
+	  }, {
+	    key: 'wander',
+	    value: function wander(array) {
+	      var nextCell = this.random(array);
+	      this.changingCells[nextCell] = this.cell.type;
+	      this.changingCells[this.cell.id] = 'false';
+	    }
+	  }, {
+	    key: 'stay',
+	    value: function stay() {
+	      this.changingCells[this.cell.id] = this.cell.type;
+	    }
+	  }, {
+	    key: 'reproduce',
+	    value: function reproduce(array) {
+	      // console.log(array);
+	      var nextCell = this.random(array);
+	      this.changingCells[nextCell] = this.cell.type;
+	    }
+	  }, {
+	    key: 'die',
+	    value: function die() {
+	      this.changingCells[this.cell.id] = 'false';
+	    }
+	  }, {
+	    key: 'live',
+	    value: function live(conditionalHash) {
+	      var _this2 = this;
+
+	      if (this.changingCells[this.cell.id]) return;
+
+	      var type = this.cell.type;
+	      var typeHash = {};
+
+	      var neighborTypes = Object.keys(conditionalHash[type]['neighborHash']);
+
+	      var validTypesWithFalse = neighborTypes.filter(function (neighborType) {
+	        return conditionalHash[type]['neighborHash'][neighborType] === true;
+	      });
+
+	      var validTypesWithoutFalse = neighborTypes.filter(function (neighborType) {
+	        var currentType = conditionalHash[type]['neighborHash'][neighborType];
+
+	        if (currentType === true && neighborType !== 'false') return true;
+	      });
+
+	      var validNeighborsWithFalse = this.getValidNeighbors(validTypesWithFalse);
+	      var validNeighborsWithoutFalse = this.getValidNeighbors(validTypesWithoutFalse);
+
+	      var totalNeighbors = this.cell.neighbors.filter(function (id) {
+	        return _this2.cellList[id].type !== 'false';
+	      });
+
+	      neighborTypes.forEach(function (neighborType) {
+	        typeHash[neighborType] = 0;
+	      });
+
+	      this.cell.neighbors.forEach(function (num) {
+	        typeHash[_this2.cellList[num].type]++;
+	      });
+
+	      if (eval(conditionalHash[type]['conditions']['skipCon'])) {
+	        return;
+	      } else if (eval(conditionalHash[type]['conditions']['dieCon'])) {
+	        this.die();
+	      } else if (eval(conditionalHash[type]['conditions']['reproduceCon'])) {
+	        this.reproduce(validNeighborsWithFalse);
+	      } else if (eval(conditionalHash[type]['conditions']['wanderCon'])) {
+	        this.wander(validNeighborsWithFalse);
+	      } else {
+	        this.stay();
+	      }
+	    }
+	  }]);
+
+	  return CellLogic;
+	}();
+
+	exports.default = CellLogic;
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var demoHash = {
+	  'typeOne': {
+	    'name': 'Grass',
+	    'color': '#507F2C',
+	    'conditions': {
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
+	      'dieCon': 'Math.random() * 100 < 0',
+	      'stayCon': 'Math.random() * 100 < 0',
+	      'wanderCon': 'Math.random() * 100 < 0',
+	      'reproduceCon': 'Math.random() * 100 < 100'
+	    },
+	    'neighborHash': {
+	      'typeOne': false,
+	      'typeTwo': false,
+	      'typeThree': false,
+	      'typeFour': false,
+	      'false': true
+	    }
+	  },
+
+	  'typeTwo': {
+	    'name': 'Sheep',
+	    'color': '#2552B2',
+	    'conditions': {
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
+	      'dieCon': 'Math.random() * 100 < 100 && typeHash[\'typeOne\'] === 0',
+	      'stayCon': 'Math.random() * 100 < 33',
+	      'wanderCon': 'Math.random() * 100 < 50',
+	      'reproduceCon': 'Math.random() * 100 < 25 && typeHash[\'typeTwo\'] > 0 && typeHash[\'typeOne\'] > 2'
+	    },
+	    'neighborHash': {
+	      'typeOne': true,
+	      'typeTwo': false,
+	      'typeThree': false,
+	      'typeFour': false,
+	      'false': true
+	    }
+	  },
+
+	  'typeThree': {
+	    'name': 'Human',
+	    'color': '#FF851B',
+	    'conditions': {
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
+	      'dieCon': 'Math.random() * 100 < 100 && validNeighborsWithoutFalse.length === 0',
+	      'stayCon': 'Math.random() * 100 < 33',
+	      'wanderCon': 'Math.random() * 100 < 100',
+	      'reproduceCon': 'Math.random() * 100 < 25 && typeHash[\'typeThree\'] > 0 && validNeighborsWithoutFalse.length > 2'
+	    },
+	    'neighborHash': {
+	      'typeOne': true,
+	      'typeTwo': true,
+	      'typeThree': false,
+	      'typeFour': false,
+	      'false': true
+	    }
+	  },
+
+	  'typeFour': {
+	    'name': 'Fence',
+	    'color': '#654321',
+	    'conditions': {
+	      'skipCon': 'Math.random() * 100 < 100 && validNeighborsWithFalse.length === 0',
+	      'dieCon': 'Math.random() * 100 < 0',
+	      'stayCon': 'Math.random() * 100 < 100',
+	      'wanderCon': 'Math.random() * 100 < 0',
+	      'reproduceCon': 'Math.random() * 100 < 0'
+	    },
+	    'neighborHash': {
+	      'typeOne': true,
+	      'typeTwo': false,
+	      'typeThree': false,
+	      'typeFour': false,
+	      'false': true
+	    }
+	  },
+
+	  'false': {
+	    'name': 'false',
+	    'color': 'rgba(255, 255, 255, 0)',
+	    'conditions': {
+	      'skipCon': 'Math.random() * 100 < 100',
+	      'dieCon': 'Math.random() * 100 < 0',
+	      'stayCon': 'Math.random() * 100 < 0',
+	      'wanderCon': 'Math.random() * 100 < 0',
+	      'reproduceCon': 'Math.random() * 100 < 0'
+	    },
+	    'neighborHash': {
+	      'typeOne': false,
+	      'typeTwo': false,
+	      'typeThree': false,
+	      'typeFour': false,
+	      'false': true
+	    }
+	  }
+	};
+
+	exports.default = demoHash;
+
+/***/ }),
+/* 17 */,
+/* 18 */,
+/* 19 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Cell = function () {
+	  function Cell(ctx, gridWidth, gridHeight, cellSize, id, x, y) {
+	    _classCallCheck(this, Cell);
+
+	    this.id = id;
+	    this.xmin = x + 1;
+	    this.xmax = x + cellSize;
+	    this.ymin = y + 1;
+	    this.ymax = y + cellSize;
+	    this.neighbors = [];
+
+	    this.ctx = ctx;
+	    this.cellSize = cellSize;
+	    this.gridWidth = gridWidth;
+	    this.x = x;
+	    this.y = y;
+
+	    this.type = 'false';
+	    this.color = 'rgba(255, 255, 255, 0)';
+
+	    this.getNeighbors(gridWidth, gridHeight, cellSize);
+	    this.render();
+	  }
+
+	  _createClass(Cell, [{
+	    key: 'changeState',
+	    value: function changeState(type, color) {
+	      this.type = type;
+	      this.color = color;
+	      this.render();
+	    }
+	  }, {
+	    key: 'getNeighbors',
+	    value: function getNeighbors(gridWidth, gridHeight, cellSize) {
+	      var _this = this;
+
+	      var offsetValue = gridWidth / cellSize;
+	      var maxWidthCount = gridWidth / Math.pow(cellSize, 2);
+	      var maxHeightCount = gridHeight / Math.pow(cellSize, 2);
+	      var maxCellId = Math.pow(cellSize, 2) * maxWidthCount * maxHeightCount;
+	      var top = this.id - offsetValue;
+	      var bottom = this.id + offsetValue;
+	      var left = this.id - 1;
+	      var right = this.id + 1;
+	      var topLeft = this.id - (offsetValue + 1);
+	      var bottomLeft = this.id + (offsetValue - 1);
+	      var topRight = this.id - (offsetValue - 1);
+	      var bottomRight = this.id + (offsetValue + 1);
+
+	      var neighborArray = [top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft];
+
+	      neighborArray.forEach(function (num) {
+	        if (num >= 0 && num <= maxCellId - 1) {
+	          _this.neighbors.push(num);
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'hexToRgbA',
+	    value: function hexToRgbA(hex) {
+	      var c = void 0;
+
+	      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+	        c = hex.substring(1).split('');
+	        if (c.length === 3) {
+	          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+	        }
+	        c = '0x' + c.join('');
+	        return 'rgba(' + [c >> 16 & 255, c >> 8 & 255, c & 255].join(',') + ', .9)';
+	      }
+	      throw new Error('Bad Hex');
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      this.ctx.clearRect(this.x, this.y, this.cellSize, this.cellSize);
+
+	      if (this.type === 'false') return;
+
+	      // Converting Hex to RGBA in case of future opacity tweaking
+	      this.ctx.fillStyle = this.hexToRgbA(this.color);
+
+	      this.ctx.fillRect(this.x, this.y, this.cellSize, this.cellSize);
+	    }
+	  }]);
+
+	  return Cell;
+	}();
+
+	exports.default = Cell;
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _Cell = __webpack_require__(19);
+
+	var _Cell2 = _interopRequireDefault(_Cell);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Grid = function () {
+	  function Grid(ctx, cellSize, gridWidth, gridHeight) {
+	    _classCallCheck(this, Grid);
+
+	    this.ctx = ctx;
+	    this.cells = [];
+	    this.populateGrid(cellSize, gridWidth, gridHeight);
+	  }
+
+	  _createClass(Grid, [{
+	    key: "toggleCell",
+	    value: function toggleCell(e, type, color) {
+	      var clickedCell = this.cells.find(function (cell) {
+	        if (e.offsetX >= cell.xmin && e.offsetX <= cell.xmax) {
+	          if (e.offsetY >= cell.ymin && e.offsetY <= cell.ymax) {
+	            return cell;
+	          }
+	        }
+	      });
+
+	      clickedCell.changeState(type, color);
+	      return clickedCell;
+	    }
+	  }, {
+	    key: "populateGrid",
+	    value: function populateGrid(cellSize, gridWidth, gridHeight) {
+	      var maxWidthCellCount = gridWidth / Math.pow(cellSize, 2);
+	      var maxHeightCellCount = gridHeight / Math.pow(cellSize, 2);
+	      var y = 0;
+	      var id = 0;
+
+	      for (var i = 0; i < cellSize * maxHeightCellCount; i++) {
+	        var x = 0;
+
+	        for (var j = 0; j < cellSize * maxWidthCellCount; j++) {
+	          this.cells.push(new _Cell2.default(this.ctx, gridWidth, gridHeight, cellSize, id, x, y));
+	          x += cellSize;
+	          id++;
+	        }
+
+	        y += cellSize;
+	      }
+	    }
+	  }]);
+
+	  return Grid;
+	}();
+
+	exports.default = Grid;
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _cellLogic = __webpack_require__(15);
+
+	var _cellLogic2 = _interopRequireDefault(_cellLogic);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Engine = function () {
+	  function Engine(board) {
+	    _classCallCheck(this, Engine);
+
+	    this.board = board;
+	    this.livingCells = {};
+	    this.changingCells = {};
+	    this.dyingCells = [];
+	  }
+
+	  _createClass(Engine, [{
+	    key: 'random',
+	    value: function random(array) {
+	      return array[Math.floor(Math.random() * array.length)];
+	    }
+	  }, {
+	    key: 'shuffle',
+	    value: function shuffle(array) {
+	      for (var i = array.length - 1; i > 0; i--) {
+	        var j = Math.floor(Math.random() * (i + 1));
+	        var temp = array[i];
+	        array[i] = array[j];
+	        array[j] = temp;
+	      }
+	      return array;
+	    }
+	  }, {
+	    key: 'cellLogic',
+	    value: function cellLogic(conditionalHash) {
+	      var _this = this;
+
+	      this.shuffle(this.dyingCells).forEach(function (cell) {
+	        var cellLogic = new _cellLogic2.default(_this.changingCells, _this.board.cells, cell);
+	        cellLogic.live(conditionalHash);
+
+	        cell.neighbors.forEach(function (id) {
+	          if (_this.livingCells[id]) return;
+	          _this.livingCells[id] = _this.board.cells[id];
+	        });
+	      });
+
+	      this.dyingCells = [];
+
+	      this.shuffle(Object.values(this.livingCells)).forEach(function (cell) {
+	        if (_this.changingCells[cell.id]) return;
+	        var cellLogic = new _cellLogic2.default(_this.changingCells, _this.board.cells, cell);
+	        cellLogic.live(conditionalHash);
+	      });
+
+	      this.livingCells = {};
+
+	      Object.keys(this.changingCells).forEach(function (key) {
+	        _this.board.cells[key].changeState(_this.changingCells[key], conditionalHash[_this.changingCells[key]].color);
+
+	        _this.dyingCells.push(_this.board.cells[key]);
+	      });
+
+	      this.changingCells = {};
+	    }
+	  }]);
+
+	  return Engine;
+	}();
+
+	exports.default = Engine;
 
 /***/ })
 /******/ ]);

@@ -1,5 +1,5 @@
-import Board from "./board";
-import Automata from "./automata";
+import Grid from "./logic/Grid";
+import Automata from "./logic/Engine";
 
 export default class Container {
   constructor (mainCanvas, mainCtx, conditionalHash) {
@@ -16,7 +16,7 @@ export default class Container {
     this.cellType = 'typeOne';
     this.start = null;
     this.getGridSize();
-    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
+    this.board = new Grid(this.mainCtx, this.cellSize, this.width, this.height);
     this.automata = new Automata(this.board);
     this.handlePlayEvent();
   }
@@ -75,7 +75,7 @@ export default class Container {
 
   handleResetEvent () {
     this.handlePauseEvent();
-    this.board = new Board(this.mainCtx, this.cellSize, this.width, this.height);
+    this.board = new Grid(this.mainCtx, this.cellSize, this.width, this.height);
     this.automata = new Automata(this.board);
     this.handlePauseEvent();
   }
