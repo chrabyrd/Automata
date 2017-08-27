@@ -3,12 +3,6 @@ export default class GridControlBar {
     this.container = container;
     this.mainCanvas = document.getElementById("mainCanvas");
 
-    this.cellLogicControls = document.getElementById("cellLogicControls");
-
-    this.modalBackdrop = document.getElementById("modalBackdrop");
-    this.informationModalBackdrop = document.getElementById("informationModalBackdrop");
-    this.informationModal = document.getElementById("informationModal");
-
     this.playPauseButton = document.getElementById("playPauseButton");
     this.nextFrameButton = document.getElementById("nextFrameButton");
     this.resetButton = document.getElementById("resetButton");
@@ -19,6 +13,9 @@ export default class GridControlBar {
     this.currentHeight = document.getElementById("currentHeight");
 
     this.informationButton = document.getElementById("informationButton");
+
+    this.gridControls = document.querySelector("#gridControls");
+    this.gridControls.style.display = 'flex';
   }
 
   handlePauseEvent() {
@@ -45,7 +42,7 @@ export default class GridControlBar {
     this.modalBackdrop.style.display = 'none';
     this.informationModalBackdrop.style.display = 'flex';
     this.informationModal.style.display = 'flex';
-    this.cellLogicControls.style.zIndex = 0;
+    // this.cellLogicControls.style.zIndex = 0;
   }
 
   handleSpeedChangeEvent() {

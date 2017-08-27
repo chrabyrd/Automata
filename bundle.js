@@ -77,10 +77,10 @@
 	  var mainCtx = mainCanvas.getContext("2d");
 
 	  var container = new _Container2.default(mainCanvas, mainCtx, _hashes.demoHash);
+	  var informationModal = new _InformationModal2.default(container);
 	  var cellControlBar = new _CellControlBar2.default(container, _hashes.demoHash);
 	  var cellLogicModal = new _CellLogicModal2.default(container);
 	  var gridControlBar = new _GridControlBar2.default(container);
-	  var informationModal = new _InformationModal2.default(container);
 
 	  // cellControlBar.populateTypeContainers();
 	  // informationModal.handleInformationModalBehavior();
@@ -1024,12 +1024,6 @@
 	    this.container = container;
 	    this.mainCanvas = document.getElementById("mainCanvas");
 
-	    this.cellLogicControls = document.getElementById("cellLogicControls");
-
-	    this.modalBackdrop = document.getElementById("modalBackdrop");
-	    this.informationModalBackdrop = document.getElementById("informationModalBackdrop");
-	    this.informationModal = document.getElementById("informationModal");
-
 	    this.playPauseButton = document.getElementById("playPauseButton");
 	    this.nextFrameButton = document.getElementById("nextFrameButton");
 	    this.resetButton = document.getElementById("resetButton");
@@ -1040,6 +1034,9 @@
 	    this.currentHeight = document.getElementById("currentHeight");
 
 	    this.informationButton = document.getElementById("informationButton");
+
+	    this.gridControls = document.querySelector("#gridControls");
+	    this.gridControls.style.display = 'flex';
 	  }
 
 	  _createClass(GridControlBar, [{
@@ -1071,7 +1068,7 @@
 	      this.modalBackdrop.style.display = 'none';
 	      this.informationModalBackdrop.style.display = 'flex';
 	      this.informationModal.style.display = 'flex';
-	      this.cellLogicControls.style.zIndex = 0;
+	      // this.cellLogicControls.style.zIndex = 0;
 	    }
 	  }, {
 	    key: "handleSpeedChangeEvent",

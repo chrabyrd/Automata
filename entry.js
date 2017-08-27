@@ -11,10 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainCtx = mainCanvas.getContext("2d");
 
   const container = new Container(mainCanvas, mainCtx, demoHash);
+  const informationModal = new InformationModal(container);
   const cellControlBar = new CellControlBar(container, demoHash);
   const cellLogicModal = new CellLogicModal(container);
   const gridControlBar = new GridControlBar(container);
-  const informationModal = new InformationModal(container);
 
   // cellControlBar.populateTypeContainers();
   // informationModal.handleInformationModalBehavior();
