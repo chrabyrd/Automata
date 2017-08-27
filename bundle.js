@@ -46,7 +46,7 @@
 
 	"use strict";
 
-	var _Container = __webpack_require__(12);
+	var _Container = __webpack_require__(1);
 
 	var _Container2 = _interopRequireDefault(_Container);
 
@@ -54,15 +54,21 @@
 
 	var _tutorial = __webpack_require__(7);
 
-	var _gridControls = __webpack_require__(8);
+	var _GridControlBar = __webpack_require__(8);
 
-	var _CellControlBar = __webpack_require__(11);
+	var _GridControlBar2 = _interopRequireDefault(_GridControlBar);
+
+	var _CellControlBar = __webpack_require__(9);
 
 	var _CellControlBar2 = _interopRequireDefault(_CellControlBar);
 
-	var _CellLogicModal = __webpack_require__(13);
+	var _CellLogicModal = __webpack_require__(10);
 
 	var _CellLogicModal2 = _interopRequireDefault(_CellLogicModal);
+
+	var _InformationModal = __webpack_require__(11);
+
+	var _InformationModal2 = _interopRequireDefault(_InformationModal);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -70,25 +76,14 @@
 	  var mainCanvas = document.getElementById("mainCanvas");
 	  var mainCtx = mainCanvas.getContext("2d");
 
-	  var informationModalBackdrop = document.getElementById("informationModalBackdrop");
-
-	  var informationModal = document.getElementById("informationModal");
-	  var tutorialModal = document.getElementById("tutorialModal");
-
-	  var gridControls = document.getElementById("gridControls");
-	  var playPauseButton = document.getElementById("playPauseButton");
-
-	  var currentWidth = document.getElementById("currentWidth");
-	  var currentHeight = document.getElementById("currentHeight");
-
-	  var demoButton = document.getElementById("demoButton");
-	  var newGridButton = document.getElementById("newGridButton");
-
-	  var conditionalHash = _hashes.defaultHash;
-	  var container = void 0;
-
-	  var cellControlBar = new _CellControlBar2.default(container, _hashes.defaultHash);
+	  var container = new _Container2.default(mainCanvas, mainCtx, _hashes.demoHash);
+	  var cellControlBar = new _CellControlBar2.default(container, _hashes.demoHash);
 	  var cellLogicModal = new _CellLogicModal2.default(container);
+	  var gridControlBar = new _GridControlBar2.default(container);
+	  var informationModal = new _InformationModal2.default(container);
+
+	  // cellControlBar.populateTypeContainers();
+	  // informationModal.handleInformationModalBehavior();
 
 	  var mouseStateToggle = false;
 
@@ -118,12 +113,12 @@
 	    switch (e.keyCode) {
 	      case 27:
 	        // Esc
-	        toggleUI();
+	        // toggleUI();
 	        break;
 	      case 32:
 	        // Spacebar
 	        e.preventDefault();
-	        handlePauseEvent();
+	        // handlePauseEvent();
 	        break;
 	      case 49:
 	        // 1
@@ -143,11 +138,11 @@
 	        break;
 	      case 73:
 	        // i
-	        toggleInformationModal();
+	        // toggleInformationModal();
 	        break;
 	      case 78:
 	        // n
-	        handleNextFrameEvent();
+	        // handleNextFrameEvent();
 	        break;
 	      case 79:
 	        // o
@@ -155,207 +150,181 @@
 	        break;
 	      case 82:
 	        // r
-	        handleResetEvent();
+	        // handleResetEvent();
 	        break;
 	    }
 	  });
-
-	  var toggleInformationModal = function toggleInformationModal() {
-	    if (!container.pauseEvent) handlePauseEvent();
-
-	    // modalBackdrop.style.display = 'none';
-	    informationModalBackdrop.style.display = 'flex';
-	    informationModal.style.display = 'flex';
-	    // cellLogicControls.style.zIndex = 0;
-	  };
-
-	  var toggleUI = function toggleUI() {
-	    cellLogicModal.style.display = 'none';
-	    informationModal.style.display = 'none';
-	    // modalBackdrop.style.display = 'none';
-	    gridControls.style.display = 'flex';
-
-	    // cellControlBar.showCellTypeContainers();
-	    //
-	    // if (gridControls.style.opacity === '0') {
-	    //   gridControls.style.opacity = '1';
-	    //
-	    //   for (let i = 0; i < cellControlBar.cellTypeContainers.length; i++) {
-	    //     const currentType = Object.keys(conditionalHash)[i];
-	    //
-	    //     if (currentType === container.cellType) {
-	    //       cellControlBar.cellTypeContainers[i].style.opacity = '1';
-	    //     }
-	    //   }
-	    // } else {
-	    //   gridControls.style.opacity = '0';
-	    //
-	    //   for (let i = 0; i < cellControlBar.cellTypeContainers.length; i++) {
-	    //     cellControlBar.cellTypeContainers[i].style.opacity = '0';
-	    //   }
-	    // }
-	  };
-
-	  var handlePauseEvent = function handlePauseEvent() {
-	    playPauseButton.classList.toggle("fa-pause");
-	    playPauseButton.classList.add("fa-play");
-	    container.handlePauseEvent();
-	  };
-
-	  var handleNextFrameEvent = function handleNextFrameEvent() {
-	    if (playPauseButton.classList.contains("fa-pause")) {
-	      playPauseButton.classList.toggle("fa-pause");
-	      playPauseButton.classList.add("fa-play");
-	    }
-	    container.handleNextFrameEvent();
-	  };
-
-	  var handleResetEvent = function handleResetEvent() {
-	    container.handleResetEvent();
-	  };
-
-	  var handleInformationModalBehavior = function handleInformationModalBehavior() {
-
-	    var particleEffect = function particleEffect() {
-	      var colors = {
-	        aqua: "#00ffff",
-	        azure: "#f0ffff",
-	        beige: "#f5f5dc",
-	        blue: "#0000ff",
-	        brown: "#a52a2a",
-	        cyan: "#00ffff",
-	        darkblue: "#00008b",
-	        darkcyan: "#008b8b",
-	        darkgrey: "#a9a9a9",
-	        darkgreen: "#006400",
-	        darkkhaki: "#bdb76b",
-	        darkmagenta: "#8b008b",
-	        darkolivegreen: "#556b2f",
-	        darkorange: "#ff8c00",
-	        darkorchid: "#9932cc",
-	        darkred: "#8b0000",
-	        darksalmon: "#e9967a",
-	        darkviolet: "#9400d3",
-	        fuchsia: "#ff00ff",
-	        gold: "#ffd700",
-	        green: "#008000",
-	        indigo: "#4b0082",
-	        khaki: "#f0e68c",
-	        lightblue: "#add8e6",
-	        lightcyan: "#e0ffff",
-	        lightgreen: "#90ee90",
-	        lightpink: "#ffb6c1",
-	        lightyellow: "#ffffe0",
-	        lime: "#00ff00",
-	        magenta: "#ff00ff",
-	        maroon: "#800000",
-	        navy: "#000080",
-	        olive: "#808000",
-	        orange: "#ffa500",
-	        pink: "#ffc0cb",
-	        purple: "#800080",
-	        violet: "#800080",
-	        red: "#ff0000",
-	        silver: "#c0c0c0",
-	        yellow: "#ffff00"
-	      };
-
-	      var generateParticle = function generateParticle() {
-	        var getRandomInt = function getRandomInt(min, max) {
-	          min = Math.ceil(min);
-	          max = Math.floor(max);
-	          return Math.floor(Math.random() * (max - min)) + min;
-	        };
-
-	        var size = getRandomInt(10, 40);
-	        var randomColor = Object.values(colors)[Math.floor(Math.random() * Object.values(colors).length)];
-
-	        var box = document.createElement('div');
-
-	        box.style.width = size + "px";
-	        box.style.height = size + "px";
-	        box.style.left = getRandomInt(0, window.innerWidth) + "px";
-	        box.style.bottom = getRandomInt(0, window.innerWidth) + "px";
-	        box.classList.add("particle");
-	        box.style.backgroundColor = randomColor;
-	        informationModalBackdrop.appendChild(box);
-
-	        setTimeout(function () {
-	          box.style.webkitAnimationName = 'boxFadeOut';
-	          box.style.webkitAnimationDuration = '1s';
-	        }, 1600);
-
-	        setTimeout(function () {
-	          box.parentNode.removeChild(box);
-	        }, 2000);
-	      };
-
-	      generateParticle();
-	    };
-
-	    var changeHash = function changeHash(hash) {
-	      conditionalHash = hash;
-	      container = new _Container2.default(mainCanvas, mainCtx, conditionalHash);
-
-	      var populateGridDimensions = function populateGridDimensions() {
-	        var possibleDimensions = container.gridDimensions.sort(function (a, b) {
-	          return a - b;
-	        });
-
-	        possibleDimensions.reverse().forEach(function (num) {
-	          var widthOption = document.createElement('option');
-	          widthOption.value = num;
-	          widthOption.text = num;
-
-	          var heightOption = document.createElement('option');
-	          heightOption.value = num;
-	          heightOption.text = num;
-
-	          currentWidth.add(widthOption);
-	          currentHeight.add(heightOption);
-	        });
-
-	        currentWidth.value = container.width;
-	        currentHeight.value = container.height;
-	      };
-
-	      informationModal.style.display = 'none';
-	      informationModalBackdrop.style.display = 'none';
-	      gridControls.style.display = 'flex';
-
-	      clearInterval(particleEffect, 40);
-
-	      handleResetEvent();
-	      cellControlBar.populateTypeContainers();
-	      populateGridDimensions();
-	      cellControlBar.showCellTypeContainers();
-	    };
-
-	    setInterval(particleEffect, 40);
-
-	    newGridButton.addEventListener('click', function () {
-	      changeHash(_hashes.defaultHash);
-	      (0, _gridControls.handleGridControlButtons)(container);
-	    });
-
-	    demoButton.addEventListener('click', function () {
-	      changeHash(_hashes.demoHash);
-	      (0, _gridControls.handleGridControlButtons)(container);
-	      (0, _tutorial.startTutorial)();
-	    });
-
-	    // Use this pattern for later presets
-	    // demoButton.addEventListener('click', () => {
-	    //   changeHash(demoHash);
-	    // });
-	  };
-
-	  cellControlBar.populateTypeContainers();
-	  handleInformationModalBehavior();
 	});
 
 /***/ }),
-/* 1 */,
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _board = __webpack_require__(2);
+
+	var _board2 = _interopRequireDefault(_board);
+
+	var _automata = __webpack_require__(4);
+
+	var _automata2 = _interopRequireDefault(_automata);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Container = function () {
+	  function Container(mainCanvas, mainCtx, conditionalHash) {
+	    _classCallCheck(this, Container);
+
+	    this.mainCanvas = mainCanvas;
+	    this.mainCtx = mainCtx;
+	    this.conditionalHash = conditionalHash;
+	    this.gridDimensions = [];
+	    this.cellSizes = [1, 2, 4, 8, 16, 32];
+	    this.width = window.innerWidth;
+	    this.height = window.innerHeight;
+	    this.drawspeed = 50;
+	    this.cellSize = 16;
+	    this.pauseEvent = false;
+	    this.cellType = 'typeOne';
+	    this.start = null;
+	    this.getGridSize();
+	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	    this.automata = new _automata2.default(this.board);
+	    this.handlePlayEvent();
+	  }
+
+	  _createClass(Container, [{
+	    key: "closestValue",
+	    value: function closestValue(num, array) {
+	      var sortedArray = array.sort(function (a, b) {
+	        return Math.abs(num - a) - Math.abs(num - b);
+	      });
+
+	      return sortedArray.filter(function (val) {
+	        return val >= num;
+	      })[0];
+	    }
+	  }, {
+	    key: "getGridSize",
+	    value: function getGridSize() {
+	      var gridDimensions = [];
+
+	      for (var i = 200; i <= 4000; i++) {
+	        if (i % 32 === 0) gridDimensions.push(i);
+	      }
+
+	      this.width = this.closestValue(this.width, gridDimensions);
+	      this.height = this.closestValue(this.height, gridDimensions);
+	      this.mainCanvas.width = this.width;
+	      this.mainCanvas.height = this.height;
+	      this.gridDimensions = gridDimensions;
+	    }
+	  }, {
+	    key: "handleClickEvent",
+	    value: function handleClickEvent(e) {
+	      var color = this.conditionalHash[this.cellType].color;
+	      var selectedCell = this.board.toggleCell(e, this.cellType, color);
+
+	      this.automata.dyingCells.push(selectedCell);
+	    }
+	  }, {
+	    key: "handlePlayEvent",
+	    value: function handlePlayEvent() {
+	      var _this = this;
+
+	      this.start = setInterval(function () {
+	        _this.automata.cellLogic(_this.conditionalHash);
+	      }, this.drawspeed);
+	    }
+	  }, {
+	    key: "handlePauseEvent",
+	    value: function handlePauseEvent() {
+	      if (this.pauseEvent) {
+	        this.pauseEvent = false;
+	        this.handlePlayEvent();
+	      } else {
+	        this.pauseEvent = true;
+	        clearInterval(this.start);
+	      }
+	    }
+	  }, {
+	    key: "handleNextFrameEvent",
+	    value: function handleNextFrameEvent() {
+	      if (!this.pauseEvent) this.handlePauseEvent();
+	      this.automata.cellLogic(this.conditionalHash);
+	    }
+	  }, {
+	    key: "handleResetEvent",
+	    value: function handleResetEvent() {
+	      this.handlePauseEvent();
+	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
+	      this.automata = new _automata2.default(this.board);
+	      this.handlePauseEvent();
+	    }
+	  }, {
+	    key: "handleSpeedChangeEvent",
+	    value: function handleSpeedChangeEvent(speed) {
+	      this.handlePauseEvent();
+	      this.drawspeed = speed;
+	      this.handlePauseEvent();
+	    }
+	  }, {
+	    key: "handleCellResizeEvent",
+	    value: function handleCellResizeEvent(size) {
+	      this.cellSize = parseInt(size);
+	      this.handleResetEvent();
+	    }
+	  }, {
+	    key: "handleResizeEvent",
+	    value: function handleResizeEvent(dimension, size) {
+	      if (dimension === 'width') {
+	        this.width = size;
+	        this.mainCanvas.width = size;
+	      } else if (dimension === 'height') {
+	        this.height = size;
+	        this.mainCanvas.height = size;
+	      }
+
+	      this.handleResetEvent();
+	    }
+	  }, {
+	    key: "handlePauseEvent",
+	    value: function handlePauseEvent() {
+	      this.playPauseButton.classList.toggle("fa-pause");
+	      this.playPauseButton.classList.add("fa-play");
+	      this.container.handlePauseEvent();
+	    }
+	  }, {
+	    key: "handleNextFrameEvent",
+	    value: function handleNextFrameEvent() {
+	      if (this.playPauseButton.classList.contains("fa-pause")) {
+	        this.playPauseButton.classList.toggle("fa-pause");
+	        this.playPauseButton.classList.add("fa-play");
+	      }
+	      this.container.handleNextFrameEvent();
+	    }
+	  }, {
+	    key: "handleResetEvent",
+	    value: function handleResetEvent() {
+	      this.container.handleResetEvent();
+	    }
+	  }]);
+
+	  return Container;
+	}();
+
+	exports.default = Container;
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1144,9 +1113,7 @@
 	exports.default = GridControlBar;
 
 /***/ }),
-/* 9 */,
-/* 10 */,
-/* 11 */
+/* 9 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1299,154 +1266,7 @@
 	exports.default = CellControlBar;
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _board = __webpack_require__(2);
-
-	var _board2 = _interopRequireDefault(_board);
-
-	var _automata = __webpack_require__(4);
-
-	var _automata2 = _interopRequireDefault(_automata);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Container = function () {
-	  function Container(mainCanvas, mainCtx, conditionalHash) {
-	    _classCallCheck(this, Container);
-
-	    this.mainCanvas = mainCanvas;
-	    this.mainCtx = mainCtx;
-	    this.conditionalHash = conditionalHash;
-	    this.gridDimensions = [];
-	    this.cellSizes = [1, 2, 4, 8, 16, 32];
-	    this.width = window.innerWidth;
-	    this.height = window.innerHeight;
-	    this.drawspeed = 50;
-	    this.cellSize = 16;
-	    this.pauseEvent = false;
-	    this.cellType = 'typeOne';
-	    this.start = null;
-	    this.getGridSize();
-	    this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	    this.automata = new _automata2.default(this.board);
-	    this.handlePlayEvent();
-	  }
-
-	  _createClass(Container, [{
-	    key: "closestValue",
-	    value: function closestValue(num, array) {
-	      var sortedArray = array.sort(function (a, b) {
-	        return Math.abs(num - a) - Math.abs(num - b);
-	      });
-
-	      return sortedArray.filter(function (val) {
-	        return val >= num;
-	      })[0];
-	    }
-	  }, {
-	    key: "getGridSize",
-	    value: function getGridSize() {
-	      var gridDimensions = [];
-
-	      for (var i = 200; i <= 4000; i++) {
-	        if (i % 32 === 0) gridDimensions.push(i);
-	      }
-
-	      this.width = this.closestValue(this.width, gridDimensions);
-	      this.height = this.closestValue(this.height, gridDimensions);
-	      this.mainCanvas.width = this.width;
-	      this.mainCanvas.height = this.height;
-	      this.gridDimensions = gridDimensions;
-	    }
-	  }, {
-	    key: "handleClickEvent",
-	    value: function handleClickEvent(e) {
-	      var color = this.conditionalHash[this.cellType].color;
-	      var selectedCell = this.board.toggleCell(e, this.cellType, color);
-
-	      this.automata.dyingCells.push(selectedCell);
-	    }
-	  }, {
-	    key: "handlePlayEvent",
-	    value: function handlePlayEvent() {
-	      var _this = this;
-
-	      this.start = setInterval(function () {
-	        _this.automata.cellLogic(_this.conditionalHash);
-	      }, this.drawspeed);
-	    }
-	  }, {
-	    key: "handlePauseEvent",
-	    value: function handlePauseEvent() {
-	      if (this.pauseEvent) {
-	        this.pauseEvent = false;
-	        this.handlePlayEvent();
-	      } else {
-	        this.pauseEvent = true;
-	        clearInterval(this.start);
-	      }
-	    }
-	  }, {
-	    key: "handleNextFrameEvent",
-	    value: function handleNextFrameEvent() {
-	      if (!this.pauseEvent) this.handlePauseEvent();
-	      this.automata.cellLogic(this.conditionalHash);
-	    }
-	  }, {
-	    key: "handleResetEvent",
-	    value: function handleResetEvent() {
-	      this.handlePauseEvent();
-	      this.board = new _board2.default(this.mainCtx, this.cellSize, this.width, this.height);
-	      this.automata = new _automata2.default(this.board);
-	      this.handlePauseEvent();
-	    }
-	  }, {
-	    key: "handleSpeedChangeEvent",
-	    value: function handleSpeedChangeEvent(speed) {
-	      this.handlePauseEvent();
-	      this.drawspeed = speed;
-	      this.handlePauseEvent();
-	    }
-	  }, {
-	    key: "handleCellResizeEvent",
-	    value: function handleCellResizeEvent(size) {
-	      this.cellSize = parseInt(size);
-	      this.handleResetEvent();
-	    }
-	  }, {
-	    key: "handleResizeEvent",
-	    value: function handleResizeEvent(dimension, size) {
-	      if (dimension === 'width') {
-	        this.width = size;
-	        this.mainCanvas.width = size;
-	      } else if (dimension === 'height') {
-	        this.height = size;
-	        this.mainCanvas.height = size;
-	      }
-
-	      this.handleResetEvent();
-	    }
-	  }]);
-
-	  return Container;
-	}();
-
-	exports.default = Container;
-
-/***/ }),
-/* 13 */
+/* 10 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1577,6 +1397,171 @@
 	}();
 
 	exports.default = CellLogicModal;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var InformationModal = function () {
+	  function InformationModal(container) {
+	    _classCallCheck(this, InformationModal);
+
+	    this.container = container;
+	    this.informationModalBackdrop = document.getElementById("informationModalBackdrop");
+	    this.informationModal = document.getElementById("informationModal");
+	    this.demoButton = document.getElementById("demoButton");
+	    this.newGridButton = document.getElementById("newGridButton");
+
+	    this.informationModal.style.display = 'none';
+	    this.informationModalBackdrop.style.display = 'none';
+	  }
+
+	  _createClass(InformationModal, [{
+	    key: "toggleInformationModal",
+	    value: function toggleInformationModal() {
+	      if (!this.container.pauseEvent) this.container.handlePauseEvent();
+
+	      // modalBackdrop.style.display = 'none';
+	      this.informationModalBackdrop.style.display = 'flex';
+	      this.informationModal.style.display = 'flex';
+	      // cellLogicControls.style.zIndex = 0;
+	    }
+	  }, {
+	    key: "handleInformationModalBehavior",
+	    value: function handleInformationModalBehavior() {
+	      var _this = this;
+
+	      var particleEffect = function particleEffect() {
+	        var colors = {
+	          aqua: "#00ffff",
+	          azure: "#f0ffff",
+	          beige: "#f5f5dc",
+	          blue: "#0000ff",
+	          brown: "#a52a2a",
+	          cyan: "#00ffff",
+	          darkblue: "#00008b",
+	          darkcyan: "#008b8b",
+	          darkgrey: "#a9a9a9",
+	          darkgreen: "#006400",
+	          darkkhaki: "#bdb76b",
+	          darkmagenta: "#8b008b",
+	          darkolivegreen: "#556b2f",
+	          darkorange: "#ff8c00",
+	          darkorchid: "#9932cc",
+	          darkred: "#8b0000",
+	          darksalmon: "#e9967a",
+	          darkviolet: "#9400d3",
+	          fuchsia: "#ff00ff",
+	          gold: "#ffd700",
+	          green: "#008000",
+	          indigo: "#4b0082",
+	          khaki: "#f0e68c",
+	          lightblue: "#add8e6",
+	          lightcyan: "#e0ffff",
+	          lightgreen: "#90ee90",
+	          lightpink: "#ffb6c1",
+	          lightyellow: "#ffffe0",
+	          lime: "#00ff00",
+	          magenta: "#ff00ff",
+	          maroon: "#800000",
+	          navy: "#000080",
+	          olive: "#808000",
+	          orange: "#ffa500",
+	          pink: "#ffc0cb",
+	          purple: "#800080",
+	          violet: "#800080",
+	          red: "#ff0000",
+	          silver: "#c0c0c0",
+	          yellow: "#ffff00"
+	        };
+
+	        var generateParticle = function generateParticle() {
+	          var getRandomInt = function getRandomInt(min, max) {
+	            min = Math.ceil(min);
+	            max = Math.floor(max);
+	            return Math.floor(Math.random() * (max - min)) + min;
+	          };
+
+	          var size = getRandomInt(10, 40);
+	          var randomColor = Object.values(colors)[Math.floor(Math.random() * Object.values(colors).length)];
+
+	          var box = document.createElement('div');
+
+	          box.style.width = size + "px";
+	          box.style.height = size + "px";
+	          box.style.left = getRandomInt(0, window.innerWidth) + "px";
+	          box.style.bottom = getRandomInt(0, window.innerWidth) + "px";
+	          box.classList.add("particle");
+	          box.style.backgroundColor = randomColor;
+	          _this.informationModalBackdrop.appendChild(box);
+
+	          setTimeout(function () {
+	            box.style.webkitAnimationName = 'boxFadeOut';
+	            box.style.webkitAnimationDuration = '1s';
+	          }, 1600);
+
+	          setTimeout(function () {
+	            box.parentNode.removeChild(box);
+	          }, 2000);
+	        };
+
+	        generateParticle();
+	      };
+
+	      // const changeHash = hash => {
+	      //   conditionalHash = hash;
+	      //   container = new Container(mainCanvas, mainCtx, conditionalHash);
+	      //
+	      //   const populateGridDimensions = () => {
+	      //     const possibleDimensions = container.gridDimensions.sort((a, b) => a - b);
+	      //
+	      //     possibleDimensions.reverse().forEach(num => {
+	      //       const widthOption = document.createElement('option');
+	      //       widthOption.value = num;
+	      //       widthOption.text = num;
+	      //
+	      //       const heightOption = document.createElement('option');
+	      //       heightOption.value = num;
+	      //       heightOption.text = num;
+	      //
+	      //       currentWidth.add(widthOption);
+	      //       currentHeight.add(heightOption);
+	      //     });
+	      //
+	      //     currentWidth.value = container.width;
+	      //     currentHeight.value = container.height;
+	      //   };
+	      //
+	      //   informationModal.style.display = 'none';
+	      //   informationModalBackdrop.style.display = 'none';
+	      //   gridControls.style.display = 'flex';
+	      //
+	      //   clearInterval(particleEffect, 40);
+	      //
+	      //   handleResetEvent();
+	      //   cellControlBar.populateTypeContainers();
+	      //   populateGridDimensions();
+	      //   cellControlBar.showCellTypeContainers();
+	      // };
+
+	      setInterval(particleEffect, 40);
+	    }
+	  }]);
+
+	  return InformationModal;
+	}();
+
+	exports.default = InformationModal;
 
 /***/ })
 /******/ ]);

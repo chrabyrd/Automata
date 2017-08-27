@@ -102,4 +102,22 @@ export default class Container {
 
     this.handleResetEvent();
   }
+
+  handlePauseEvent() {
+    this.playPauseButton.classList.toggle("fa-pause");
+    this.playPauseButton.classList.add("fa-play");
+    this.container.handlePauseEvent();
+  }
+
+  handleNextFrameEvent() {
+    if (this.playPauseButton.classList.contains("fa-pause")) {
+      this.playPauseButton.classList.toggle("fa-pause");
+      this.playPauseButton.classList.add("fa-play");
+    }
+    this.container.handleNextFrameEvent();
+  }
+
+  handleResetEvent() {
+    this.container.handleResetEvent();
+  }
 }
