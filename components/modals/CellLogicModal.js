@@ -1,4 +1,5 @@
 import NeighborTypeBox from './NeighborTypeBox';
+import CellConditionsBox from './CellConditionsBox';
 
 export default class CellLogicModal {
   constructor(cellType, container, conditionalHash) {
@@ -11,12 +12,17 @@ export default class CellLogicModal {
     this.validNeighborsContainer =
       document.querySelector("#validNeighborsContainer");
 
+    this.cellConditionsContainer =
+      document.querySelector("#cellConditionsContainer");
+
+
     this.changeCellName = this.changeCellName.bind(this);
     this.populateValidNeighborBoxes = this.populateValidNeighborBoxes.bind(this);
   }
 
   show() {
     this.changeCellName();
+    this.populateCellConditionsBoxes();
     this.populateValidNeighborBoxes();
 
     this.modalBackdrop.addEventListener('click', () => this.hide());
@@ -30,14 +36,29 @@ export default class CellLogicModal {
       this.validNeighborsContainer.removeChild(this.validNeighborsContainer.firstChild);
     }
 
+    while (this.cellConditionsContainer.firstChild) {
+      this.cellConditionsContainer.removeChild(this.cellConditionsContainer.firstChild);
+    }
+
     this.modalBackdrop.style.display = 'none';
     this.cellLogicModal.style.display = 'none';
   }
 
   changeCellName() {
     const cellName = document.querySelector("#cellName");
+
     cellName.innerText =
       `${this.conditionalHash[this.cellType].name} Cell Behavior`;
+  }
+
+  populateCellConditionsBoxes() {
+    const conditions = this.conditionalHash[this.cellType]['conditions'];
+
+    Object.keys(conditions).forEach(con => {
+      const cellConditionsBox = new CellConditionsBox(con, conditions[con], this.conditionalHash);
+
+      this.cellConditionsContainer.appendChild(cellConditionsBox.createElement());
+    });
   }
 
   populateValidNeighborBoxes() {

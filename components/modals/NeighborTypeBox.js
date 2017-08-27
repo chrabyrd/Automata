@@ -13,6 +13,7 @@ export default class NeighborTypeBox {
       `
       <label class="neighborTypeNames" value=${this.cellType}>
         ${this.cellName}
+        
         <input
           class="validNeighborBox"
           value=${this.cellType}
