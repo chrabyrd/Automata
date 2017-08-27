@@ -446,10 +446,9 @@
 	    this.container = container;
 	    this.conditionalHash = conditionalHash;
 
-	    this.modalBackdrop = document.getElementById("modalBackdrop");
-	    this.cellLogicModal = document.getElementById("cellLogicModal");
-
-	    this.neighborTypeNames = document.getElementsByClassName("neighborTypeNames");
+	    this.modalBackdrop = document.querySelector("#modalBackdrop");
+	    this.cellLogicModal = document.querySelector("#cellLogicModal");
+	    this.validNeighborsContainer = document.querySelector("#validNeighborsContainer");
 
 	    this.changeCellName = this.changeCellName.bind(this);
 	    this.populateValidNeighborBoxes = this.populateValidNeighborBoxes.bind(this);
@@ -458,14 +457,25 @@
 	  _createClass(CellLogicModal, [{
 	    key: "show",
 	    value: function show() {
+	      var _this = this;
+
 	      this.changeCellName();
 	      this.populateValidNeighborBoxes();
+
+	      this.modalBackdrop.addEventListener('click', function () {
+	        return _this.hide();
+	      });
+
 	      this.modalBackdrop.style.display = 'flex';
 	      this.cellLogicModal.style.display = 'flex';
 	    }
 	  }, {
 	    key: "hide",
 	    value: function hide() {
+	      while (this.validNeighborsContainer.firstChild) {
+	        this.validNeighborsContainer.removeChild(this.validNeighborsContainer.firstChild);
+	      }
+
 	      this.modalBackdrop.style.display = 'none';
 	      this.cellLogicModal.style.display = 'none';
 	    }
@@ -478,64 +488,21 @@
 	  }, {
 	    key: "populateValidNeighborBoxes",
 	    value: function populateValidNeighborBoxes() {
-	      var _this = this;
-
-	      var validNeighborsContainer = document.querySelector("#validNeighborsContainer");
+	      var _this2 = this;
 
 	      var neighborHash = this.conditionalHash[this.cellType]['neighborHash'];
 
-	      validNeighborsContainer.addEventListener('click', function (e) {
+	      this.validNeighborsContainer.addEventListener('click', function (e) {
 	        var cellType = e.target.value;
 	        neighborHash[cellType] = e.target.checked;
 	      });
 
 	      Object.keys(neighborHash).forEach(function (cellType) {
-	        var cellName = _this.conditionalHash[cellType]['name'];
+	        var cellName = _this2.conditionalHash[cellType]['name'];
 	        var neighborTypeBox = new _NeighborTypeBox2.default(cellType, cellName, neighborHash[cellType]);
 
-	        validNeighborsContainer.appendChild(neighborTypeBox.createElement());
+	        _this2.validNeighborsContainer.appendChild(neighborTypeBox.createElement());
 	      });
-
-	      // const resetNeighborBoxes = () => {
-	      //   for (let i = 0; i < this.validNeighborBoxes.length; i++) {
-	      //     const currentBox = this.validNeighborBoxes[i];
-	      //     currentBox.checked = false;
-	      //   }
-	      // };
-	      //
-	      // resetNeighborBoxes();
-	      //
-	      // for (let i = 0; i < this.validNeighborBoxes.length; i++) {
-	      //   const currentBox = this.validNeighborBoxes[i];
-	      //   const currentName = this.neighborTypeNames[i];
-	      //
-	      //   const getType = function () {
-	      //     this.conditionalHash[cellType]['neighborHash'][currentBox.value] = currentBox.checked;
-	      //   };
-	      //
-	      //   currentName.setAttribute("name", this.conditionalHash[currentBox.value].name);
-	      //
-	      //   currentBox.checked = this.conditionalHash[cellType]['neighborHash'][currentBox.value];
-	      //   currentBox.onclick = () => getType();
-	      // }
-	    }
-	  }, {
-	    key: "changeCellLogicModalType",
-	    value: function changeCellLogicModalType(cellType) {
-
-	      if (!this.container.pauseEvent) this.container.handlePauseEvent();
-
-	      // cellLogicModal.style.display = 'flex';
-	      // modalBackdrop.style.display = 'flex';
-	      // gridControls.style.display = 'none';
-	      //
-	      // changeModalCellName(cellType);
-	      // populateConditionalDropdowns();
-	      // refreshConditionalStatements(cellType);
-	      // resetMenuValues();
-	      // handleChanceSliders(cellType);
-	      // handleSubmitEventListeners(cellType);
-	      // populateValidNeighborBoxes(cellType);
 	    }
 	  }]);
 
@@ -873,7 +840,7 @@
 
 	        currentLogicModalButton.addEventListener('click', function () {
 	          // tutorialModal.style.display = 'none';
-	          _this.hideCellTypeContainers();
+	          // this.hideCellTypeContainers();
 	          var cellLogicModal = new _CellLogicModal2.default(currentType, _this.container, _this.conditionalHash);
 	          cellLogicModal.show();
 	        });

@@ -38,7 +38,7 @@ export default class CellControlBar {
 
       currentLogicModalButton.addEventListener('click', () => {
         // tutorialModal.style.display = 'none';
-        this.hideCellTypeContainers();
+        // this.hideCellTypeContainers();
         const cellLogicModal = new CellLogicModal(currentType, this.container, this.conditionalHash);
         cellLogicModal.show();
       });
